@@ -19,6 +19,10 @@ let package = Package(
     .package(
       url: "https://github.com/Brightify/Cuckoo.git",
       from: "2.0.9"
+    ),
+    .package(
+      url: "https://github.com/eu-digital-identity-wallet/SwiftCopyableMacro.git",
+      from: "0.0.1"
     )
   ],
   targets: [
@@ -26,6 +30,10 @@ let package = Package(
       name: "EudiRQESUi",
       dependencies: [
         "Swinject",
+        .product(
+          name: "Copyable",
+          package: "SwiftCopyableMacro"
+        )
       ],
       path: "./Sources"
     ),
