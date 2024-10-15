@@ -16,13 +16,13 @@
 
 @Copyable
 struct ExampleState: ViewState {
-    let example: String
+  let example: String
 }
 
 final class ExampleViewModel<Router: RouteGraph>: ViewModel<Router, ExampleState> {
-    
-    public override init(router: Router, initialState: ExampleState) {
-        super.init(router: router, initialState: .init(example: ""))
-    }
-    
+  
+  override init(router: Router, initialState: ExampleState) {
+    super.init(router: router, initialState: .init(example: ""))
+  }
+  
 }

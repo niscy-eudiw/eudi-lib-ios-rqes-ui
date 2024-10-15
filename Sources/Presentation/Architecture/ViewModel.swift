@@ -22,18 +22,18 @@ protocol ViewState {}
 @MainActor
 class ViewModel<Router: RouteGraph, UiState: ViewState>: ObservableObject {
 
-  public lazy var cancellables = Set<AnyCancellable>()
+  lazy var cancellables = Set<AnyCancellable>()
 
-  @Published public private(set) var viewState: UiState
+  @Published private(set) var viewState: UiState
 
-  public let router: Router
+  let router: Router
 
-  public init(router: Router, initialState: UiState) {
+  init(router: Router, initialState: UiState) {
     self.router = router
     self.viewState = initialState
   }
 
-  public func setState(_ reducer: (UiState) -> UiState) {
+  func setState(_ reducer: (UiState) -> UiState) {
     self.viewState = reducer(viewState)
   }
 }

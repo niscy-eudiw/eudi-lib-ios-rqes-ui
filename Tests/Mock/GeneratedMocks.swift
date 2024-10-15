@@ -118,6 +118,448 @@ class LocalizationControllerStub:LocalizationController, @unchecked Sendable {
 
 
 
+// MARK: - Mocks generated from file: '../Sources/Domain/Controller/LogController.swift'
+
+import Cuckoo
+@testable import EudiRQESUi
+
+class MockLogController: LogController, Cuckoo.ProtocolMock, @unchecked Sendable {
+    typealias MocksType = LogController
+    typealias Stubbing = __StubbingProxy_LogController
+    typealias Verification = __VerificationProxy_LogController
+
+    // Original typealiases
+
+    let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any LogController)?
+
+    func enableDefaultImplementation(_ stub: any LogController) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+    
+    func log(_ p0: Error) {
+        return cuckoo_manager.call(
+            "log(_ p0: Error)",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.log(p0)
+        )
+    }
+    
+    func log(_ p0: String) {
+        return cuckoo_manager.call(
+            "log(_ p0: String)",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.log(p0)
+        )
+    }
+
+    struct __StubbingProxy_LogController: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        func log<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(Error)> where M1.MatchedType == Error {
+            let matchers: [Cuckoo.ParameterMatcher<(Error)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockLogController.self,
+                method: "log(_ p0: Error)",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func log<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(String)> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockLogController.self,
+                method: "log(_ p0: String)",
+                parameterMatchers: matchers
+            ))
+        }
+    }
+
+    struct __VerificationProxy_LogController: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+        
+        
+        @discardableResult
+        func log<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(Error), Void> where M1.MatchedType == Error {
+            let matchers: [Cuckoo.ParameterMatcher<(Error)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "log(_ p0: Error)",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func log<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(String), Void> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "log(_ p0: String)",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+    }
+}
+
+class LogControllerStub:LogController, @unchecked Sendable {
+
+
+    
+    func log(_ p0: Error) {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    func log(_ p0: String) {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+}
+
+
+
+
+// MARK: - Mocks generated from file: '../Sources/Domain/Controller/PreferencesController.swift'
+
+import Cuckoo
+@testable import EudiRQESUi
+
+class MockPreferencesController: PreferencesController, Cuckoo.ProtocolMock, @unchecked Sendable {
+    typealias MocksType = PreferencesController
+    typealias Stubbing = __StubbingProxy_PreferencesController
+    typealias Verification = __VerificationProxy_PreferencesController
+
+    // Original typealiases
+
+    let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any PreferencesController)?
+
+    func enableDefaultImplementation(_ stub: any PreferencesController) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+    
+    func setValue(_ p0: Any?, forKey p1: Prefs.Key) {
+        return cuckoo_manager.call(
+            "setValue(_ p0: Any?, forKey p1: Prefs.Key)",
+            parameters: (p0, p1),
+            escapingParameters: (p0, p1),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.setValue(p0, forKey: p1)
+        )
+    }
+    
+    func getString(forKey p0: Prefs.Key) -> String? {
+        return cuckoo_manager.call(
+            "getString(forKey p0: Prefs.Key) -> String?",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.getString(forKey: p0)
+        )
+    }
+    
+    func getOptionalString(forKey p0: Prefs.Key) -> String {
+        return cuckoo_manager.call(
+            "getOptionalString(forKey p0: Prefs.Key) -> String",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.getOptionalString(forKey: p0)
+        )
+    }
+    
+    func getBool(forKey p0: Prefs.Key) -> Bool {
+        return cuckoo_manager.call(
+            "getBool(forKey p0: Prefs.Key) -> Bool",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.getBool(forKey: p0)
+        )
+    }
+    
+    func getFloat(forKey p0: Prefs.Key) -> Float {
+        return cuckoo_manager.call(
+            "getFloat(forKey p0: Prefs.Key) -> Float",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.getFloat(forKey: p0)
+        )
+    }
+    
+    func getInt(forKey p0: Prefs.Key) -> Int {
+        return cuckoo_manager.call(
+            "getInt(forKey p0: Prefs.Key) -> Int",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.getInt(forKey: p0)
+        )
+    }
+    
+    func remove(forKey p0: Prefs.Key) {
+        return cuckoo_manager.call(
+            "remove(forKey p0: Prefs.Key)",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.remove(forKey: p0)
+        )
+    }
+    
+    func getValue(forKey p0: Prefs.Key) -> Any? {
+        return cuckoo_manager.call(
+            "getValue(forKey p0: Prefs.Key) -> Any?",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.getValue(forKey: p0)
+        )
+    }
+
+    struct __StubbingProxy_PreferencesController: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        func setValue<M1: Cuckoo.OptionalMatchable, M2: Cuckoo.Matchable>(_ p0: M1, forKey p1: M2) -> Cuckoo.ProtocolStubNoReturnFunction<(Any?, Prefs.Key)> where M1.OptionalMatchedType == Any, M2.MatchedType == Prefs.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(Any?, Prefs.Key)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockPreferencesController.self,
+                method: "setValue(_ p0: Any?, forKey p1: Prefs.Key)",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func getString<M1: Cuckoo.Matchable>(forKey p0: M1) -> Cuckoo.ProtocolStubFunction<(Prefs.Key), String?> where M1.MatchedType == Prefs.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(Prefs.Key)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockPreferencesController.self,
+                method: "getString(forKey p0: Prefs.Key) -> String?",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func getOptionalString<M1: Cuckoo.Matchable>(forKey p0: M1) -> Cuckoo.ProtocolStubFunction<(Prefs.Key), String> where M1.MatchedType == Prefs.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(Prefs.Key)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockPreferencesController.self,
+                method: "getOptionalString(forKey p0: Prefs.Key) -> String",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func getBool<M1: Cuckoo.Matchable>(forKey p0: M1) -> Cuckoo.ProtocolStubFunction<(Prefs.Key), Bool> where M1.MatchedType == Prefs.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(Prefs.Key)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockPreferencesController.self,
+                method: "getBool(forKey p0: Prefs.Key) -> Bool",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func getFloat<M1: Cuckoo.Matchable>(forKey p0: M1) -> Cuckoo.ProtocolStubFunction<(Prefs.Key), Float> where M1.MatchedType == Prefs.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(Prefs.Key)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockPreferencesController.self,
+                method: "getFloat(forKey p0: Prefs.Key) -> Float",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func getInt<M1: Cuckoo.Matchable>(forKey p0: M1) -> Cuckoo.ProtocolStubFunction<(Prefs.Key), Int> where M1.MatchedType == Prefs.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(Prefs.Key)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockPreferencesController.self,
+                method: "getInt(forKey p0: Prefs.Key) -> Int",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func remove<M1: Cuckoo.Matchable>(forKey p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(Prefs.Key)> where M1.MatchedType == Prefs.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(Prefs.Key)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockPreferencesController.self,
+                method: "remove(forKey p0: Prefs.Key)",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func getValue<M1: Cuckoo.Matchable>(forKey p0: M1) -> Cuckoo.ProtocolStubFunction<(Prefs.Key), Any?> where M1.MatchedType == Prefs.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(Prefs.Key)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockPreferencesController.self,
+                method: "getValue(forKey p0: Prefs.Key) -> Any?",
+                parameterMatchers: matchers
+            ))
+        }
+    }
+
+    struct __VerificationProxy_PreferencesController: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+        
+        
+        @discardableResult
+        func setValue<M1: Cuckoo.OptionalMatchable, M2: Cuckoo.Matchable>(_ p0: M1, forKey p1: M2) -> Cuckoo.__DoNotUse<(Any?, Prefs.Key), Void> where M1.OptionalMatchedType == Any, M2.MatchedType == Prefs.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(Any?, Prefs.Key)>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+            return cuckoo_manager.verify(
+                "setValue(_ p0: Any?, forKey p1: Prefs.Key)",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func getString<M1: Cuckoo.Matchable>(forKey p0: M1) -> Cuckoo.__DoNotUse<(Prefs.Key), String?> where M1.MatchedType == Prefs.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(Prefs.Key)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "getString(forKey p0: Prefs.Key) -> String?",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func getOptionalString<M1: Cuckoo.Matchable>(forKey p0: M1) -> Cuckoo.__DoNotUse<(Prefs.Key), String> where M1.MatchedType == Prefs.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(Prefs.Key)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "getOptionalString(forKey p0: Prefs.Key) -> String",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func getBool<M1: Cuckoo.Matchable>(forKey p0: M1) -> Cuckoo.__DoNotUse<(Prefs.Key), Bool> where M1.MatchedType == Prefs.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(Prefs.Key)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "getBool(forKey p0: Prefs.Key) -> Bool",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func getFloat<M1: Cuckoo.Matchable>(forKey p0: M1) -> Cuckoo.__DoNotUse<(Prefs.Key), Float> where M1.MatchedType == Prefs.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(Prefs.Key)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "getFloat(forKey p0: Prefs.Key) -> Float",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func getInt<M1: Cuckoo.Matchable>(forKey p0: M1) -> Cuckoo.__DoNotUse<(Prefs.Key), Int> where M1.MatchedType == Prefs.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(Prefs.Key)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "getInt(forKey p0: Prefs.Key) -> Int",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func remove<M1: Cuckoo.Matchable>(forKey p0: M1) -> Cuckoo.__DoNotUse<(Prefs.Key), Void> where M1.MatchedType == Prefs.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(Prefs.Key)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "remove(forKey p0: Prefs.Key)",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func getValue<M1: Cuckoo.Matchable>(forKey p0: M1) -> Cuckoo.__DoNotUse<(Prefs.Key), Any?> where M1.MatchedType == Prefs.Key {
+            let matchers: [Cuckoo.ParameterMatcher<(Prefs.Key)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "getValue(forKey p0: Prefs.Key) -> Any?",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+    }
+}
+
+class PreferencesControllerStub:PreferencesController, @unchecked Sendable {
+
+
+    
+    func setValue(_ p0: Any?, forKey p1: Prefs.Key) {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    func getString(forKey p0: Prefs.Key) -> String? {
+        return DefaultValueRegistry.defaultValue(for: (String?).self)
+    }
+    
+    func getOptionalString(forKey p0: Prefs.Key) -> String {
+        return DefaultValueRegistry.defaultValue(for: (String).self)
+    }
+    
+    func getBool(forKey p0: Prefs.Key) -> Bool {
+        return DefaultValueRegistry.defaultValue(for: (Bool).self)
+    }
+    
+    func getFloat(forKey p0: Prefs.Key) -> Float {
+        return DefaultValueRegistry.defaultValue(for: (Float).self)
+    }
+    
+    func getInt(forKey p0: Prefs.Key) -> Int {
+        return DefaultValueRegistry.defaultValue(for: (Int).self)
+    }
+    
+    func remove(forKey p0: Prefs.Key) {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    func getValue(forKey p0: Prefs.Key) -> Any? {
+        return DefaultValueRegistry.defaultValue(for: (Any?).self)
+    }
+}
+
+
+
+
 // MARK: - Mocks generated from file: '../Sources/Domain/DI/Graph/DIGraph.swift'
 
 import Cuckoo
@@ -151,13 +593,13 @@ class MockDIGraphType: DIGraphType, Cuckoo.ProtocolMock, @unchecked Sendable {
     }
 
     
-    func lazyLoad(with p0: [Assembly]) {
+    func load() {
         return cuckoo_manager.call(
-            "lazyLoad(with p0: [Assembly])",
-            parameters: (p0),
-            escapingParameters: (p0),
+            "load()",
+            parameters: (),
+            escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: __defaultImplStub!.lazyLoad(with: p0)
+            defaultCall: __defaultImplStub!.load()
         )
     }
 
@@ -172,10 +614,10 @@ class MockDIGraphType: DIGraphType, Cuckoo.ProtocolMock, @unchecked Sendable {
             return .init(manager: cuckoo_manager, name: "assembler")
         }
         
-        func lazyLoad<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<([Assembly])> where M1.MatchedType == [Assembly] {
-            let matchers: [Cuckoo.ParameterMatcher<([Assembly])>] = [wrap(matchable: p0) { $0 }]
+        func load() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockDIGraphType.self,
-                method: "lazyLoad(with p0: [Assembly])",
+                method: "load()",
                 parameterMatchers: matchers
             ))
         }
@@ -198,10 +640,10 @@ class MockDIGraphType: DIGraphType, Cuckoo.ProtocolMock, @unchecked Sendable {
         
         
         @discardableResult
-        func lazyLoad<M1: Cuckoo.Matchable>(with p0: M1) -> Cuckoo.__DoNotUse<([Assembly]), Void> where M1.MatchedType == [Assembly] {
-            let matchers: [Cuckoo.ParameterMatcher<([Assembly])>] = [wrap(matchable: p0) { $0 }]
+        func load() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "lazyLoad(with p0: [Assembly])",
+                "load()",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -220,7 +662,7 @@ class DIGraphTypeStub:DIGraphType, @unchecked Sendable {
 
 
     
-    func lazyLoad(with p0: [Assembly]) {
+    func load() {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
 }
@@ -300,6 +742,16 @@ public class MockEudiRQESUiConfig: EudiRQESUiConfig, Cuckoo.ProtocolMock, @unche
             )
         }
     }
+    
+    public var printLogs: Bool {
+        get {
+            return cuckoo_manager.getter(
+                "printLogs",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.printLogs
+            )
+        }
+    }
 
 
     public struct __StubbingProxy_EudiRQESUiConfig: Cuckoo.StubbingProxy {
@@ -315,6 +767,10 @@ public class MockEudiRQESUiConfig: EudiRQESUiConfig, Cuckoo.ProtocolMock, @unche
         
         var translations: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockEudiRQESUiConfig,[String: [LocalizableKey: String]]> {
             return .init(manager: cuckoo_manager, name: "translations")
+        }
+        
+        var printLogs: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockEudiRQESUiConfig,Bool> {
+            return .init(manager: cuckoo_manager, name: "printLogs")
         }
     }
 
@@ -336,6 +792,10 @@ public class MockEudiRQESUiConfig: EudiRQESUiConfig, Cuckoo.ProtocolMock, @unche
         var translations: Cuckoo.VerifyReadOnlyProperty<[String: [LocalizableKey: String]]> {
             return .init(manager: cuckoo_manager, name: "translations", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
+        
+        var printLogs: Cuckoo.VerifyReadOnlyProperty<Bool> {
+            return .init(manager: cuckoo_manager, name: "printLogs", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
     }
 }
 
@@ -352,6 +812,12 @@ public class EudiRQESUiConfigStub:EudiRQESUiConfig, @unchecked Sendable {
             return DefaultValueRegistry.defaultValue(for: ([String: [LocalizableKey: String]]).self)
         }
     }
+    
+    public var printLogs: Bool {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (Bool).self)
+        }
+    }
 
 
 }
@@ -363,5 +829,117 @@ public class EudiRQESUiConfigStub:EudiRQESUiConfig, @unchecked Sendable {
 
 import Cuckoo
 import UIKit
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: '../Sources/Presentation/Architecture/ViewModel.swift'
+
+import Cuckoo
+import SwiftUI
+import Combine
+import Copyable
+@testable import EudiRQESUi
+
+class MockViewState: ViewState, Cuckoo.ProtocolMock, @unchecked Sendable {
+    typealias MocksType = ViewState
+    typealias Stubbing = __StubbingProxy_ViewState
+    typealias Verification = __VerificationProxy_ViewState
+
+    // Original typealiases
+
+    let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any ViewState)?
+
+    func enableDefaultImplementation(_ stub: any ViewState) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+
+    struct __StubbingProxy_ViewState: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+    }
+
+    struct __VerificationProxy_ViewState: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    }
+}
+
+class ViewStateStub:ViewState, @unchecked Sendable {
+
+
+}
+
+
+
+
+// MARK: - Mocks generated from file: '../Sources/Presentation/Router/RouteGraph.swift'
+
+import Cuckoo
+@testable import EudiRQESUi
+
+class MockRouteGraph: RouteGraph, Cuckoo.ProtocolMock, @unchecked Sendable {
+    typealias MocksType = RouteGraph
+    typealias Stubbing = __StubbingProxy_RouteGraph
+    typealias Verification = __VerificationProxy_RouteGraph
+
+    // Original typealiases
+
+    let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any RouteGraph)?
+
+    func enableDefaultImplementation(_ stub: any RouteGraph) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+
+    struct __StubbingProxy_RouteGraph: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+    }
+
+    struct __VerificationProxy_RouteGraph: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+    }
+}
+
+class RouteGraphStub:RouteGraph, @unchecked Sendable {
+
+
+}
+
+
+
+
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/ExampleView/ExampleViewModel.swift'
+
+import Cuckoo
 @testable import EudiRQESUi
 
