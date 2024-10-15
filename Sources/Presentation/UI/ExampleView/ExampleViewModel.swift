@@ -13,3 +13,16 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+
+@Copyable
+struct ExampleState: ViewState {
+    let example: String
+}
+
+final class ExampleViewModel<Router: RouteGraph>: ViewModel<Router, ExampleState> {
+    
+    public override init(router: Router, initialState: ExampleState) {
+        super.init(router: router, initialState: .init(example: ""))
+    }
+    
+}

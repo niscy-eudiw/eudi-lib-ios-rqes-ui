@@ -21,13 +21,19 @@ final class ControllerAssembly: Assembly {
   
   func assemble(container: Container) {
     
-    do {
-      let config = try EudiRQESUi.getConfig()
-      container.register(LocalizationController.self) { r in
-        LocalizationControllerImpl(config: config)
-      }
-      .inObjectScope(ObjectScope.container)
-    } catch {}
+    container.register(LocalizationController.self) { r in
+      LocalizationControllerImpl(config: EudiRQESUi.getConfig())
+    }
+    .inObjectScope(ObjectScope.container)
     
+    container.register(LogController.self) { r in
+      LogControllerImpl(config: EudiRQESUi.getConfig())
+    }
+    .inObjectScope(ObjectScope.transient)
+    
+    container.register(PreferencesController.self) { r in
+      PreferencesControllerImpl()
+    }
+    .inObjectScope(ObjectScope.transient)
   }
 }

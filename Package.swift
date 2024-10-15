@@ -35,7 +35,10 @@ let package = Package(
           package: "SwiftCopyableMacro"
         )
       ],
-      path: "./Sources"
+      path: "./Sources",
+      resources: [
+        .process("Resources")
+      ]
     ),
     .testTarget(
       name: "EudiRQESUiTests",

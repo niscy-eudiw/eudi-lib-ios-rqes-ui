@@ -16,14 +16,24 @@
 import Foundation
 
 public protocol EudiRQESUiConfig: Sendable {
+  
+  // QTSPs List
   var qtsps: [URL] { get }
+  
+  // Transactions per locale
   var translations: [String: [LocalizableKey: String]] { get }
+  
+  // Logging is enabled
+  var printLogs: Bool { get }
 }
 
-internal final class DefaultConfig: EudiRQESUiConfig {
+// MARK: - TODO To be removed once SDK is stable
+final class DefaultConfig: EudiRQESUiConfig {
+  
   var qtsps: [URL] {
     []
   }
+  
   var translations: [String : [LocalizableKey : String]] {
     [
       "en_US" : [
@@ -32,4 +42,6 @@ internal final class DefaultConfig: EudiRQESUiConfig {
       ]
     ]
   }
+  
+  var printLogs: Bool { true }
 }

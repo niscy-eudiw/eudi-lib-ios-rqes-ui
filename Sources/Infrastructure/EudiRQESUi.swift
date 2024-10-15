@@ -54,11 +54,8 @@ public extension EudiRQESUi {
 }
 
 extension EudiRQESUi {
-  static func getConfig() throws -> EudiRQESUiConfig {
-    guard let _config else {
-      throw EudiRQESUiError.notInitialized
-    }
-    return _config
+  static func getConfig() -> EudiRQESUiConfig {
+    return _config!
   }
 }
 

@@ -13,6 +13,31 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-protocol RouteGraph {
-    
+
+protocol LogController: Sendable {
+  func log(_ error: Error)
+  func log(_ description: String)
+}
+
+final class LogControllerImpl: LogController {
+  
+  private static let tag: String = "EudiRQESUi"
+  
+  private let config: EudiRQESUiConfig
+  
+  init(config: EudiRQESUiConfig) {
+    self.config = config
+  }
+  
+  func log(_ error: Error) {
+    if config.printLogs {
+      print("\(Self.tag): \(error)")
+    }
+  }
+  
+  func log(_ description: String) {
+    if config.printLogs {
+      print("\(Self.tag): \(description)")
+    }
+  }
 }
