@@ -19,8 +19,10 @@ public final actor EudiRQESUi {
   
   private static var _shared: EudiRQESUi?
   private static var _config: EudiRQESUiConfig?
+  private static var state: State = .none
   
   private var viewController: UIViewController?
+  private var state: State = .none
   
   @discardableResult
   public init(config: EudiRQESUiConfig) {
@@ -29,18 +31,20 @@ public final actor EudiRQESUi {
     DIGraph.shared.load()
   }
   
-  public func show(
+  public func initiate(
     on container: UIViewController,
-    with state: State,
+    animated: Bool = true
+  ) async {
+    state = .none
+    await resume(on: container, animated: animated)
+  }
+  
+  public func resume(
+    on container: UIViewController,
     animated: Bool = true
   ) async {
     viewController = await UIViewController()
     await container.present(viewController!, animated: animated)
-  }
-  
-  public func dismiss(animated: Bool = true) async {
-    await viewController?.dismiss(animated: animated)
-    self.viewController = nil
   }
 }
 
@@ -54,20 +58,43 @@ public extension EudiRQESUi {
 }
 
 extension EudiRQESUi {
+  
   static func getConfig() -> EudiRQESUiConfig {
     return _config!
   }
+  
+  static func setState(_ state: State) {
+    self.state = state
+  }
+  
+  func cancel(animated: Bool = true) async {
+    state = .none
+    await pause(animated: animated)
+  }
+  
+  func pause(animated: Bool = true) async {
+    await viewController?.dismiss(animated: animated)
+  }
 }
 
-public extension EudiRQESUi {
+extension EudiRQESUi {
   enum State: Equatable, Sendable {
     
+    case none
     case initial
+    case certifcate(String)
+    case sign(String)
     
     var id: String {
       return switch self {
+      case .none:
+        "none"
       case .initial:
         "initial"
+      case .certifcate:
+        "certifcate"
+      case .sign:
+        "sign"
       }
     }
     
