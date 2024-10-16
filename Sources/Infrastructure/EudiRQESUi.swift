@@ -22,7 +22,6 @@ public final actor EudiRQESUi {
   private static var state: State = .none
   
   private var viewController: UIViewController?
-  private var state: State = .none
   
   @discardableResult
   public init(config: EudiRQESUiConfig) {
@@ -35,7 +34,7 @@ public final actor EudiRQESUi {
     on container: UIViewController,
     animated: Bool = true
   ) async {
-    state = .none
+    Self.setState(.none)
     await resume(on: container, animated: animated)
   }
   
@@ -68,7 +67,7 @@ extension EudiRQESUi {
   }
   
   func cancel(animated: Bool = true) async {
-    state = .none
+    Self.setState(.none)
     await pause(animated: animated)
   }
   
