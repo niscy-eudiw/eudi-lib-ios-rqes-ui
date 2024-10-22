@@ -13,27 +13,31 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import Foundation
 import SwiftUI
 
-struct RoutingView<T: RouterGraph, Content: View>: View {
-  @ObservedObject var router: T
-  public let content: Content
-  public var detents: Set<PresentationDetent>
-  public let indicator: Visibility
+protocol RouterGraph: ObservableObject {
+  associatedtype Route: Hashable & Identifiable
   
-  public init(router: T, @ViewBuilder content: @escaping () -> Content, detents: Set<PresentationDetent> = [.large], indicator: Visibility = .hidden) {
-    self.router = router
-    self.content = content()
-    self.detents = detents
-    self.indicator = indicator
+  var path: NavigationPath { get set }
+  
+  @MainActor func navigateTo(_ appRoute: Route)
+  @MainActor func pop()
+  @MainActor func navigateToRoot()
+  @MainActor func view(for route: Route) -> AnyView
+}
+
+extension RouterGraph {
+  
+  func navigateTo(_ appRoute: Route) {
+    path.append(appRoute)
   }
   
-  public var body: some View {
-    NavigationStack(path: $router.path) {
-      content
-        .navigationDestination(for: T.Route.self) { route in
-          router.view(for: route)
-        }
-    }
+  func pop() {
+    path.removeLast()
+  }
+  
+  func navigateToRoot() {
+    path.removeLast(path.count)
   }
 }

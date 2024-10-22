@@ -13,32 +13,22 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
 import SwiftUI
 
-final class Router: RouterGraph {
+@Copyable
+struct SignedDocumenState: ViewState {
+}
+
+class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocumenState> {
   
-  @Published var path: NavigationPath = NavigationPath()
-  
-  enum Route: Hashable, Identifiable{
-    case documentSelection
-    case serviceSelection(rssps: [URL])
-    case credentialSelection(credntials: [String])
-    case signedDocument(String, String)
-    case viewDocument(Bool, String)
-    
-    var id: String {
-      switch self {
-      default:
-        return ""
-      }
-    }
-  }
-  
-  func view(for route: Route) -> AnyView {
-    switch route {
-    default:
-      return Text("").eraseToAnyView()
-    }
+  override init(
+    router: Router,
+    initialState: SignedDocumenState
+  ) {
+    super.init(
+      router: router,
+      initialState: initialState
+    )
   }
 }
+

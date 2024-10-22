@@ -15,25 +15,24 @@
  */
 import SwiftUI
 
-struct RoutingView<T: RouterGraph, Content: View>: View {
-  @ObservedObject var router: T
-  public let content: Content
-  public var detents: Set<PresentationDetent>
-  public let indicator: Visibility
+struct DocumentSelectionView<R: Router>: View {
+  @StateObject var viewModel:DocumentSelectionViewModel<Router>
   
-  public init(router: T, @ViewBuilder content: @escaping () -> Content, detents: Set<PresentationDetent> = [.large], indicator: Visibility = .hidden) {
-    self.router = router
-    self.content = content()
-    self.detents = detents
-    self.indicator = indicator
+  init(
+    router: Router,
+    document: URL
+  ) {
+    _viewModel = .init(
+      wrappedValue: .init(
+        router: router,
+        initialState: .init(
+          document: document
+        )
+      )
+    )
   }
   
-  public var body: some View {
-    NavigationStack(path: $router.path) {
-      content
-        .navigationDestination(for: T.Route.self) { route in
-          router.view(for: route)
-        }
-    }
+  var body: some View {
+    Text("DocumentSelectionView")
   }
 }

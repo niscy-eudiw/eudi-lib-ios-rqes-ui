@@ -16,28 +16,29 @@
 import Foundation
 import SwiftUI
 
-protocol RouterGraph: ObservableObject {
-  associatedtype Route: Hashable & Identifiable
+final class Router: RouterGraph {
   
-  var path: NavigationPath { get set }
+  @Published var path: NavigationPath = NavigationPath()
   
-  @MainActor func navigateTo(_ appRoute: Route)
-  @MainActor func pop()
-  @MainActor func navigateToRoot()
-  @MainActor func view(for route: Route) -> AnyView
-}
-
-extension RouterGraph {
-  
-  func navigateTo(_ appRoute: Route) {
-    path.append(appRoute)
+  enum Route: Hashable, Identifiable{
+    case documentSelection
+    case serviceSelection(rssps: [URL])
+    case credentialSelection(credntials: [String])
+    case signedDocument(String, String)
+    case viewDocument(Bool, String)
+    
+    var id: String {
+      switch self {
+      default:
+        return ""
+      }
+    }
   }
   
-  func pop() {
-    path.removeLast()
-  }
-  
-  func navigateToRoot() {
-    path.removeLast(path.count)
+  func view(for route: Route) -> AnyView {
+    switch route {
+    default:
+      return Text("").eraseToAnyView()
+    }
   }
 }
