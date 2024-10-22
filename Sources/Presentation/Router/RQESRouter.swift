@@ -20,10 +20,12 @@ final class Router: RouterGraph {
   
   @Published var path: NavigationPath = NavigationPath()
   
-  enum RQESRoute: Hashable, Identifiable{
+  enum Route: Hashable, Identifiable{
     case documentSelection
-    case homePostDetails(postID: Int)
-    case homeCreatePost
+    case serviceSelection(rssps: [URL])
+    case credentialSelection(credntials: [String])
+    case signedDocument(String, String)
+    case viewDocument(Bool, String)
     
     var id: String {
       switch self {
@@ -33,7 +35,7 @@ final class Router: RouterGraph {
     }
   }
   
-  func view(for route: RQESRoute) -> AnyView {
+  func view(for route: Route) -> AnyView {
     switch route {
     default:
       return Text("").eraseToAnyView()
