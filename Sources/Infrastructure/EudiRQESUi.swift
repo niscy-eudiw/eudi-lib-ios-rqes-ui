@@ -30,12 +30,21 @@ public final actor EudiRQESUi {
     DIGraph.shared.load()
   }
   
+  @MainActor
   public func initiate(
-    on container: UIViewController,
+    on container: UIViewController = UIApplication.shared.topViewController()!,
     fileUrl: URL,
     animated: Bool = true
   ) async {
-    setState(.initial(fileUrl))
+    guard let config = Self._config else {
+      fatalError("EudiRQESUi: SDK has not been initialized properly")
+    }
+    await setState(
+      .initial(
+        fileUrl,
+        config
+      )
+    )
     await resume(on: container, animated: animated)
   }
   
@@ -43,12 +52,44 @@ public final actor EudiRQESUi {
     on container: UIViewController,
     animated: Bool = true
   ) async {
-    viewController = await UIViewController()
+    viewController = await nextViewController()
     await container.present(viewController!, animated: animated)
   }
   
   public func suspend(animated: Bool = true) async {
     await pause(animated: animated)
+  }
+  
+  @MainActor
+  private func nextViewController() -> UIViewController {
+    switch Self.state {
+    case .none:
+      fatalError("EudiRQESUi: SDK has not been initialized properly")
+    case .initial(
+      let document,
+      let config
+    ):
+      let router = MainRouter()
+      return ContainerViewController(
+        rootView: RoutingView(
+          router: router
+        ) {
+          DocumentSelectionView<MainRouter>(
+            router: router,
+            document: document,
+            services: config.rssps
+          )
+        }
+      )
+    case .rssps(_):
+      fatalError("TODO")
+    case .credentials(_):
+      fatalError("TODO")
+    case .sign(_, _):
+      fatalError("TODO")
+    case .view:
+      fatalError("TODO")
+    }
   }
 }
 
@@ -89,10 +130,11 @@ extension EudiRQESUi {
   enum State: Equatable, Sendable {
     
     case none
-    case initial(URL)
-    case qtsp
-    case certifcate(String)
-    case sign(String)
+    case initial(URL, any EudiRQESUiConfig)
+    case rssps([URL])
+    case credentials([String])
+    case sign(String, String)
+    case view
     
     var id: String {
       return switch self {
@@ -100,12 +142,14 @@ extension EudiRQESUi {
         "none"
       case .initial:
         "initial"
-      case .qtsp:
-        "qtsp"
-      case .certifcate:
-        "certifcate"
+      case .rssps:
+        "rssps"
+      case .credentials:
+        "credentials"
       case .sign:
         "sign"
+      case .view:
+        "view"
       }
     }
     

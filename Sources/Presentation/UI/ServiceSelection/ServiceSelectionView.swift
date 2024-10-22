@@ -15,8 +15,8 @@
  */
 import SwiftUI
 
-struct ServiceSelectionView<R: Router>: View {
-  @StateObject var viewModel:ServiceSelectionViewModel<Router>
+struct ServiceSelectionView<Router: RouterGraph>: View {
+  @StateObject var viewModel: ServiceSelectionViewModel<Router>
   
   init(
     router: Router,

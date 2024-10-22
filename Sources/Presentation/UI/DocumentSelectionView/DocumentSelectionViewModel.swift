@@ -18,6 +18,7 @@ import SwiftUI
 @Copyable
 struct DocumentSelectionState: ViewState {
   let document: URL
+  let services: [URL]
 }
 
 class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, DocumentSelectionState> {
@@ -30,5 +31,25 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
       router: router,
       initialState: initialState
     )
+  }
+  
+  func selectService() {
+    if let router = self.router as? MainRouter {
+      router.navigateTo(
+        .serviceSelection(
+          services: viewState.services
+        )
+      )
+    }
+  }
+  
+  func viewDocument() {
+    if let router = self.router as? MainRouter {
+      router.navigateTo(
+        .serviceSelection(
+          services: viewState.services
+        )
+      )
+    }
   }
 }

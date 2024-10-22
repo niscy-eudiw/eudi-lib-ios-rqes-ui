@@ -15,24 +15,43 @@
  */
 import SwiftUI
 
-struct DocumentSelectionView<R: Router>: View {
-  @StateObject var viewModel:DocumentSelectionViewModel<Router>
+struct DocumentSelectionView<Router: RouterGraph>: View {
+  @StateObject var viewModel: DocumentSelectionViewModel<Router>
   
   init(
     router: Router,
-    document: URL
+    document: URL,
+    services: [URL]
   ) {
     _viewModel = .init(
       wrappedValue: .init(
         router: router,
         initialState: .init(
-          document: document
+          document: document,
+          services: services
         )
       )
     )
   }
   
   var body: some View {
-    Text("DocumentSelectionView")
+    NavigationView {
+      VStack {
+        Button(action: {
+        }) {
+          Text("View Document")
+            .foregroundColor(.blue)
+        }
+        
+        Button(action: {
+          viewModel.selectService()
+        }) {
+          Text("Select RSSP")
+            .foregroundColor(.blue)
+        }
+      }
+      .navigationTitle("Confirm Selection")
+      .navigationBarTitleDisplayMode(.inline)
+    }
   }
 }

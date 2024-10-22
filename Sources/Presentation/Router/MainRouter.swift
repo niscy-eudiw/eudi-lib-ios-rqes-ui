@@ -16,13 +16,15 @@
 import Foundation
 import SwiftUI
 
-final class Router: RouterGraph {
+final class MainRouter: RouterGraph {
+  
+  typealias Route = RouteTable
   
   @Published var path: NavigationPath = NavigationPath()
   
-  enum Route: Hashable, Identifiable{
-    case documentSelection
-    case serviceSelection(rssps: [URL])
+  enum RouteTable: Hashable, Identifiable {
+    case documentSelection(document: URL, services: [URL])
+    case serviceSelection(services: [URL])
     case credentialSelection(credntials: [String])
     case signedDocument(String, String)
     case viewDocument(Bool, String)
@@ -37,8 +39,28 @@ final class Router: RouterGraph {
   
   func view(for route: Route) -> AnyView {
     switch route {
-    default:
-      return Text("").eraseToAnyView()
+    case .documentSelection(let document, let services):
+      DocumentSelectionView(
+        router: self,
+        document: document,
+        services: services
+      )
+      .eraseToAnyView()
+    case .serviceSelection(let services):
+      ServiceSelectionView(
+        router: self,
+        services: services
+      )
+        .eraseToAnyView()
+    case .credentialSelection(let credentials):
+      Text("")
+        .eraseToAnyView()
+    case .signedDocument(_, _):
+      Text("")
+        .eraseToAnyView()
+    case .viewDocument(_, _):
+      Text("")
+        .eraseToAnyView()
     }
   }
 }

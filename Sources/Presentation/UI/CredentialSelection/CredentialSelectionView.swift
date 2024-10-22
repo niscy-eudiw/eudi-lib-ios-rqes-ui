@@ -15,7 +15,7 @@
  */
 import SwiftUI
 
-struct CredentialSelectionView<R: Router>: View {
+struct CredentialSelectionView<Router: RouterGraph>: View {
   @StateObject var viewModel: CredentialSelectionViewModel<Router>
   
   init(

@@ -37,7 +37,7 @@ private struct PDFViewRepresented: UIViewRepresentable {
   }
 }
 
-struct DocumentViewer<R: Router>: View {
+struct DocumentViewer<Router: RouterGraph>: View {
   @StateObject var viewModel: DocumentViewModel<Router>
   
   init(

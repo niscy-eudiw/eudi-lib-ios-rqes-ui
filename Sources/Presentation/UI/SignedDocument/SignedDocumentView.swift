@@ -15,7 +15,7 @@
  */
 import SwiftUI
 
-struct SignedDocumentView<R: Router>: View {
+struct SignedDocumentView<Router: RouterGraph>: View {
   @StateObject var viewModel: SignedDocumentViewModel<Router>
   
   init(

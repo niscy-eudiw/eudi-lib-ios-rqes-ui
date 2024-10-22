@@ -31,17 +31,17 @@ public protocol EudiRQESUiConfig: Sendable {
 }
 
 // MARK: - TODO To be removed once SDK is stable
-final class DefaultConfig: EudiRQESUiConfig {
+public final class UIConfig: EudiRQESUiConfig {
   
-  var rssps: [URL] {
+  public var rssps: [URL] {
     []
   }
   
-  var redirectUrl: URL? {
+  public var redirectUrl: URL? {
     .init(string: "https://www.example.com")
   }
   
-  var translations: [String : [LocalizableKey : String]] {
+  public var translations: [String : [LocalizableKey : String]] {
     [
       "en_US" : [
         .mock : "mock",
@@ -50,5 +50,9 @@ final class DefaultConfig: EudiRQESUiConfig {
     ]
   }
   
-  var printLogs: Bool { true }
+  public var printLogs: Bool { true }
+  
+  public init() {
+    
+  }
 }
