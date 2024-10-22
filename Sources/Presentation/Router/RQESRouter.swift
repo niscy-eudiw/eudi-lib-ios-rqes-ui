@@ -16,7 +16,6 @@
 import Foundation
 import SwiftUI
 
-@available(iOS 13.0, *)
 final class Router: RouterGraph {
   
   @Published var path: NavigationPath = NavigationPath()

@@ -15,14 +15,12 @@
  */
 import SwiftUI
 
-@available(iOS 16.0, *)
 struct RoutingView<T: RouterGraph, Content: View>: View {
   @ObservedObject var router: T
   public let content: Content
   public var detents: Set<PresentationDetent>
   public let indicator: Visibility
   
-  @available(iOS 16.0, *)
   public init(router: T, @ViewBuilder content: @escaping () -> Content, detents: Set<PresentationDetent> = [.large], indicator: Visibility = .hidden) {
     self.router = router
     self.content = content()

@@ -37,7 +37,6 @@ extension RouterGraph {
     path.removeLast()
   }
   
-  @available(iOS 16.0, *)
   func navigateToRoot() {
     path.removeLast(path.count)
   }
