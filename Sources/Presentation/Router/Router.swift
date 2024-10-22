@@ -1,0 +1,44 @@
+/*
+ * Copyright (c) 2023 European Commission
+ *
+ * Licensed under the EUPL, Version 1.2 or - as soon they will be approved by the European
+ * Commission - subsequent versions of the EUPL (the "Licence"); You may not use this work
+ * except in compliance with the Licence.
+ *
+ * You may obtain a copy of the Licence at:
+ * https://joinup.ec.europa.eu/software/page/eupl
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the Licence is distributed on an "AS IS" basis, WITHOUT WARRANTIES OR CONDITIONS OF
+ * ANY KIND, either express or implied. See the Licence for the specific language
+ * governing permissions and limitations under the Licence.
+ */
+import Foundation
+import SwiftUI
+
+protocol RouterGraph: ObservableObject {
+  associatedtype Route: Hashable & Identifiable
+  
+  var path: NavigationPath { get set }
+  
+  @MainActor func navigateTo(_ appRoute: Route)
+  @MainActor func pop()
+  @MainActor func navigateToRoot()
+  @MainActor func view(for route: Route) -> AnyView
+}
+
+extension RouterGraph {
+  
+  func navigateTo(_ appRoute: Route) {
+    path.append(appRoute)
+  }
+  
+  func pop() {
+    path.removeLast()
+  }
+  
+  @available(iOS 16.0, *)
+  func navigateToRoot() {
+    path.removeLast(path.count)
+  }
+}
