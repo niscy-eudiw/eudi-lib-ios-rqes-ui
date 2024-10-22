@@ -32,9 +32,10 @@ public final actor EudiRQESUi {
   
   public func initiate(
     on container: UIViewController,
+    fileUrl: URL,
     animated: Bool = true
   ) async {
-    Self.setState(.none)
+    setState(.initial(fileUrl))
     await resume(on: container, animated: animated)
   }
   
@@ -63,15 +64,19 @@ public extension EudiRQESUi {
 extension EudiRQESUi {
   
   static func getConfig() -> EudiRQESUiConfig {
-    return _config!
+    return Self._config!
   }
   
-  static func setState(_ state: State) {
-    self.state = state
+  func setState(_ state: State) {
+    Self.state = state
+  }
+  
+  func getState() -> State {
+    return Self.state
   }
   
   func cancel(animated: Bool = true) async {
-    Self.setState(.none)
+    setState(.none)
     await pause(animated: animated)
   }
   
@@ -84,7 +89,8 @@ extension EudiRQESUi {
   enum State: Equatable, Sendable {
     
     case none
-    case initial
+    case initial(URL)
+    case qtsp
     case certifcate(String)
     case sign(String)
     
@@ -94,6 +100,8 @@ extension EudiRQESUi {
         "none"
       case .initial:
         "initial"
+      case .qtsp:
+        "qtsp"
       case .certifcate:
         "certifcate"
       case .sign:
