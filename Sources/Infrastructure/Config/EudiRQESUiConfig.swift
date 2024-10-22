@@ -20,6 +20,9 @@ public protocol EudiRQESUiConfig: Sendable {
   // Remote signing service provider list
   var rssps : [URL] { get }
   
+  // OAuth redirect url
+  var redirectUrl: URL? { get }
+  
   // Transactions per locale
   var translations: [String: [LocalizableKey: String]] { get }
   
@@ -32,6 +35,10 @@ final class DefaultConfig: EudiRQESUiConfig {
   
   var rssps: [URL] {
     []
+  }
+  
+  var redirectUrl: URL? {
+    .init(string: "https://www.example.com")
   }
   
   var translations: [String : [LocalizableKey : String]] {
