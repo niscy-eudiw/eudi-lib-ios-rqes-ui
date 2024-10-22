@@ -13,31 +13,31 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-@preconcurrency import Swinject
+import Foundation
+import SwiftUI
 
-protocol DIGraphType: Sendable {
-  var assembler: Assembler { get }
-  func load()
-}
-
-final class DIGraph: DIGraphType {
+@available(iOS 13.0, *)
+final class Router: RouterGraph {
   
-  static let shared: DIGraphType = DIGraph()
-  static let resolver: Resolver = shared.assembler.resolver
+  @Published var path: NavigationPath = NavigationPath()
   
-  let assembler: Assembler
-  
-  private init() {
-    self.assembler = Assembler()
+  enum RQESRoute: Hashable, Identifiable{
+    case documentSelection
+    case homePostDetails(postID: Int)
+    case homeCreatePost
+    
+    var id: String {
+      switch self {
+      default:
+        return ""
+      }
+    }
   }
   
-  func load() {
-    self.assembler.apply(
-      assemblies: [
-        ControllerAssembly(),
-        InteractorAssembly(),
-        PresentationAssembly()
-      ]
-    )
+  func view(for route: RQESRoute) -> AnyView {
+    switch route {
+    default:
+      return Text("").eraseToAnyView()
+    }
   }
 }

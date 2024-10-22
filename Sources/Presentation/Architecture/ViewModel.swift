@@ -20,7 +20,7 @@
 protocol ViewState {}
 
 @MainActor
-class ViewModel<Router: RouteGraph, UiState: ViewState>: ObservableObject {
+class ViewModel<Router: RouterGraph, UiState: ViewState>: ObservableObject {
 
   lazy var cancellables = Set<AnyCancellable>()
 

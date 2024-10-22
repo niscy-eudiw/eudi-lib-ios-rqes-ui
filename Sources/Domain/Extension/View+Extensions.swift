@@ -13,31 +13,11 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-@preconcurrency import Swinject
+import SwiftUI
 
-protocol DIGraphType: Sendable {
-  var assembler: Assembler { get }
-  func load()
-}
-
-final class DIGraph: DIGraphType {
-  
-  static let shared: DIGraphType = DIGraph()
-  static let resolver: Resolver = shared.assembler.resolver
-  
-  let assembler: Assembler
-  
-  private init() {
-    self.assembler = Assembler()
-  }
-  
-  func load() {
-    self.assembler.apply(
-      assemblies: [
-        ControllerAssembly(),
-        InteractorAssembly(),
-        PresentationAssembly()
-      ]
-    )
+public extension View {
+  @MainActor
+  func eraseToAnyView() -> AnyView {
+    return AnyView(self)
   }
 }

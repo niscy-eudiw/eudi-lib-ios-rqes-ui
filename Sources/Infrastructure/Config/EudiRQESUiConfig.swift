@@ -17,8 +17,8 @@ import Foundation
 
 public protocol EudiRQESUiConfig: Sendable {
   
-  // QTSPs List
-  var qtsps: [URL] { get }
+  // Remote signing service provider list
+  var rssps : [URL] { get }
   
   // Transactions per locale
   var translations: [String: [LocalizableKey: String]] { get }
@@ -30,7 +30,7 @@ public protocol EudiRQESUiConfig: Sendable {
 // MARK: - TODO To be removed once SDK is stable
 final class DefaultConfig: EudiRQESUiConfig {
   
-  var qtsps: [URL] {
+  var rssps: [URL] {
     []
   }
   

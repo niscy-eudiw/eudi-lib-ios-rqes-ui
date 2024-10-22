@@ -13,6 +13,16 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-protocol RouteGraph {
-    
+import Swinject
+
+final class PresentationAssembly: Assembly {
+  
+  init() {}
+  
+  func assemble(container: Container) {
+    container.register((any RouterGraph).self) { r in
+      Router()
+    }
+    .inObjectScope(ObjectScope.container)
+  }
 }

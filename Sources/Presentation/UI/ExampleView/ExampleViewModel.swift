@@ -19,10 +19,14 @@ struct ExampleState: ViewState {
   let example: String
 }
 
-final class ExampleViewModel<Router: RouteGraph>: ViewModel<Router, ExampleState> {
+final class ExampleViewModel<Router: RouterGraph>: ViewModel<Router, ExampleState> {
   
   override init(router: Router, initialState: ExampleState) {
-    super.init(router: router, initialState: .init(example: ""))
+    super.init(
+      router: router,
+      initialState: .init(
+        example: ""
+      )
+    )
   }
-  
 }

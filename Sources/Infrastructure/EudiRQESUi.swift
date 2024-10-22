@@ -45,6 +45,10 @@ public final actor EudiRQESUi {
     viewController = await UIViewController()
     await container.present(viewController!, animated: animated)
   }
+  
+  public func suspend(animated: Bool = true) async {
+    await pause(animated: animated)
+  }
 }
 
 public extension EudiRQESUi {
