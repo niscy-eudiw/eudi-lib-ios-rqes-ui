@@ -16,7 +16,7 @@
 import SwiftUI
 import PDFKit
 
-enum DocumentSource {
+enum DocumentSource: Hashable, Equatable {
   case pdfUrl(URL)
   case pdfBase64(String)
 }

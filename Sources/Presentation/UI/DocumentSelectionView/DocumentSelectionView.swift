@@ -35,23 +35,58 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
   }
   
   var body: some View {
-    NavigationView {
-      VStack {
+    content(
+      view: viewModel.viewDocument,
+      select: viewModel.selectService,
+      dismiss: viewModel.dismiss
+    )
+  }
+}
+
+@MainActor
+@ViewBuilder
+func content(
+  view: @escaping () -> Void,
+  select: @escaping () -> Void,
+  dismiss: @escaping () -> Void
+) -> some View {
+  NavigationView {
+    VStack {
+      Button(action: {
+        view()
+      }) {
+        Text("View Document")
+          .foregroundColor(.blue)
+      }
+      
+      Button(action: {
+        select()
+      }) {
+        Text("Select RSSP")
+          .foregroundColor(.blue)
+      }
+      
+      Spacer()
+    }
+    .navigationTitle("Confirm Selection")
+    .navigationBarTitleDisplayMode(.inline)
+    .toolbar {
+      ToolbarItem(placement: .topBarLeading) {
         Button(action: {
+          dismiss()
         }) {
-          Text("View Document")
-            .foregroundColor(.blue)
-        }
-        
-        Button(action: {
-          viewModel.selectService()
-        }) {
-          Text("Select RSSP")
-            .foregroundColor(.blue)
+          Text("Close")
         }
       }
-      .navigationTitle("Confirm Selection")
-      .navigationBarTitleDisplayMode(.inline)
     }
   }
+  .eraseToAnyView()
+}
+
+#Preview {
+  content(
+    view: {},
+    select: {},
+    dismiss: {}
+  )
 }

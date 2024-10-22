@@ -33,6 +33,19 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
     )
   }
   
+  func viewDocument() {
+    if let router = self.router as? MainRouter {
+      router.navigateTo(
+        .viewDocument(
+          true,
+          .pdfUrl(
+            viewState.document
+          )
+        )
+      )
+    }
+  }
+  
   func selectService() {
     if let router = self.router as? MainRouter {
       router.navigateTo(
@@ -43,13 +56,10 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
     }
   }
   
-  func viewDocument() {
-    if let router = self.router as? MainRouter {
-      router.navigateTo(
-        .serviceSelection(
-          services: viewState.services
-        )
-      )
-    }
+  func dismiss() {
+    NotificationCenter.default.post(
+      name: .didCloseDocumentSelection,
+      object: nil
+    )
   }
 }

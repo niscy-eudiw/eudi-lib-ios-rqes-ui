@@ -57,26 +57,46 @@ struct DocumentViewer<Router: RouterGraph>: View {
   }
   
   var body: some View {
-    if let errorMessage = viewModel.viewState.errorMessage {
-      Text(errorMessage)
-        .font(.headline)
-        .foregroundColor(.red)
-        .padding()
-    } else if let documentType = viewModel.viewState.documentSource {
-      switch documentType {
-      case .pdfUrl, .pdfBase64:
-        if let pdfDocument = viewModel.viewState.pdfDocument {
-          PDFViewRepresented(pdfDocument: pdfDocument)
-            .edgesIgnoringSafeArea(.all) // Fullscreen PDF
-        } else {
-          ProgressView("Loading PDF...")
-            .font(.headline)
-        }
-      }
-    } else {
-      ProgressView("Loading document...")
-        .font(.headline)
-    }
+    content(
+      viewState: viewModel.viewState
+    )
   }
 }
 
+@MainActor
+@ViewBuilder
+private func content(viewState: DocumentState) -> some View {
+  if let errorMessage = viewState.errorMessage {
+    Text(errorMessage)
+      .font(.headline)
+      .foregroundColor(.red)
+      .padding()
+      .eraseToAnyView()
+    
+  } else if let documentType = viewState.documentSource {
+    switch documentType {
+    case .pdfBase64(let string):
+      if let pdfData = Data(base64Encoded: string),
+         let doc = PDFDocument(data: pdfData) {
+        PDFViewRepresented(pdfDocument: doc)
+          .edgesIgnoringSafeArea(.all) // Optional: ignore safe area
+      }
+    case .pdfUrl:
+      Text("Not supported yet")
+    }
+  } else {
+    ProgressView("Loading document...")
+      .font(.headline)
+      .eraseToAnyView()
+  }
+}
+
+#Preview {
+  content(viewState: .init(
+    pdfDocument: nil,
+    errorMessage: nil,
+    documentSource: .pdfBase64(
+      "JVBERi0xLjEKJcKlwrHDqwoKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCgoyIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2VzCiAgICAgL0tpZHMgWzMgMCBSXQogICAgIC9Db3VudCAxCiAgICAgL01lZGlhQm94IFswIDAgMzAwIDE0NF0KICA+PgplbmRvYmoKCjMgMCBvYmoKICA8PCAgL1R5cGUgL1BhZ2UKICAgICAgL1BhcmVudCAyIDAgUgogICAgICAvUmVzb3VyY2VzCiAgICAgICA8PCAvRm9udAogICAgICAgICAgIDw8IC9GMQogICAgICAgICAgICAgICA8PCAvVHlwZSAvRm9udAogICAgICAgICAgICAgICAgICAvU3VidHlwZSAvVHlwZTEKICAgICAgICAgICAgICAgICAgL0Jhc2VGb250IC9UaW1lcy1Sb21hbgogICAgICAgICAgICAgICA+PgogICAgICAgICAgID4+CiAgICAgICA+PgogICAgICAvQ29udGVudHMgNCAwIFIKICA+PgplbmRvYmoKCjQgMCBvYmoKICA8PCAvTGVuZ3RoIDU1ID4+CnN0cmVhbQogIEJUCiAgICAvRjEgMTggVGYKICAgIDAgMCBUZAogICAgKEhlbGxvIFdvcmxkKSBUagogIEVUCmVuZHN0cmVhbQplbmRvYmoKCnhyZWYKMCA1CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxOCAwMDAwMCBuIAowMDAwMDAwMDc3IDAwMDAwIG4gCjAwMDAwMDAxNzggMDAwMDAgbiAKMDAwMDAwMDQ1NyAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgIC9Sb290IDEgMCBSCiAgICAgIC9TaXplIDUKICA+PgpzdGFydHhyZWYKNTY1CiUlRU9GCg=="
+    )
+  ))
+}

@@ -17,6 +17,8 @@ import UIKit
 
 public final actor EudiRQESUi {
   
+  private nonisolated(unsafe) var cancellables = Set<AnyCancellable>()
+  
   private static var _shared: EudiRQESUi?
   private static var _config: EudiRQESUiConfig?
   private static var state: State = .none
@@ -46,6 +48,16 @@ public final actor EudiRQESUi {
       )
     )
     await resume(on: container, animated: animated)
+    
+    Task {
+      await MainActor.run {
+        NotificationCenter.default.publisher(for: .didCloseDocumentSelection)
+          .sink { [weak self] _ in
+            self?.handleDocumentSelectionClosed()
+          }
+          .store(in: &cancellables)
+      }
+    }
   }
   
   public func resume(
@@ -89,6 +101,13 @@ public final actor EudiRQESUi {
       fatalError("TODO")
     case .view:
       fatalError("TODO")
+    }
+  }
+  
+  @MainActor
+  private func handleDocumentSelectionClosed() {
+    Task {
+      await cancel()
     }
   }
 }
