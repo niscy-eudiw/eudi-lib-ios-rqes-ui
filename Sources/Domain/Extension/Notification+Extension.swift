@@ -15,4 +15,5 @@
  */
 extension Notification.Name {
   static let didCloseDocumentSelection = Notification.Name("didCloseDocumentSelection")
+  static let stateNotification = Notification.Name("stateNotification")
 }

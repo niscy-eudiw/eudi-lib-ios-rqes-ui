@@ -685,6 +685,13 @@ import Cuckoo
 
 
 
+// MARK: - Mocks generated from file: 'Sources/Domain/Extension/Notification+Extension.swift'
+
+import Cuckoo
+@testable import EudiRQESUi
+
+
+
 // MARK: - Mocks generated from file: 'Sources/Domain/Extension/Resolver+Extensions.swift'
 
 import Cuckoo
@@ -697,6 +704,13 @@ import Swinject
 
 import Cuckoo
 import SwiftUI
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: 'Sources/Domain/Extension/UIApplication+Extensions.swift'
+
+import Cuckoo
 @testable import EudiRQESUi
 
 
@@ -741,6 +755,16 @@ public class MockEudiRQESUiConfig: EudiRQESUiConfig, Cuckoo.ProtocolMock, @unche
         }
     }
     
+    public var redirectUrl: URL? {
+        get {
+            return cuckoo_manager.getter(
+                "redirectUrl",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.redirectUrl
+            )
+        }
+    }
+    
     public var translations: [String: [LocalizableKey: String]] {
         get {
             return cuckoo_manager.getter(
@@ -773,6 +797,10 @@ public class MockEudiRQESUiConfig: EudiRQESUiConfig, Cuckoo.ProtocolMock, @unche
             return .init(manager: cuckoo_manager, name: "rssps")
         }
         
+        var redirectUrl: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockEudiRQESUiConfig,URL?> {
+            return .init(manager: cuckoo_manager, name: "redirectUrl")
+        }
+        
         var translations: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockEudiRQESUiConfig,[String: [LocalizableKey: String]]> {
             return .init(manager: cuckoo_manager, name: "translations")
         }
@@ -797,6 +825,10 @@ public class MockEudiRQESUiConfig: EudiRQESUiConfig, Cuckoo.ProtocolMock, @unche
             return .init(manager: cuckoo_manager, name: "rssps", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
+        var redirectUrl: Cuckoo.VerifyReadOnlyProperty<URL?> {
+            return .init(manager: cuckoo_manager, name: "redirectUrl", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
         var translations: Cuckoo.VerifyReadOnlyProperty<[String: [LocalizableKey: String]]> {
             return .init(manager: cuckoo_manager, name: "translations", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
@@ -812,6 +844,12 @@ public class EudiRQESUiConfigStub:EudiRQESUiConfig, @unchecked Sendable {
     public var rssps: [URL] {
         get {
             return DefaultValueRegistry.defaultValue(for: ([URL]).self)
+        }
+    }
+    
+    public var redirectUrl: URL? {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (URL?).self)
         }
     }
     

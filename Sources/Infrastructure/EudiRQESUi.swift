@@ -65,6 +65,7 @@ public final actor EudiRQESUi {
   
   @MainActor
   private func nextViewController() -> UIViewController {
+    let router = MainRouter()
     switch Self.state {
     case .none:
       fatalError("EudiRQESUi: SDK has not been initialized properly")
@@ -72,26 +73,63 @@ public final actor EudiRQESUi {
       let document,
       let config
     ):
-      let router = MainRouter()
       return ContainerViewController(
         rootView: RoutingView(
           router: router
         ) {
-          DocumentSelectionView<MainRouter>(
+          DocumentSelectionView(
             router: router,
             document: document,
             services: config.rssps
           )
         }
       )
-    case .rssps(_):
-      fatalError("TODO")
-    case .credentials(_):
-      fatalError("TODO")
-    case .sign(_, _):
-      fatalError("TODO")
-    case .view:
-      fatalError("TODO")
+    case .rssps(let services):
+      return ContainerViewController(
+        rootView: RoutingView(
+          router: router
+        ) {
+          ServiceSelectionView(
+            router: router,
+            services: services
+          )
+        }
+      )
+    case .credentials:
+      return ContainerViewController(
+        rootView: RoutingView(
+          router: router
+        ) {
+          CredentialSelectionView(
+            router: router
+          )
+        }
+      )
+    case .sign(let name, let contents):
+      return ContainerViewController(
+        rootView: RoutingView(
+          router: router
+        ) {
+          SignedDocumentView(
+            router: router,
+            initialState: .init(
+              name: name,
+              contents: contents
+            )
+          )
+        }
+      )
+    case .view(let source):
+      return ContainerViewController(
+        rootView: RoutingView(
+          router: router
+        ) {
+          DocumentViewer(
+            router: router,
+            source: source
+          )
+        }
+      )
     }
   }
   
@@ -103,12 +141,27 @@ public final actor EudiRQESUi {
         self.handleDocumentSelectionClosed()
       }
       .store(in: &cancellables)
+    
+    NotificationCenter.default.publisher(for: .stateNotification)
+      .compactMap { $0.userInfo?["state"] as? State }
+      .sink { [weak self] state in
+        guard let self = self else { return }
+        self.handleNewState(state)
+      }
+      .store(in: &cancellables)
   }
   
   @MainActor
   private func handleDocumentSelectionClosed() {
     Task {
       await cancel()
+    }
+  }
+  
+  @MainActor
+  private func handleNewState(_ state: State) {
+    Task {
+      await setState(state)
     }
   }
 }
@@ -152,9 +205,9 @@ extension EudiRQESUi {
     case none
     case initial(URL, any EudiRQESUiConfig)
     case rssps([URL])
-    case credentials([String])
+    case credentials
     case sign(String, String)
-    case view
+    case view(DocumentSource)
     
     var id: String {
       return switch self {

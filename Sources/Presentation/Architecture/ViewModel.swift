@@ -43,4 +43,12 @@ class ViewModel<Router: RouterGraph, UiState: ViewState>: ObservableObject {
       object: nil
     )
   }
+  
+  func setState(_ state: EudiRQESUi.State) {
+      NotificationCenter.default.post(
+        name: .stateNotification,
+        object: nil,
+        userInfo: ["state": state]
+      )
+  }
 }
