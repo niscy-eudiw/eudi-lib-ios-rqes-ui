@@ -37,7 +37,6 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
     if let router = self.router as? MainRouter {
       router.navigateTo(
         .viewDocument(
-          true,
           .pdfUrl(
             viewState.document
           )

@@ -27,7 +27,7 @@ final class MainRouter: RouterGraph {
     case serviceSelection(services: [URL])
     case credentialSelection(credntials: [String])
     case signedDocument(String, String)
-    case viewDocument(Bool, DocumentSource)
+    case viewDocument(DocumentSource)
     
     var id: String {
       switch self {
@@ -58,7 +58,7 @@ final class MainRouter: RouterGraph {
     case .signedDocument(_, _):
       Text("")
         .eraseToAnyView()
-    case .viewDocument(let signed, let source):
+    case .viewDocument(let source):
       DocumentViewer(
         router: self,
         source: source

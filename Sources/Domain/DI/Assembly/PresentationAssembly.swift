@@ -23,6 +23,6 @@ final class PresentationAssembly: Assembly {
     container.register((any RouterGraph).self) { r in
       MainRouter()
     }
-    .inObjectScope(ObjectScope.container)
+    .inObjectScope(ObjectScope.transient)
   }
 }

@@ -48,16 +48,7 @@ public final actor EudiRQESUi {
       )
     )
     await resume(on: container, animated: animated)
-    
-    Task {
-      await MainActor.run {
-        NotificationCenter.default.publisher(for: .didCloseDocumentSelection)
-          .sink { [weak self] _ in
-            self?.handleDocumentSelectionClosed()
-          }
-          .store(in: &cancellables)
-      }
-    }
+    notificationListening()
   }
   
   public func resume(
@@ -102,6 +93,16 @@ public final actor EudiRQESUi {
     case .view:
       fatalError("TODO")
     }
+  }
+  
+  @MainActor
+  private func notificationListening() {
+    NotificationCenter.default.publisher(for: .didCloseDocumentSelection)
+      .sink { [weak self] _ in
+        guard let self = self else { return }
+        self.handleDocumentSelectionClosed()
+      }
+      .store(in: &cancellables)
   }
   
   @MainActor
