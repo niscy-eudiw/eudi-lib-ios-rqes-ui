@@ -21,7 +21,7 @@ final class PresentationAssembly: Assembly {
   
   func assemble(container: Container) {
     container.register((any RouterGraph).self) { r in
-      MainRouter()
+      InternalRouter()
     }
     .inObjectScope(ObjectScope.transient)
   }

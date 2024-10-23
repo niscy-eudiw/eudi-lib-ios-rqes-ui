@@ -33,7 +33,7 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
   }
   
   func selectCredential() {
-    if let router = self.router as? MainRouter {
+    if let router = self.router as? InternalRouter {
       router.navigateTo(
         .credentialSelection
       )

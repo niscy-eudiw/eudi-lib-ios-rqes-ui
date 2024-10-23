@@ -15,7 +15,7 @@
  */
 import Foundation
 
-public protocol EudiRQESUiConfig: Sendable {
+public protocol EudiRQESUiConfig: Sendable, Equatable {
   
   // Remote signing service provider list
   var rssps : [URL] { get }
@@ -31,7 +31,7 @@ public protocol EudiRQESUiConfig: Sendable {
 }
 
 // MARK: - TODO To be removed once SDK is stable
-public final class UIConfig: EudiRQESUiConfig {
+public struct DefaultUIConfig: EudiRQESUiConfig {
   
   public var rssps: [URL] {
     [

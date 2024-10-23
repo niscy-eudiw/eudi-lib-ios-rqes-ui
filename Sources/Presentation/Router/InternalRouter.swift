@@ -16,23 +16,55 @@
 import Foundation
 import SwiftUI
 
-final class MainRouter: RouterGraph {
+final class InternalRouter: RouterGraph {
   
   typealias Route = RouteTable
   
   @Published var path: NavigationPath = NavigationPath()
   
-  enum RouteTable: Hashable, Identifiable {
+  enum RouteTable: Hashable, Identifiable, Equatable {
     case documentSelection(document: URL, services: [URL])
     case serviceSelection(services: [URL])
     case credentialSelection
     case signedDocument(title: String, contents: String)
     case viewDocument(DocumentSource)
+    case certificateSelection(any EudiRQESUiConfig)
     
     var id: String {
       switch self {
-      default:
-        return ""
+      case .documentSelection:
+        return "documentSelection"
+      case .serviceSelection:
+        return "serviceSelection"
+      case .credentialSelection:
+        return "credentialSelection"
+      case .signedDocument:
+        return "signedDocument"
+      case .viewDocument:
+        return "viewDocument"
+      case .certificateSelection:
+        return "certificateSelection"
+      }
+    }
+    
+    public static func == (lhs: RouteTable, rhs: RouteTable) -> Bool {
+      return lhs.id == rhs.id
+    }
+    
+    func hash(into hasher: inout Hasher) {
+      switch self {
+      case .documentSelection:
+        hasher.combine("documentSelection")
+      case .serviceSelection:
+        hasher.combine("serviceSelection")
+      case .credentialSelection:
+        hasher.combine("credentialSelection")
+      case .signedDocument:
+        hasher.combine("signedDocument")
+      case .viewDocument:
+        hasher.combine("viewDocument")
+      case .certificateSelection:
+        hasher.combine("certificateSelection")
       }
     }
   }
@@ -72,6 +104,8 @@ final class MainRouter: RouterGraph {
         source: source
       )
       .eraseToAnyView()
+    case .certificateSelection(let config):
+      fatalError("TODO")
     }
   }
 }

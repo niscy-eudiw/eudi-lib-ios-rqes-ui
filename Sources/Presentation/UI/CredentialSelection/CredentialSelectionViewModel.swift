@@ -43,7 +43,7 @@ class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Crede
   }
   
   func signDocument() {
-    if let router = self.router as? MainRouter {
+    if let router = self.router as? InternalRouter {
       router.navigateTo(
         .signedDocument(
           title: "Document_Title.PDF",

@@ -20,13 +20,13 @@ public final actor EudiRQESUi {
   private nonisolated(unsafe) var cancellables = Set<AnyCancellable>()
   
   private static var _shared: EudiRQESUi?
-  private static var _config: EudiRQESUiConfig?
+  private static var _config: (any EudiRQESUiConfig)?
   private static var state: State = .none
   
   private var viewController: UIViewController?
   
   @discardableResult
-  public init(config: EudiRQESUiConfig) {
+  public init(config: any EudiRQESUiConfig) {
     Self._config = config
     Self._shared = self
     DIGraph.shared.load()
@@ -65,7 +65,7 @@ public final actor EudiRQESUi {
   
   @MainActor
   private func nextViewController() -> UIViewController {
-    let router = MainRouter()
+    let router = InternalRouter()
     switch Self.state {
     case .none:
       fatalError("EudiRQESUi: SDK has not been initialized properly")
@@ -177,7 +177,7 @@ public extension EudiRQESUi {
 
 extension EudiRQESUi {
   
-  static func getConfig() -> EudiRQESUiConfig {
+  static func getConfig() -> any EudiRQESUiConfig {
     return Self._config!
   }
   
