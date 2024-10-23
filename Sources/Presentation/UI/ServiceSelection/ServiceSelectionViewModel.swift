@@ -31,4 +31,12 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
       initialState: initialState
     )
   }
+  
+  func selectCredential() {
+    if let router = self.router as? MainRouter {
+      router.navigateTo(
+        .credentialSelection
+      )
+    }
+  }
 }

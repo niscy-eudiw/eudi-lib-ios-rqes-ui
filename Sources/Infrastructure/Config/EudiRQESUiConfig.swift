@@ -34,7 +34,11 @@ public protocol EudiRQESUiConfig: Sendable {
 public final class UIConfig: EudiRQESUiConfig {
   
   public var rssps: [URL] {
-    []
+    [
+      URL(string: "https://www.entrust.com")!,
+      URL(string: "https://www.docusign.com")!,
+      URL(string: "https://www.ascertia.com")!
+    ]
   }
   
   public var redirectUrl: URL? {

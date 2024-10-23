@@ -16,23 +16,53 @@
 import SwiftUI
 
 struct CredentialSelectionView<Router: RouterGraph>: View {
+  @State private var selectedItem: String?
   @StateObject var viewModel: CredentialSelectionViewModel<Router>
   
   init(
-    router: Router,
-    credentials: [String]
+    router: Router
   ) {
     _viewModel = .init(
       wrappedValue: .init(
-        router: router,
-        initialState: .init(
-          credentials: credentials
-        )
+        router: router
       )
     )
   }
   
   var body: some View {
-    Text("CredentialSelectionView")
+    NavigationView {
+      List(viewModel.viewState.credentials, id: \.self) { item in
+        HStack {
+          Text(item)
+          Spacer()
+          if selectedItem == item {
+            Image(systemName: "checkmark")
+              .foregroundColor(.blue)
+          }
+        }
+        .contentShape(Rectangle())
+        .onTapGesture {
+          if selectedItem == item {
+            selectedItem = nil
+          } else {
+            selectedItem = item
+          }
+        }
+      }
+    }
+    .onAppear {
+      viewModel.fetchCredentials()
+    }
+    .navigationTitle("Select service")
+    .navigationBarTitleDisplayMode(.inline)
+    .toolbar {
+      ToolbarItem(placement: .navigationBarTrailing) {
+        if selectedItem != nil {
+          Button("Proceed") {
+            viewModel.signDocument()
+          }
+        }
+      }
+    }
   }
 }

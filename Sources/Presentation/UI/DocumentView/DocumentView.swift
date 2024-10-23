@@ -66,18 +66,22 @@ struct DocumentViewer<Router: RouterGraph>: View {
 @MainActor
 @ViewBuilder
 private func content(viewState: DocumentState) -> some View {
-  if let errorMessage = viewState.errorMessage {
-    Text(errorMessage)
-      .font(.headline)
-      .foregroundColor(.red)
-      .padding()
-      .eraseToAnyView()
-    
-  } else if let document = viewState.pdfDocument {
-    PDFViewRepresented(
-      pdfDocument: document
-    )
+  NavigationView {
+    if let errorMessage = viewState.errorMessage {
+      Text(errorMessage)
+        .font(.headline)
+        .foregroundColor(.red)
+        .padding()
+        .eraseToAnyView()
+      
+    } else if let document = viewState.pdfDocument {
+      PDFViewRepresented(
+        pdfDocument: document
+      )
+    }
   }
+  .navigationTitle("View document")
+  .navigationBarTitleDisplayMode(.inline)
 }
 
 #Preview {

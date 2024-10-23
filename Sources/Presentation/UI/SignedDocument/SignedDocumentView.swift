@@ -20,17 +20,51 @@ struct SignedDocumentView<Router: RouterGraph>: View {
   
   init(
     router: Router,
-    services: [URL]
+    initialState: SignedDocumenState
   ) {
     _viewModel = .init(
       wrappedValue: .init(
         router: router,
-        initialState: .init()
+        initialState: initialState
       )
     )
   }
   
   var body: some View {
-    Text("SignedDocumentView")
+    NavigationView {
+      VStack(spacing: 20) {
+        Text("Success")
+          .font(.largeTitle)
+          .foregroundColor(.green)
+        
+        Button(action: {
+          viewModel.viewDocument()
+        }) {
+          HStack {
+            Image(systemName: "eye")
+              .font(.system(size: 24))
+              .foregroundColor(.blue)
+            
+            Text("View")
+              .font(.headline)
+              .foregroundColor(.black)
+          }
+          .padding()
+          .background(Color.white)
+          .cornerRadius(8)
+          .shadow(radius: 4)
+        }
+      }
+      .padding()
+    }
+    .navigationTitle("Status")
+    .navigationBarTitleDisplayMode(.inline)
+    .toolbar {
+      ToolbarItem(placement: .navigationBarTrailing) {
+        Button("Done") {
+          viewModel.dismiss()
+        }
+      }
+    }
   }
 }

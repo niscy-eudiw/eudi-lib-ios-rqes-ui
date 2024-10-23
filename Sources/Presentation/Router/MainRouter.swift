@@ -25,8 +25,8 @@ final class MainRouter: RouterGraph {
   enum RouteTable: Hashable, Identifiable {
     case documentSelection(document: URL, services: [URL])
     case serviceSelection(services: [URL])
-    case credentialSelection(credntials: [String])
-    case signedDocument(String, String)
+    case credentialSelection
+    case signedDocument(title: String, contents: String)
     case viewDocument(DocumentSource)
     
     var id: String {
@@ -52,12 +52,20 @@ final class MainRouter: RouterGraph {
         services: services
       )
       .eraseToAnyView()
-    case .credentialSelection(let credentials):
-      Text("")
-        .eraseToAnyView()
-    case .signedDocument(_, _):
-      Text("")
-        .eraseToAnyView()
+    case .credentialSelection:
+      CredentialSelectionView(
+        router: self
+      )
+      .eraseToAnyView()
+    case .signedDocument(let name, let contents):
+      SignedDocumentView(
+        router: self,
+        initialState: .init(
+          name: name,
+          contents: contents
+        )
+      )
+      .eraseToAnyView()
     case .viewDocument(let source):
       DocumentViewer(
         router: self,

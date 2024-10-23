@@ -36,4 +36,11 @@ class ViewModel<Router: RouterGraph, UiState: ViewState>: ObservableObject {
   func setState(_ reducer: (UiState) -> UiState) {
     self.viewState = reducer(viewState)
   }
+  
+  func dismiss() {
+    NotificationCenter.default.post(
+      name: .didCloseDocumentSelection,
+      object: nil
+    )
+  }
 }

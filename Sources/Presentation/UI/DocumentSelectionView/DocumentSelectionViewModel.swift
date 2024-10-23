@@ -54,11 +54,4 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
       )
     }
   }
-  
-  func dismiss() {
-    NotificationCenter.default.post(
-      name: .didCloseDocumentSelection,
-      object: nil
-    )
-  }
 }

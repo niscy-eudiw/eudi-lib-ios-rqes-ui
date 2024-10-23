@@ -24,11 +24,32 @@ class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Crede
   
   override init(
     router: Router,
-    initialState: CredentialSelectionState
+    initialState: CredentialSelectionState = .init(credentials: [])
   ) {
     super.init(
       router: router,
       initialState: initialState
     )
+  }
+  
+  func fetchCredentials() {
+    setState {
+      $0.copy(credentials: [
+        "Certificate 1",
+        "Certificate 2",
+        "Certificate 3"
+      ])
+    }
+  }
+  
+  func signDocument() {
+    if let router = self.router as? MainRouter {
+      router.navigateTo(
+        .signedDocument(
+          title: "Document_Title.PDF",
+          contents: ""
+        )
+      )
+    }
   }
 }

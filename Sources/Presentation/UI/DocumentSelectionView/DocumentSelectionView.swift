@@ -45,7 +45,7 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
 
 @MainActor
 @ViewBuilder
-func content(
+private func content(
   view: @escaping () -> Void,
   select: @escaping () -> Void,
   dismiss: @escaping () -> Void
@@ -81,12 +81,4 @@ func content(
     }
   }
   .eraseToAnyView()
-}
-
-#Preview {
-  content(
-    view: {},
-    select: {},
-    dismiss: {}
-  )
 }

@@ -17,6 +17,7 @@ import SwiftUI
 
 struct ServiceSelectionView<Router: RouterGraph>: View {
   @StateObject var viewModel: ServiceSelectionViewModel<Router>
+  @State private var selectedItem: String?
   
   init(
     router: Router,
@@ -33,7 +34,36 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
   }
   
   var body: some View {
-    Text("ServiceSelectionView")
+    NavigationView {
+      List(viewModel.viewState.services, id: \.self) { item in
+        HStack {
+          Text(item.absoluteString)
+          Spacer()
+          if selectedItem == item.absoluteString {
+            Image(systemName: "checkmark")
+              .foregroundColor(.blue)
+          }
+        }
+        .contentShape(Rectangle())
+        .onTapGesture {
+          if selectedItem == item.absoluteString {
+            selectedItem = nil
+          } else {
+            selectedItem = item.absoluteString
+          }
+        }
+      }
+    }
+    .navigationTitle("Select service")
+    .navigationBarTitleDisplayMode(.inline)
+    .toolbar {
+      ToolbarItem(placement: .navigationBarTrailing) {
+        if selectedItem != nil {
+          Button("Proceed") {
+            viewModel.selectCredential()
+          }
+        }
+      }
+    }
   }
 }
-
