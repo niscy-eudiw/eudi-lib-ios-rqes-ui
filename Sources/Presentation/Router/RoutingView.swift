@@ -15,11 +15,11 @@
  */
 import SwiftUI
 
-struct RoutingView<T: RouterGraph, Content: View>: View {
-  @ObservedObject var router: T
+struct RoutingView<Router: RouterGraph, Content: View>: View {
+  @ObservedObject var router: Router
   public let content: Content
   
-  public init(router: T, @ViewBuilder content: @escaping () -> Content) {
+  public init(router: Router, @ViewBuilder content: @escaping () -> Content) {
     self.router = router
     self.content = content()
   }
@@ -27,7 +27,7 @@ struct RoutingView<T: RouterGraph, Content: View>: View {
   public var body: some View {
     NavigationStack(path: $router.path) {
       content
-        .navigationDestination(for: T.Route.self) { route in
+        .navigationDestination(for: Router.Route.self) { route in
           router.view(for: route)
         }
     }

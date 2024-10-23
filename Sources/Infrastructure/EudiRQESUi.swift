@@ -61,10 +61,6 @@ public final actor EudiRQESUi {
     }
   }
   
-  public func suspend(animated: Bool = true) async {
-    await pause(animated: animated)
-  }
-  
   @MainActor
   private func nextViewController() -> UIViewController {
     let router = DIGraph.resolver.force(
