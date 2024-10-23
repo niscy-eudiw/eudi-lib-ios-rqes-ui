@@ -14,24 +14,36 @@
  * governing permissions and limitations under the Licence.
  */
 public extension UIApplication {
-  // Helper method to get the top-most view controller
-  func topViewController(controller: UIViewController? = UIApplication.shared.connectedScenes
-    .filter({ $0.activationState == .foregroundActive })
-    .compactMap({ $0 as? UIWindowScene })
-    .first?.windows
-    .filter({ $0.isKeyWindow }).first?.rootViewController) -> UIViewController? {
+  
+  func topViewController(
+    controller: UIViewController? = UIApplication
+      .shared
+      .connectedScenes
+      .filter({ $0.activationState == .foregroundActive })
+      .compactMap({ $0 as? UIWindowScene })
+      .first?.windows
+      .filter({ $0.isKeyWindow })
+      .first?
+      .rootViewController
+  ) -> UIViewController? {
       
       if let navigationController = controller as? UINavigationController {
-        return topViewController(controller: navigationController.visibleViewController)
-      }
-      if let tabController = controller as? UITabBarController {
+        return topViewController(
+          controller: navigationController.visibleViewController
+        )
+        
+      } else if let tabController = controller as? UITabBarController {
         if let selected = tabController.selectedViewController {
-          return topViewController(controller: selected)
+          return topViewController(
+            controller: selected
+          )
         }
+      } else if let presented = controller?.presentedViewController {
+        return topViewController(
+          controller: presented
+        )
       }
-      if let presented = controller?.presentedViewController {
-        return topViewController(controller: presented)
-      }
+    
       return controller
     }
 }
