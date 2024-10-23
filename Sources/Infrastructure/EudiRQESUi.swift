@@ -65,7 +65,10 @@ public final actor EudiRQESUi {
   
   @MainActor
   private func nextViewController() -> UIViewController {
-    let router = InternalRouter()
+    let router = DIGraph.resolver.force(
+      (any RouterGraph).self,
+      InternalRouter.self
+    )
     switch Self.state {
     case .none:
       fatalError("EudiRQESUi: SDK has not been initialized properly")

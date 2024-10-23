@@ -25,6 +25,10 @@ extension Resolver {
     resolve(serviceType, name: name)!
   }
   
+  func force<Service, Resolution>(_ serviceType: Service.Type, _ resolutionType: Resolution.Type) -> Resolution {
+    resolve(serviceType)! as! Resolution
+  }
+  
   func force<Service, Arg1>(
     _ serviceType: Service.Type,
     argument: Arg1
