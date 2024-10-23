@@ -34,7 +34,7 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
   }
   
   func viewDocument() {
-    if let router = self.router as? InternalRouter {
+    if let router = self.router as? RouterGraphImpl {
       router.navigateTo(
         .viewDocument(
           .pdfUrl(
@@ -46,7 +46,7 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
   }
   
   func selectService() {
-    if let router = self.router as? InternalRouter {
+    if let router = self.router as? RouterGraphImpl {
       router.navigateTo(
         .serviceSelection(
           services: viewState.services

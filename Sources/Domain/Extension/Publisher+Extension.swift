@@ -13,16 +13,29 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Swinject
+import Combine
 
-final class PresentationAssembly: Assembly {
+private struct UncheckedSendable<T>: @unchecked Sendable {
+  let unwrap: T
+  init(_ value: T) { unwrap = value}
+}
+
+extension Publisher where Output: Sendable {
   
-  init() {}
-  
-  func assemble(container: Container) {
-    container.register((any RouterGraph).self) { r in
-      RouterGraphImpl()
+  /// Custom sink that supports async/await
+  func sinkAsync(receiveValue: @escaping @Sendable (Output) async -> Void) -> AnyCancellable {
+    return sink { completion in
+      switch completion {
+      case .finished:
+        break
+      case .failure:
+        break
+      }
+    } receiveValue: { value in
+      let v = UncheckedSendable(value)
+      Task {
+        await receiveValue(value)
+      }
     }
-    .inObjectScope(ObjectScope.transient)
   }
 }

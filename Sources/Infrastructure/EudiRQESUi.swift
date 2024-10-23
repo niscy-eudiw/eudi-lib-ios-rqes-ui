@@ -15,6 +15,8 @@
  */
 import UIKit
 
+extension Notification: @unchecked @retroactive Sendable {}
+
 public final actor EudiRQESUi {
   
   private nonisolated(unsafe) var cancellables = Set<AnyCancellable>()
@@ -65,7 +67,7 @@ public final actor EudiRQESUi {
   private func nextViewController() -> UIViewController {
     let router = DIGraph.resolver.force(
       (any RouterGraph).self,
-      InternalRouter.self
+      RouterGraphImpl.self
     )
     switch Self.state {
     case .none:
@@ -75,9 +77,7 @@ public final actor EudiRQESUi {
       let config
     ):
       return ContainerViewController(
-        rootView: RoutingView(
-          router: router
-        ) {
+        rootView: RoutingView(router: router) {
           DocumentSelectionView(
             router: router,
             document: document,
@@ -87,9 +87,7 @@ public final actor EudiRQESUi {
       )
     case .rssps(let services):
       return ContainerViewController(
-        rootView: RoutingView(
-          router: router
-        ) {
+        rootView: RoutingView(router: router) {
           ServiceSelectionView(
             router: router,
             services: services
@@ -98,9 +96,7 @@ public final actor EudiRQESUi {
       )
     case .credentials:
       return ContainerViewController(
-        rootView: RoutingView(
-          router: router
-        ) {
+        rootView: RoutingView(router: router) {
           CredentialSelectionView(
             router: router
           )
@@ -108,9 +104,7 @@ public final actor EudiRQESUi {
       )
     case .sign(let name, let contents):
       return ContainerViewController(
-        rootView: RoutingView(
-          router: router
-        ) {
+        rootView: RoutingView(router: router) {
           SignedDocumentView(
             router: router,
             initialState: .init(
@@ -122,9 +116,7 @@ public final actor EudiRQESUi {
       )
     case .view(let source):
       return ContainerViewController(
-        rootView: RoutingView(
-          router: router
-        ) {
+        rootView: RoutingView(router: router) {
           DocumentViewer(
             router: router,
             source: source
@@ -137,33 +129,29 @@ public final actor EudiRQESUi {
   @MainActor
   private func notificationListening() {
     NotificationCenter.default.publisher(for: .didCloseDocumentSelection)
-      .sink { [weak self] _ in
+      .sinkAsync { [weak self] _ in
         guard let self = self else { return }
-        self.handleDocumentSelectionClosed()
+        await self.handleDocumentSelectionClosed()
       }
       .store(in: &cancellables)
     
     NotificationCenter.default.publisher(for: .stateNotification)
       .compactMap { $0.userInfo?["state"] as? State }
-      .sink { [weak self] state in
+      .sinkAsync { [weak self] state in
         guard let self = self else { return }
-        self.handleNewState(state)
+        await self.handleNewState(state)
       }
       .store(in: &cancellables)
   }
   
   @MainActor
-  private func handleDocumentSelectionClosed() {
-    Task {
-      await cancel()
-    }
+  private func handleDocumentSelectionClosed() async {
+    await cancel()
   }
   
   @MainActor
-  private func handleNewState(_ state: State) {
-    Task {
-      await setState(state)
-    }
+  private func handleNewState(_ state: State) async {
+    await setState(state)
   }
 }
 

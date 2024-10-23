@@ -16,7 +16,7 @@
 import Foundation
 import SwiftUI
 
-final class InternalRouter: RouterGraph {
+final class RouterGraphImpl: RouterGraph {
   
   typealias Route = RouteTable
   
