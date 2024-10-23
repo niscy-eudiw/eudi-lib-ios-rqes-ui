@@ -33,30 +33,39 @@ public protocol EudiRQESUiConfig: Sendable, Equatable {
 // MARK: - TODO To be removed once SDK is stable
 public struct DefaultUIConfig: EudiRQESUiConfig {
   
-  public var rssps: [URL] {
-    [
-      URL(string: "https://www.entrust.com")!,
-      URL(string: "https://www.docusign.com")!,
-      URL(string: "https://www.ascertia.com")!
-    ]
+  public let rssps: [URL]
+  public let redirectUrl: URL?
+  public let translations: [String : [LocalizableKey : String]]
+  public let printLogs: Bool
+  
+  private init(
+    rssps: [URL],
+    redirectUrl: URL?,
+    translations: [String: [LocalizableKey: String]],
+    printLogs: Bool
+  ) {
+    self.rssps = rssps
+    self.redirectUrl = redirectUrl
+    self.translations = translations
+    self.printLogs = printLogs
   }
   
-  public var redirectUrl: URL? {
-    .init(string: "https://www.example.com")
+  public static func createDefault() -> DefaultUIConfig {
+    return DefaultUIConfig(
+      rssps: [
+        URL(string: "https://www.entrust.com")!,
+        URL(string: "https://www.docusign.com")!,
+        URL(string: "https://www.ascertia.com")!
+      ],
+      redirectUrl: URL(string: "https://www.example.com"),
+      translations: [
+        "en_US": [
+          .mock: "mock",
+          .mockWithValues: "mock %@, %@"
+        ]
+      ],
+      printLogs: true
+    )
   }
   
-  public var translations: [String : [LocalizableKey : String]] {
-    [
-      "en_US" : [
-        .mock : "mock",
-        .mockWithValues: "mock %@, %@"
-      ]
-    ]
-  }
-  
-  public var printLogs: Bool { true }
-  
-  public init() {
-    
-  }
 }

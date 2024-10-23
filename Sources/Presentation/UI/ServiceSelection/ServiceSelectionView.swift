@@ -65,5 +65,16 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
         }
       }
     }
+    .toolbar {
+      ToolbarItem(placement: .navigationBarTrailing) {
+        if selectedItem != nil {
+          Button("State") {
+            viewModel.setState(
+              .credentials
+            )
+          }
+        }
+      }
+    }
   }
 }

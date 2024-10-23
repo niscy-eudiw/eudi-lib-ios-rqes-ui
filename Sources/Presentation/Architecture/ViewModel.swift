@@ -21,20 +21,29 @@ protocol ViewState {}
 
 @MainActor
 class ViewModel<Router: RouterGraph, UiState: ViewState>: ObservableObject {
-
+  
   lazy var cancellables = Set<AnyCancellable>()
-
+  
   @Published private(set) var viewState: UiState
-
+  
   let router: Router
-
+  
   init(router: Router, initialState: UiState) {
     self.router = router
     self.viewState = initialState
   }
-
+  
   func setState(_ reducer: (UiState) -> UiState) {
     self.viewState = reducer(viewState)
+  }
+  
+  func setState(_ state: EudiRQESUi.State) {
+    dismiss()
+    NotificationCenter.default.post(
+      name: .stateNotification,
+      object: nil,
+      userInfo: ["state": state]
+    )
   }
   
   func dismiss() {
@@ -42,13 +51,5 @@ class ViewModel<Router: RouterGraph, UiState: ViewState>: ObservableObject {
       name: .didCloseDocumentSelection,
       object: nil
     )
-  }
-  
-  func setState(_ state: EudiRQESUi.State) {
-      NotificationCenter.default.post(
-        name: .stateNotification,
-        object: nil,
-        userInfo: ["state": state]
-      )
   }
 }

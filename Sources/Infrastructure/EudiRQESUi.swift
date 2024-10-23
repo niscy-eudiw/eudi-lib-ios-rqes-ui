@@ -18,12 +18,11 @@ import UIKit
 public final actor EudiRQESUi {
   
   private nonisolated(unsafe) var cancellables = Set<AnyCancellable>()
+  private nonisolated(unsafe) var viewController: UIViewController?
   
   private static var _shared: EudiRQESUi?
   private static var _config: (any EudiRQESUiConfig)?
   private static var state: State = .none
-  
-  private var viewController: UIViewController?
   
   @discardableResult
   public init(config: any EudiRQESUiConfig) {
@@ -34,7 +33,7 @@ public final actor EudiRQESUi {
   
   @MainActor
   public func initiate(
-    on container: UIViewController = UIApplication.shared.topViewController()!,
+    on container: UIViewController = UIApplication.shared.topViewController(),
     fileUrl: URL,
     animated: Bool = true
   ) async {
@@ -51,12 +50,15 @@ public final actor EudiRQESUi {
     notificationListening()
   }
   
+  @MainActor
   public func resume(
-    on container: UIViewController,
+    on container: UIViewController = UIApplication.shared.topViewController(),
     animated: Bool = true
   ) async {
-    viewController = await nextViewController()
-    await container.present(viewController!, animated: animated)
+    viewController = nextViewController()
+    if let viewController = viewController {
+      container.present(viewController, animated: animated)
+    }
   }
   
   public func suspend(animated: Bool = true) async {

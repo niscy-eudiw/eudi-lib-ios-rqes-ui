@@ -104,7 +104,7 @@ final class InternalRouter: RouterGraph {
         source: source
       )
       .eraseToAnyView()
-    case .certificateSelection(let config):
+    case .certificateSelection:
       fatalError("TODO")
     }
   }
