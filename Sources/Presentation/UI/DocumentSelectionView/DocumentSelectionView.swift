@@ -51,11 +51,11 @@ func content(
   dismiss: @escaping () -> Void
 ) -> some View {
   NavigationView {
-    VStack {
+    VStack(alignment: .center, spacing: 10.0) {
       Button(action: {
         view()
       }) {
-        Text("View Document")
+        Text("View PDF")
           .foregroundColor(.blue)
       }
       

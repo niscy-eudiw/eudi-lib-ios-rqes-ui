@@ -35,6 +35,14 @@ class DocumentViewModel<Router: RouterGraph>: ViewModel<Router, DocumentState> {
       router: router,
       initialState: initialState
     )
+    
+    if let source = initialState.documentSource {
+      loadDocument(from: source)
+    } else {
+      setState {
+        $0.copy(errorMessage: "Not document source provided")
+      }
+    }
   }
   
   private func loadDocument(from source: DocumentSource) {
