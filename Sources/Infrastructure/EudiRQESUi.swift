@@ -77,7 +77,9 @@ public final actor EudiRQESUi {
       let config
     ):
       return ContainerViewController(
-        rootView: RoutingView(router: router) {
+        rootView: RoutingView(
+          router: router
+        ) { router in
           DocumentSelectionView(
             router: router,
             document: document,
@@ -87,7 +89,9 @@ public final actor EudiRQESUi {
       )
     case .rssps(let services):
       return ContainerViewController(
-        rootView: RoutingView(router: router) {
+        rootView: RoutingView(
+          router: router
+        ) { router in
           ServiceSelectionView(
             router: router,
             services: services
@@ -96,7 +100,9 @@ public final actor EudiRQESUi {
       )
     case .credentials:
       return ContainerViewController(
-        rootView: RoutingView(router: router) {
+        rootView: RoutingView(
+          router: router
+        ) { router in
           CredentialSelectionView(
             router: router
           )
@@ -104,7 +110,9 @@ public final actor EudiRQESUi {
       )
     case .sign(let name, let contents):
       return ContainerViewController(
-        rootView: RoutingView(router: router) {
+        rootView: RoutingView(
+          router: router
+        ) { router in
           SignedDocumentView(
             router: router,
             initialState: .init(
@@ -116,7 +124,9 @@ public final actor EudiRQESUi {
       )
     case .view(let source):
       return ContainerViewController(
-        rootView: RoutingView(router: router) {
+        rootView: RoutingView(
+          router: router
+        ) { router in
           DocumentViewer(
             router: router,
             source: source

@@ -19,9 +19,9 @@ struct RoutingView<Router: RouterGraph, Content: View>: View {
   @ObservedObject var router: Router
   public let content: Content
   
-  public init(router: Router, @ViewBuilder content: @escaping () -> Content) {
+  public init(router: Router, @ViewBuilder content: @escaping (Router) -> Content) {
     self.router = router
-    self.content = content()
+    self.content = content(router)
   }
   
   public var body: some View {
