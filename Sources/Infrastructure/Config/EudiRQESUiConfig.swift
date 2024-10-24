@@ -25,28 +25,36 @@ public protocol EudiRQESUiConfig: Sendable, Equatable {
   
   // Transactions per locale
   var translations: [String: [LocalizableKey: String]] { get }
-  
+
+  var theme: ThemeProtocol { get }
+
   // Logging is enabled
   var printLogs: Bool { get }
 }
 
+extension EudiRQESUiConfig {
+  public var translations: [String: [LocalizableKey: String]] {
+    [:]
+  }
+
+  public var theme: ThemeProtocol {
+    AppTheme()
+  }
+}
+
 // MARK: - TODO To be removed once SDK is stable
 public struct DefaultUIConfig: EudiRQESUiConfig {
-  
   public let rssps: [URL]
   public let redirectUrl: URL?
-  public let translations: [String : [LocalizableKey : String]]
   public let printLogs: Bool
   
   private init(
     rssps: [URL],
     redirectUrl: URL?,
-    translations: [String: [LocalizableKey: String]]? = nil,
     printLogs: Bool
   ) {
     self.rssps = rssps
     self.redirectUrl = redirectUrl
-    self.translations = translations ?? [:]
     self.printLogs = printLogs
   }
   
