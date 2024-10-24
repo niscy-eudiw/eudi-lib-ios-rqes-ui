@@ -57,7 +57,7 @@ public struct DefaultUIConfig: EudiRQESUiConfig {
         URL(string: "https://www.docusign.com")!,
         URL(string: "https://www.ascertia.com")!
       ],
-      redirectUrl: URL(string: "https://www.example.com"),
+      redirectUrl: URL(string: "openid-rqes://code"),
       translations: [
         "en_US": [
           .mock: "mock",
