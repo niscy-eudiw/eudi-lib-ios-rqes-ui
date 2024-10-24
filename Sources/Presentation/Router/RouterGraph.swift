@@ -32,22 +32,18 @@ protocol RouterGraph: ObservableObject, Sendable {
 
 extension RouterGraph {
   
-  @MainActor
   func navigateTo(_ appRoute: Route) {
     path.append(appRoute)
   }
   
-  @MainActor
   func pop() {
     path.removeLast()
   }
   
-  @MainActor
   func navigateToRoot() {
     path.removeLast(path.count)
   }
   
-  @MainActor
   func clear() {
     if !path.isEmpty{
       path = NavigationPath()
