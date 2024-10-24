@@ -65,8 +65,7 @@ public final actor EudiRQESUi {
   @MainActor
   private func nextViewController() -> UIViewController {
     let router = DIGraph.resolver.force(
-      (any RouterGraph).self,
-      RouterGraphImpl.self
+      (any RouterGraph).self
     )
     return router.nextView(for: Self.state)
   }
