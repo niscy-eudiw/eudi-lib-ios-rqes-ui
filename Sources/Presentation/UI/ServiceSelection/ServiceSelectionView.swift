@@ -69,9 +69,10 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
       ToolbarItem(placement: .navigationBarTrailing) {
         if selectedItem != nil {
           Button("State") {
-            viewModel.setState(
+            viewModel.setFlowState(
               .credentials
             )
+            viewModel.onPause()
           }
         }
       }

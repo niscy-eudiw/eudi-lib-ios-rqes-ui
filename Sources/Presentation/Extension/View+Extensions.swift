@@ -13,7 +13,10 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-extension Notification.Name {
-  static let didCloseDocumentSelection = Notification.Name("didCloseDocumentSelection")
-  static let stateNotification = Notification.Name("stateNotification")
+import SwiftUI
+
+public extension View {
+  func eraseToAnyView() -> AnyView {
+    return AnyView(self)
+  }
 }

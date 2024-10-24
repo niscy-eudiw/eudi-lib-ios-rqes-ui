@@ -15,19 +15,18 @@
  */
 import UIKit
 
-extension Notification: @unchecked @retroactive Sendable {}
-
 public final actor EudiRQESUi {
-  
-  private nonisolated(unsafe) var cancellables = Set<AnyCancellable>()
-  private nonisolated(unsafe) var viewController: UIViewController?
   
   private static var _shared: EudiRQESUi?
   private static var _config: (any EudiRQESUiConfig)?
-  private static var state: State = .none
+  private static var _state: State = .none
+  private static var _viewController: UIViewController?
+  
+  private let router: any RouterGraph
   
   @discardableResult
   public init(config: any EudiRQESUiConfig) {
+    self.router = RouterGraphImpl()
     Self._config = config
     Self._shared = self
     DIGraph.shared.load()
@@ -35,10 +34,10 @@ public final actor EudiRQESUi {
   
   @MainActor
   public func initiate(
-    on container: UIViewController = UIApplication.shared.topViewController(),
+    on container: UIViewController,
     fileUrl: URL,
     animated: Bool = true
-  ) async {
+  ) async throws {
     guard let config = Self._config else {
       fatalError("EudiRQESUi: SDK has not been initialized properly")
     }
@@ -48,26 +47,19 @@ public final actor EudiRQESUi {
         config
       )
     )
-    await resume(on: container, animated: animated)
+    try await resume(on: container, animated: animated)
   }
   
   @MainActor
   public func resume(
-    on container: UIViewController = UIApplication.shared.topViewController(),
+    on container: UIViewController,
     animated: Bool = true
-  ) async {
-    viewController = nextViewController()
-    if let viewController = viewController {
+  ) async throws {
+    self.router.clear()
+    await setViewController(try self.router.nextView(for: await getState()))
+    if let viewController = await getViewController() {
       container.present(viewController, animated: animated)
     }
-  }
-  
-  @MainActor
-  private func nextViewController() -> UIViewController {
-    let router = DIGraph.resolver.force(
-      (any RouterGraph).self
-    )
-    return router.nextView(for: Self.state)
   }
 }
 
@@ -80,6 +72,22 @@ public extension EudiRQESUi {
   }
 }
 
+private extension EudiRQESUi {
+  
+  func getState() -> State {
+    return Self._state
+  }
+  
+  func getViewController() -> UIViewController? {
+    return Self._viewController
+  }
+  
+  func setViewController(_ viewController: UIViewController) {
+    Self._viewController = viewController
+  }
+  
+}
+
 extension EudiRQESUi {
   
   static func getConfig() -> any EudiRQESUiConfig {
@@ -87,20 +95,18 @@ extension EudiRQESUi {
   }
   
   func setState(_ state: State) {
-    Self.state = state
+    Self._state = state
   }
   
-  func getState() -> State {
-    return Self.state
-  }
-  
+  @MainActor
   func cancel(animated: Bool = true) async {
-    setState(.none)
+    await setState(.none)
     await pause(animated: animated)
   }
   
+  @MainActor
   func pause(animated: Bool = true) async {
-    await viewController?.dismiss(animated: animated)
+    await getViewController()?.dismiss(animated: animated)
   }
 }
 

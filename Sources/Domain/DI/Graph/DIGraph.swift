@@ -35,8 +35,7 @@ final class DIGraph: DIGraphType {
     self.assembler.apply(
       assemblies: [
         ControllerAssembly(),
-        InteractorAssembly(),
-        PresentationAssembly()
+        InteractorAssembly()
       ]
     )
   }

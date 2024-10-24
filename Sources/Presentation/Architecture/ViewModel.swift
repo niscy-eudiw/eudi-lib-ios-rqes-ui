@@ -37,20 +37,19 @@ class ViewModel<Router: RouterGraph, UiState: ViewState>: ObservableObject {
     self.viewState = reducer(viewState)
   }
   
-  func setState(_ state: EudiRQESUi.State) {
-    pause()
+  func setFlowState(_ state: EudiRQESUi.State) {
     Task {
       try? await EudiRQESUi.instance().setState(state)
     }
   }
   
-  func pause() {
+  func onPause() {
     Task {
       try? await EudiRQESUi.instance().pause()
     }
   }
   
-  func cancel() {
+  func onCancel() {
     Task {
       try? await EudiRQESUi.instance().cancel()
     }

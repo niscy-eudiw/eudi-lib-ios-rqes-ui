@@ -13,16 +13,23 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Swinject
+import SwiftUI
 
-final class PresentationAssembly: Assembly {
+struct ContainerView<Router: RouterGraph, Content: View>: View {
+  @ObservedObject var router: Router
+  public let content: Content
   
-  init() {}
+  public init(router: Router, @ViewBuilder content: @escaping (Router) -> Content) {
+    self.router = router
+    self.content = content(router)
+  }
   
-  func assemble(container: Container) {
-    container.register((any RouterGraph).self) { r in
-      RouterGraphImpl()
+  public var body: some View {
+    NavigationStack(path: $router.path) {
+      content
+        .navigationDestination(for: Router.Route.self) { route in
+          router.view(for: route)
+        }
     }
-    .inObjectScope(ObjectScope.transient)
   }
 }
