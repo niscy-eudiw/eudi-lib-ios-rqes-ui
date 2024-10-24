@@ -15,8 +15,8 @@
  */
 import Foundation
 
-public protocol EudiRQESUiConfig: Sendable, Equatable {
-  
+public protocol EudiRQESUiConfig: Sendable {
+
   // Remote signing service provider list
   var rssps : [URL] { get }
   
@@ -25,29 +25,42 @@ public protocol EudiRQESUiConfig: Sendable, Equatable {
   
   // Transactions per locale
   var translations: [String: [LocalizableKey: String]] { get }
-  
+
+  var theme: ThemeProtocol { get }
+
   // Logging is enabled
   var printLogs: Bool { get }
 }
 
+extension EudiRQESUiConfig {
+  public var translations: [String: [LocalizableKey: String]] {
+    [:]
+  }
+
+  public var theme: ThemeProtocol {
+    AppTheme()
+  }
+}
+
 // MARK: - TODO To be removed once SDK is stable
 public struct DefaultUIConfig: EudiRQESUiConfig {
-  
   public let rssps: [URL]
   public let redirectUrl: URL?
-  public let translations: [String : [LocalizableKey : String]]
   public let printLogs: Bool
-  
+  public var theme: ThemeProtocol
+
   private init(
     rssps: [URL],
     redirectUrl: URL?,
-    translations: [String: [LocalizableKey: String]]? = nil,
-    printLogs: Bool
+    printLogs: Bool,
+    theme: ThemeProtocol
   ) {
     self.rssps = rssps
     self.redirectUrl = redirectUrl
-    self.translations = translations ?? [:]
     self.printLogs = printLogs
+    self.theme = theme
+
+    Theme.config(with: theme)
   }
   
   public static func createDefault() -> DefaultUIConfig {
@@ -58,7 +71,8 @@ public struct DefaultUIConfig: EudiRQESUiConfig {
         URL(string: "https://www.ascertia.com")!
       ],
       redirectUrl: URL(string: "openid-rqes://code"),
-      printLogs: true
+      printLogs: true,
+      theme: AppTheme()
     )
   }
   

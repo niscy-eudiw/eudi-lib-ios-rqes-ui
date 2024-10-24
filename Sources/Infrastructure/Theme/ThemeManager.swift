@@ -13,3 +13,35 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+
+typealias Theme = ThemeManager
+
+protocol ThemeManagerProtocol: Sendable {
+  static var shared: ThemeProtocol { get }
+
+  static func config(with theme: ThemeProtocol)
+}
+
+final class ThemeManager: ThemeManagerProtocol {
+
+    nonisolated(unsafe) static var shared: ThemeProtocol = AppTheme()
+
+    static func config(with theme: ThemeProtocol) {
+        self.shared = theme
+    }
+}
+
+public protocol ThemeProtocol: Sendable {
+  var color: ColorManagerProtocol { get }
+  var font: TypographyManagerProtocol { get }
+}
+
+final class AppTheme: ThemeProtocol {
+  var color: ColorManagerProtocol {
+    ColorManager()
+  }
+
+  var font: TypographyManagerProtocol {
+    TypographyManager()
+  }
+}
