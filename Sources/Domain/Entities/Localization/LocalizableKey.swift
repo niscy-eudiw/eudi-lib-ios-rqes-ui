@@ -15,14 +15,52 @@
  */
 
 public enum LocalizableKey: String, Sendable {
-  
-  case mock
-  case mockWithValues
-  
+
+  case signDocument
+  case selectDocumentTitle
+  case selectDocument
+  case confirmSelection
+  case confirmSelectionTitle
+  case selectService
+  case selectServiceTitle
+  case selectServiceSubtitle
+  case selectCertificate
+  case selectCertificateTitle
+  case certificate
+  case selectCertificateSubtitle
+  case success
+  case successfullySignedDocument
+  case signedBy
+  case view
+  case done
+  case documentSigned
+  case shared
+  case proceed
+  case viewDocument
+
   func defaultTranslation(args: [String]) -> String {
     let value = switch self {
-    case .mock: "Mock"
-    case .mockWithValues: "mock %@, %@"
+    case .signDocument: "Sign document"
+    case .selectDocumentTitle: "Select a document from your device to sign electronically."
+    case .selectDocument: "Select document"
+    case .confirmSelection: "Confirm selection"
+    case .confirmSelectionTitle: "Please confirm signing of the following."
+    case .selectService: "Select service"
+    case .selectServiceTitle: "Select remote signing service."
+    case .selectServiceSubtitle: "Remote signing enables you to digitally sign documents without the need for locally installed digital identities. Cloud-hosted signing service makes remote signing possible."
+    case .selectCertificate: "Select certificate"
+    case .selectCertificateTitle: "You have chosen to sign the following document:"
+    case .certificate: "CERTIFICATE"
+    case .selectCertificateSubtitle: "Please confirm signing with one of the following certificates:"
+    case .success: "Success!"
+    case .successfullySignedDocument: "You successfully signed your document"
+    case .signedBy: "Signed by: %@"
+    case .view: "View"
+    case .done: "Done"
+    case .documentSigned: "Document signed"
+    case .shared: "Shared"
+    case .proceed: "Proceed"
+    case .viewDocument: "View document"
     }
     return value.format(arguments: args)
   }

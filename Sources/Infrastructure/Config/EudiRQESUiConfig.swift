@@ -41,12 +41,12 @@ public struct DefaultUIConfig: EudiRQESUiConfig {
   private init(
     rssps: [URL],
     redirectUrl: URL?,
-    translations: [String: [LocalizableKey: String]],
+    translations: [String: [LocalizableKey: String]]? = nil,
     printLogs: Bool
   ) {
     self.rssps = rssps
     self.redirectUrl = redirectUrl
-    self.translations = translations
+    self.translations = translations ?? [:]
     self.printLogs = printLogs
   }
   
@@ -58,12 +58,6 @@ public struct DefaultUIConfig: EudiRQESUiConfig {
         URL(string: "https://www.ascertia.com")!
       ],
       redirectUrl: URL(string: "openid-rqes://code"),
-      translations: [
-        "en_US": [
-          .mock: "mock",
-          .mockWithValues: "mock %@, %@"
-        ]
-      ],
       printLogs: true
     )
   }
