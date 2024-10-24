@@ -152,49 +152,45 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
       throw EudiRQESUiError.invalidState(state.id)
     }
     
-    var innerView: AnyView {
-      return switch state {
-      case .none:
-        EmptyView().eraseToAnyView()
-      case .initial(
-        let document,
-        let config
-      ):
-        DocumentSelectionView(
-          router: self,
-          document: document,
-          services: config.rssps
-        ).eraseToAnyView()
-      case .rssps(let services):
-        ServiceSelectionView(
-          router: self,
-          services: services
-        ).eraseToAnyView()
-      case .credentials:
-        CredentialSelectionView(
-          router: self
-        ).eraseToAnyView()
-      case .sign(let name, let contents):
-        SignedDocumentView(
-          router: self,
-          initialState: .init(
-            name: name,
-            contents: contents
-          )
-        ).eraseToAnyView()
-      case .view(let source):
-        DocumentViewer(
-          router: self,
-          source: source
-        ).eraseToAnyView()
-      }
-    }
-    
     return ContainerViewController(
       rootView: ContainerView(
         router: self
-      ) { router in
-        innerView
+      ) { _ in
+        switch state {
+        case .none:
+          EmptyView()
+        case .initial(
+          let document,
+          let config
+        ):
+          DocumentSelectionView(
+            router: self,
+            document: document,
+            services: config.rssps
+          )
+        case .rssps(let services):
+          ServiceSelectionView(
+            router: self,
+            services: services
+          )
+        case .credentials:
+          CredentialSelectionView(
+            router: self
+          )
+        case .sign(let name, let contents):
+          SignedDocumentView(
+            router: self,
+            initialState: .init(
+              name: name,
+              contents: contents
+            )
+          )
+        case .view(let source):
+          DocumentViewer(
+            router: self,
+            source: source
+          )
+        }
       }
     )
   }
