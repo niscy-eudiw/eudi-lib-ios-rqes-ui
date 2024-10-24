@@ -23,9 +23,9 @@ final class LogControllerImpl: LogController {
   
   private static let tag: String = "EudiRQESUi"
   
-  private let config: EudiRQESUiConfig
+  private let config: any EudiRQESUiConfig
   
-  init(config: EudiRQESUiConfig) {
+  init(config: any EudiRQESUiConfig) {
     self.config = config
   }
   

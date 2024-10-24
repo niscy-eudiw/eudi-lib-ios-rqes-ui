@@ -15,10 +15,13 @@
  */
 import Foundation
 
-public protocol EudiRQESUiConfig: Sendable {
+public protocol EudiRQESUiConfig: Sendable, Equatable {
   
-  // QTSPs List
-  var qtsps: [URL] { get }
+  // Remote signing service provider list
+  var rssps : [URL] { get }
+  
+  // OAuth redirect url
+  var redirectUrl: URL? { get }
   
   // Transactions per locale
   var translations: [String: [LocalizableKey: String]] { get }
@@ -28,20 +31,41 @@ public protocol EudiRQESUiConfig: Sendable {
 }
 
 // MARK: - TODO To be removed once SDK is stable
-final class DefaultConfig: EudiRQESUiConfig {
+public struct DefaultUIConfig: EudiRQESUiConfig {
   
-  var qtsps: [URL] {
-    []
+  public let rssps: [URL]
+  public let redirectUrl: URL?
+  public let translations: [String : [LocalizableKey : String]]
+  public let printLogs: Bool
+  
+  private init(
+    rssps: [URL],
+    redirectUrl: URL?,
+    translations: [String: [LocalizableKey: String]],
+    printLogs: Bool
+  ) {
+    self.rssps = rssps
+    self.redirectUrl = redirectUrl
+    self.translations = translations
+    self.printLogs = printLogs
   }
   
-  var translations: [String : [LocalizableKey : String]] {
-    [
-      "en_US" : [
-        .mock : "mock",
-        .mockWithValues: "mock %@, %@"
-      ]
-    ]
+  public static func createDefault() -> DefaultUIConfig {
+    return DefaultUIConfig(
+      rssps: [
+        URL(string: "https://www.entrust.com")!,
+        URL(string: "https://www.docusign.com")!,
+        URL(string: "https://www.ascertia.com")!
+      ],
+      redirectUrl: URL(string: "openid-rqes://code"),
+      translations: [
+        "en_US": [
+          .mock: "mock",
+          .mockWithValues: "mock %@, %@"
+        ]
+      ],
+      printLogs: true
+    )
   }
   
-  var printLogs: Bool { true }
 }

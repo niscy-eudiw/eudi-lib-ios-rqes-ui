@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 
-public enum LocalizableKey: String {
+public enum LocalizableKey: String, Sendable {
   
   case mock
   case mockWithValues

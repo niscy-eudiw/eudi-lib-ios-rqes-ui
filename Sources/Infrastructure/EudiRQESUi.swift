@@ -18,33 +18,48 @@ import UIKit
 public final actor EudiRQESUi {
   
   private static var _shared: EudiRQESUi?
-  private static var _config: EudiRQESUiConfig?
-  private static var state: State = .none
+  private static var _config: (any EudiRQESUiConfig)?
+  private static var _state: State = .none
+  private static var _viewController: UIViewController?
   
-  private var viewController: UIViewController?
+  private let router: any RouterGraph
   
   @discardableResult
-  public init(config: EudiRQESUiConfig) {
+  public init(config: any EudiRQESUiConfig) {
+    self.router = RouterGraphImpl()
     Self._config = config
     Self._shared = self
     DIGraph.shared.load()
   }
   
+  @MainActor
   public func initiate(
     on container: UIViewController,
     fileUrl: URL,
     animated: Bool = true
-  ) async {
-    setState(.initial(fileUrl))
-    await resume(on: container, animated: animated)
+  ) async throws {
+    guard let config = Self._config else {
+      fatalError("EudiRQESUi: SDK has not been initialized properly")
+    }
+    await setState(
+      .initial(
+        fileUrl,
+        config
+      )
+    )
+    try await resume(on: container, animated: animated)
   }
   
+  @MainActor
   public func resume(
     on container: UIViewController,
     animated: Bool = true
-  ) async {
-    viewController = await UIViewController()
-    await container.present(viewController!, animated: animated)
+  ) async throws {
+    self.router.clear()
+    await setViewController(try self.router.nextView(for: await getState()))
+    if let viewController = await getViewController() {
+      container.present(viewController, animated: animated)
+    }
   }
 }
 
@@ -57,27 +72,41 @@ public extension EudiRQESUi {
   }
 }
 
+private extension EudiRQESUi {
+  
+  func getState() -> State {
+    return Self._state
+  }
+  
+  func getViewController() -> UIViewController? {
+    return Self._viewController
+  }
+  
+  func setViewController(_ viewController: UIViewController) {
+    Self._viewController = viewController
+  }
+  
+}
+
 extension EudiRQESUi {
   
-  static func getConfig() -> EudiRQESUiConfig {
+  static func getConfig() -> any EudiRQESUiConfig {
     return Self._config!
   }
   
   func setState(_ state: State) {
-    Self.state = state
+    Self._state = state
   }
   
-  func getState() -> State {
-    return Self.state
-  }
-  
+  @MainActor
   func cancel(animated: Bool = true) async {
-    setState(.none)
+    await setState(.none)
     await pause(animated: animated)
   }
   
+  @MainActor
   func pause(animated: Bool = true) async {
-    await viewController?.dismiss(animated: animated)
+    await getViewController()?.dismiss(animated: animated)
   }
 }
 
@@ -85,10 +114,11 @@ extension EudiRQESUi {
   enum State: Equatable, Sendable {
     
     case none
-    case initial(URL)
-    case qtsp
-    case certifcate(String)
-    case sign(String)
+    case initial(URL, any EudiRQESUiConfig)
+    case rssps([URL])
+    case credentials
+    case sign(String, String)
+    case view(DocumentSource)
     
     var id: String {
       return switch self {
@@ -96,12 +126,14 @@ extension EudiRQESUi {
         "none"
       case .initial:
         "initial"
-      case .qtsp:
-        "qtsp"
-      case .certifcate:
-        "certifcate"
+      case .rssps:
+        "rssps"
+      case .credentials:
+        "credentials"
       case .sign:
         "sign"
+      case .view:
+        "view"
       }
     }
     

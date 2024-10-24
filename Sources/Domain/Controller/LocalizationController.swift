@@ -22,9 +22,9 @@ protocol LocalizationController: Sendable {
 
 final class LocalizationControllerImpl: LocalizationController {
   
-  private let config: EudiRQESUiConfig
+  private let config: any EudiRQESUiConfig
   
-  init(config: EudiRQESUiConfig) {
+  init(config: any EudiRQESUiConfig) {
     self.config = config
   }
   

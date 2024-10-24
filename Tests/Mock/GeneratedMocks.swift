@@ -1,4 +1,4 @@
-// MARK: - Mocks generated from file: '../Sources/Domain/Controller/LocalizationController.swift'
+// MARK: - Mocks generated from file: 'Sources/Domain/Controller/LocalizationController.swift'
 
 import Cuckoo
 import SwiftUI
@@ -118,7 +118,7 @@ class LocalizationControllerStub:LocalizationController, @unchecked Sendable {
 
 
 
-// MARK: - Mocks generated from file: '../Sources/Domain/Controller/LogController.swift'
+// MARK: - Mocks generated from file: 'Sources/Domain/Controller/LogController.swift'
 
 import Cuckoo
 @testable import EudiRQESUi
@@ -237,7 +237,7 @@ class LogControllerStub:LogController, @unchecked Sendable {
 
 
 
-// MARK: - Mocks generated from file: '../Sources/Domain/Controller/PreferencesController.swift'
+// MARK: - Mocks generated from file: 'Sources/Domain/Controller/PreferencesController.swift'
 
 import Cuckoo
 @testable import EudiRQESUi
@@ -560,7 +560,7 @@ class PreferencesControllerStub:PreferencesController, @unchecked Sendable {
 
 
 
-// MARK: - Mocks generated from file: '../Sources/Domain/DI/Graph/DIGraph.swift'
+// MARK: - Mocks generated from file: 'Sources/Domain/DI/Graph/DIGraph.swift'
 
 import Cuckoo
 import Swinject
@@ -670,7 +670,7 @@ class DIGraphTypeStub:DIGraphType, @unchecked Sendable {
 
 
 
-// MARK: - Mocks generated from file: '../Sources/Domain/Entities/Error/EudiRQESUiError.swift'
+// MARK: - Mocks generated from file: 'Sources/Domain/Entities/Error/EudiRQESUiError.swift'
 
 import Cuckoo
 import Foundation
@@ -678,14 +678,21 @@ import Foundation
 
 
 
-// MARK: - Mocks generated from file: '../Sources/Domain/Entities/Localization/LocalizableKey.swift'
+// MARK: - Mocks generated from file: 'Sources/Domain/Entities/Localization/LocalizableKey.swift'
 
 import Cuckoo
 @testable import EudiRQESUi
 
 
 
-// MARK: - Mocks generated from file: '../Sources/Domain/Extension/Resolver+Extensions.swift'
+// MARK: - Mocks generated from file: 'Sources/Domain/Extension/Notification+Extension.swift'
+
+import Cuckoo
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: 'Sources/Domain/Extension/Resolver+Extensions.swift'
 
 import Cuckoo
 import Swinject
@@ -693,7 +700,7 @@ import Swinject
 
 
 
-// MARK: - Mocks generated from file: '../Sources/Domain/Extension/String+Extensions.swift'
+// MARK: - Mocks generated from file: 'Sources/Domain/Extension/String+Extensions.swift'
 
 import Cuckoo
 import SwiftUI
@@ -701,7 +708,22 @@ import SwiftUI
 
 
 
-// MARK: - Mocks generated from file: '../Sources/Infrastructure/Config/EudiRQESUiConfig.swift'
+// MARK: - Mocks generated from file: 'Sources/Domain/Extension/UIApplication+Extensions.swift'
+
+import Cuckoo
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: 'Sources/Domain/Extension/View+Extensions.swift'
+
+import Cuckoo
+import SwiftUI
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: 'Sources/Infrastructure/Config/EudiRQESUiConfig.swift'
 
 import Cuckoo
 import Foundation
@@ -723,12 +745,22 @@ public class MockEudiRQESUiConfig: EudiRQESUiConfig, Cuckoo.ProtocolMock, @unche
         cuckoo_manager.enableDefaultStubImplementation()
     }
     
-    public var qtsps: [URL] {
+    public var rssps: [URL] {
         get {
             return cuckoo_manager.getter(
-                "qtsps",
+                "rssps",
                 superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.qtsps
+                defaultCall: __defaultImplStub!.rssps
+            )
+        }
+    }
+    
+    public var redirectUrl: URL? {
+        get {
+            return cuckoo_manager.getter(
+                "redirectUrl",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.redirectUrl
             )
         }
     }
@@ -761,8 +793,12 @@ public class MockEudiRQESUiConfig: EudiRQESUiConfig, Cuckoo.ProtocolMock, @unche
             self.cuckoo_manager = manager
         }
         
-        var qtsps: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockEudiRQESUiConfig,[URL]> {
-            return .init(manager: cuckoo_manager, name: "qtsps")
+        var rssps: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockEudiRQESUiConfig,[URL]> {
+            return .init(manager: cuckoo_manager, name: "rssps")
+        }
+        
+        var redirectUrl: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockEudiRQESUiConfig,URL?> {
+            return .init(manager: cuckoo_manager, name: "redirectUrl")
         }
         
         var translations: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockEudiRQESUiConfig,[String: [LocalizableKey: String]]> {
@@ -785,8 +821,12 @@ public class MockEudiRQESUiConfig: EudiRQESUiConfig, Cuckoo.ProtocolMock, @unche
             self.sourceLocation = sourceLocation
         }
         
-        var qtsps: Cuckoo.VerifyReadOnlyProperty<[URL]> {
-            return .init(manager: cuckoo_manager, name: "qtsps", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        var rssps: Cuckoo.VerifyReadOnlyProperty<[URL]> {
+            return .init(manager: cuckoo_manager, name: "rssps", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        var redirectUrl: Cuckoo.VerifyReadOnlyProperty<URL?> {
+            return .init(manager: cuckoo_manager, name: "redirectUrl", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
         var translations: Cuckoo.VerifyReadOnlyProperty<[String: [LocalizableKey: String]]> {
@@ -801,9 +841,15 @@ public class MockEudiRQESUiConfig: EudiRQESUiConfig, Cuckoo.ProtocolMock, @unche
 
 public class EudiRQESUiConfigStub:EudiRQESUiConfig, @unchecked Sendable {
     
-    public var qtsps: [URL] {
+    public var rssps: [URL] {
         get {
             return DefaultValueRegistry.defaultValue(for: ([URL]).self)
+        }
+    }
+    
+    public var redirectUrl: URL? {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (URL?).self)
         }
     }
     
@@ -825,7 +871,7 @@ public class EudiRQESUiConfigStub:EudiRQESUiConfig, @unchecked Sendable {
 
 
 
-// MARK: - Mocks generated from file: '../Sources/Infrastructure/EudiRQESUi.swift'
+// MARK: - Mocks generated from file: 'Sources/Infrastructure/EudiRQESUi.swift'
 
 import Cuckoo
 import UIKit
@@ -833,7 +879,7 @@ import UIKit
 
 
 
-// MARK: - Mocks generated from file: '../Sources/Presentation/Architecture/ViewModel.swift'
+// MARK: - Mocks generated from file: 'Sources/Presentation/Architecture/ViewModel.swift'
 
 import Cuckoo
 import SwiftUI
@@ -887,37 +933,207 @@ class ViewStateStub:ViewState, @unchecked Sendable {
 
 
 
-// MARK: - Mocks generated from file: '../Sources/Presentation/Router/RouteGraph.swift'
+// MARK: - Mocks generated from file: 'Sources/Presentation/Router/RouterGraph.swift'
 
 import Cuckoo
+import Foundation
+import SwiftUI
 @testable import EudiRQESUi
 
-class MockRouteGraph: RouteGraph, Cuckoo.ProtocolMock, @unchecked Sendable {
-    typealias MocksType = RouteGraph
-    typealias Stubbing = __StubbingProxy_RouteGraph
-    typealias Verification = __VerificationProxy_RouteGraph
+class MockRouterGraph<Route: Hashable & Identifiable>: RouterGraph, Cuckoo.ProtocolMock, @unchecked Sendable {
+    typealias MocksType = DefaultImplCaller
+    typealias Stubbing = __StubbingProxy_RouterGraph
+    typealias Verification = __VerificationProxy_RouterGraph
 
     // Original typealiases
 
     let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
 
-    private var __defaultImplStub: (any RouteGraph)?
+    class DefaultImplCaller: RouterGraph, @unchecked Sendable {
+        private let reference: Any
+    
+        private let _getter_storage$$path: () -> NavigationPath
+        private let _setter_storage$$path: (NavigationPath) -> Void
+        var path: NavigationPath {
+            get { return _getter_storage$$path() }
+            set { _setter_storage$$path(newValue) }
+        }
+    
+        
+        init<_CUCKOO$$GENERIC: RouterGraph>(from defaultImpl: UnsafeMutablePointer<_CUCKOO$$GENERIC>, keeping reference: @escaping @autoclosure () -> Any?) where _CUCKOO$$GENERIC.Route == Route {
+            self.reference = reference
+    
+            _getter_storage$$path = { defaultImpl.pointee.path }
+            _setter_storage$$path = { defaultImpl.pointee.path = $0 }
+            _storage$1$navigateTo = defaultImpl.pointee.navigateTo
+            _storage$2$pop = defaultImpl.pointee.pop
+            _storage$3$navigateToRoot = defaultImpl.pointee.navigateToRoot
+            _storage$4$view = defaultImpl.pointee.view
+            _storage$5$nextView = defaultImpl.pointee.nextView
+        }
+    
 
-    func enableDefaultImplementation(_ stub: any RouteGraph) {
-        __defaultImplStub = stub
+        private let _storage$1$navigateTo: (Route) -> Void
+        func navigateTo(_ p0: Route) {
+            return _storage$1$navigateTo(p0)
+        }
+
+        private let _storage$2$pop: () -> Void
+        func pop() {
+            return _storage$2$pop()
+        }
+
+        private let _storage$3$navigateToRoot: () -> Void
+        func navigateToRoot() {
+            return _storage$3$navigateToRoot()
+        }
+
+        private let _storage$4$view: (Route) -> AnyView
+        func view(for p0: Route) -> AnyView {
+            return _storage$4$view(p0)
+        }
+
+        private let _storage$5$nextView: (EudiRQESUi.State) -> UIViewController
+        func nextView(for p0: EudiRQESUi.State) -> UIViewController {
+            return _storage$5$nextView(p0)
+        }
+    }
+
+    private var __defaultImplStub: DefaultImplCaller?
+
+    func enableDefaultImplementation<_CUCKOO$$GENERIC: RouterGraph>(_ stub: _CUCKOO$$GENERIC) where _CUCKOO$$GENERIC.Route == Route {
+        var mutableStub = stub
+        __defaultImplStub = DefaultImplCaller(from: &mutableStub, keeping: mutableStub)
         cuckoo_manager.enableDefaultStubImplementation()
     }
 
+    func enableDefaultImplementation<_CUCKOO$$GENERIC: RouterGraph>(mutating stub: UnsafeMutablePointer<_CUCKOO$$GENERIC>) where _CUCKOO$$GENERIC.Route == Route {
+        __defaultImplStub = DefaultImplCaller(from: stub, keeping: nil)
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+    
+    var path: NavigationPath {
+        get {
+            return cuckoo_manager.getter(
+                "path",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.path
+            )
+        }
+        set {
+            cuckoo_manager.setter(
+                "path",
+                value: newValue,
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.path = newValue
+            )
+        }
+    }
 
-    struct __StubbingProxy_RouteGraph: Cuckoo.StubbingProxy {
+    
+    func navigateTo(_ p0: Route) {
+        return cuckoo_manager.call(
+            "navigateTo(_ p0: Route)",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.navigateTo(p0)
+        )
+    }
+    
+    func pop() {
+        return cuckoo_manager.call(
+            "pop()",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.pop()
+        )
+    }
+    
+    func navigateToRoot() {
+        return cuckoo_manager.call(
+            "navigateToRoot()",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.navigateToRoot()
+        )
+    }
+    
+    func view(for p0: Route) -> AnyView {
+        return cuckoo_manager.call(
+            "view(for p0: Route) -> AnyView",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.view(for: p0)
+        )
+    }
+    
+    func nextView(for p0: EudiRQESUi.State) -> UIViewController {
+        return cuckoo_manager.call(
+            "nextView(for p0: EudiRQESUi.State) -> UIViewController",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.nextView(for: p0)
+        )
+    }
+
+    struct __StubbingProxy_RouterGraph: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
     
         init(manager: Cuckoo.MockManager) {
             self.cuckoo_manager = manager
         }
+        
+        var path: Cuckoo.ProtocolToBeStubbedProperty<MockRouterGraph,NavigationPath> {
+            return .init(manager: cuckoo_manager, name: "path")
+        }
+        
+        func navigateTo<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(Route)> where M1.MatchedType == Route {
+            let matchers: [Cuckoo.ParameterMatcher<(Route)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockRouterGraph.self,
+                method: "navigateTo(_ p0: Route)",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func pop() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockRouterGraph.self,
+                method: "pop()",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func navigateToRoot() -> Cuckoo.ProtocolStubNoReturnFunction<()> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockRouterGraph.self,
+                method: "navigateToRoot()",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func view<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.ProtocolStubFunction<(Route), AnyView> where M1.MatchedType == Route {
+            let matchers: [Cuckoo.ParameterMatcher<(Route)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockRouterGraph.self,
+                method: "view(for p0: Route) -> AnyView",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func nextView<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.ProtocolStubFunction<(EudiRQESUi.State), UIViewController> where M1.MatchedType == EudiRQESUi.State {
+            let matchers: [Cuckoo.ParameterMatcher<(EudiRQESUi.State)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockRouterGraph.self,
+                method: "nextView(for p0: EudiRQESUi.State) -> UIViewController",
+                parameterMatchers: matchers
+            ))
+        }
     }
 
-    struct __VerificationProxy_RouteGraph: Cuckoo.VerificationProxy {
+    struct __VerificationProxy_RouterGraph: Cuckoo.VerificationProxy {
         private let cuckoo_manager: Cuckoo.MockManager
         private let callMatcher: Cuckoo.CallMatcher
         private let sourceLocation: Cuckoo.SourceLocation
@@ -927,19 +1143,193 @@ class MockRouteGraph: RouteGraph, Cuckoo.ProtocolMock, @unchecked Sendable {
             self.callMatcher = callMatcher
             self.sourceLocation = sourceLocation
         }
+        
+        var path: Cuckoo.VerifyProperty<NavigationPath> {
+            return .init(manager: cuckoo_manager, name: "path", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        
+        @discardableResult
+        func navigateTo<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(Route), Void> where M1.MatchedType == Route {
+            let matchers: [Cuckoo.ParameterMatcher<(Route)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "navigateTo(_ p0: Route)",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func pop() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "pop()",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func navigateToRoot() -> Cuckoo.__DoNotUse<(), Void> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "navigateToRoot()",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func view<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.__DoNotUse<(Route), AnyView> where M1.MatchedType == Route {
+            let matchers: [Cuckoo.ParameterMatcher<(Route)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "view(for p0: Route) -> AnyView",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func nextView<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.__DoNotUse<(EudiRQESUi.State), UIViewController> where M1.MatchedType == EudiRQESUi.State {
+            let matchers: [Cuckoo.ParameterMatcher<(EudiRQESUi.State)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "nextView(for p0: EudiRQESUi.State) -> UIViewController",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
     }
 }
 
-class RouteGraphStub:RouteGraph, @unchecked Sendable {
+class RouterGraphStub<Route: Hashable & Identifiable>:RouterGraph, @unchecked Sendable {
+    
+    var path: NavigationPath {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (NavigationPath).self)
+        }
+        set {}
+    }
 
 
+    
+    func navigateTo(_ p0: Route) {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    func pop() {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    func navigateToRoot() {
+        return DefaultValueRegistry.defaultValue(for: (Void).self)
+    }
+    
+    func view(for p0: Route) -> AnyView {
+        return DefaultValueRegistry.defaultValue(for: (AnyView).self)
+    }
+    
+    func nextView(for p0: EudiRQESUi.State) -> UIViewController {
+        return DefaultValueRegistry.defaultValue(for: (UIViewController).self)
+    }
 }
 
 
 
 
-// MARK: - Mocks generated from file: '../Sources/Presentation/UI/ExampleView/ExampleViewModel.swift'
+// MARK: - Mocks generated from file: 'Sources/Presentation/Router/RoutingView.swift'
 
 import Cuckoo
+import SwiftUI
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: 'Sources/Presentation/UI/CredentialSelection/CredentialSelectionView.swift'
+
+import Cuckoo
+import SwiftUI
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: 'Sources/Presentation/UI/CredentialSelection/CredentialSelectionViewModel.swift'
+
+import Cuckoo
+import SwiftUI
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: 'Sources/Presentation/UI/DocumentSelectionView/DocumentSelectionView.swift'
+
+import Cuckoo
+import SwiftUI
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: 'Sources/Presentation/UI/DocumentSelectionView/DocumentSelectionViewModel.swift'
+
+import Cuckoo
+import SwiftUI
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: 'Sources/Presentation/UI/DocumentView/DocumentView.swift'
+
+import Cuckoo
+import SwiftUI
+import PDFKit
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: 'Sources/Presentation/UI/DocumentView/DocumentViewModel.swift'
+
+import Cuckoo
+import SwiftUI
+import PDFKit
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: 'Sources/Presentation/UI/ServiceSelection/ServiceSelectionView.swift'
+
+import Cuckoo
+import SwiftUI
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: 'Sources/Presentation/UI/ServiceSelection/ServiceSelectionViewModel.swift'
+
+import Cuckoo
+import SwiftUI
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: 'Sources/Presentation/UI/SignedDocument/SignedDocumentView.swift'
+
+import Cuckoo
+import SwiftUI
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: 'Sources/Presentation/UI/SignedDocument/SignedDocumentViewModel.swift'
+
+import Cuckoo
+import SwiftUI
 @testable import EudiRQESUi
 

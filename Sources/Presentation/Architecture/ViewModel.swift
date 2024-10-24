@@ -20,20 +20,38 @@
 protocol ViewState {}
 
 @MainActor
-class ViewModel<Router: RouteGraph, UiState: ViewState>: ObservableObject {
-
+class ViewModel<Router: RouterGraph, UiState: ViewState>: ObservableObject {
+  
   lazy var cancellables = Set<AnyCancellable>()
-
+  
   @Published private(set) var viewState: UiState
-
+  
   let router: Router
-
+  
   init(router: Router, initialState: UiState) {
     self.router = router
     self.viewState = initialState
   }
-
+  
   func setState(_ reducer: (UiState) -> UiState) {
     self.viewState = reducer(viewState)
+  }
+  
+  func setFlowState(_ state: EudiRQESUi.State) {
+    Task {
+      try? await EudiRQESUi.instance().setState(state)
+    }
+  }
+  
+  func onPause() {
+    Task {
+      try? await EudiRQESUi.instance().pause()
+    }
+  }
+  
+  func onCancel() {
+    Task {
+      try? await EudiRQESUi.instance().cancel()
+    }
   }
 }

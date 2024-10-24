@@ -13,3 +13,30 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import SwiftUI
+
+@Copyable
+struct ServiceSelectionState: ViewState {
+  let services: [URL]
+}
+
+class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceSelectionState> {
+  
+  override init(
+    router: Router,
+    initialState: ServiceSelectionState
+  ) {
+    super.init(
+      router: router,
+      initialState: initialState
+    )
+  }
+  
+  func selectCredential() {
+    if let router = self.router as? RouterGraphImpl {
+      router.navigateTo(
+        .credentialSelection
+      )
+    }
+  }
+}

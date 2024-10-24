@@ -18,11 +18,14 @@ import Foundation
 public enum EudiRQESUiError: LocalizedError {
   
   case notInitialized
+  case invalidState(String)
   
   public var errorDescription: String? {
     return switch self {
     case .notInitialized:
       "You need to initialize the EudiRQESUi SDK first with an EudiRQESUiConfig Impl"
+    case .invalidState(let stateName):
+      "State is Invalid - \(stateName)"
     }
   }
 }

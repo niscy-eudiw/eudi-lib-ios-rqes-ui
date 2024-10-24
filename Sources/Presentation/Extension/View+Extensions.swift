@@ -13,16 +13,10 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import SwiftUI
 
-@Copyable
-struct ExampleState: ViewState {
-  let example: String
-}
-
-final class ExampleViewModel<Router: RouteGraph>: ViewModel<Router, ExampleState> {
-  
-  override init(router: Router, initialState: ExampleState) {
-    super.init(router: router, initialState: .init(example: ""))
+public extension View {
+  func eraseToAnyView() -> AnyView {
+    return AnyView(self)
   }
-  
 }
