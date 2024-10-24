@@ -25,6 +25,7 @@ protocol RouterGraph: ObservableObject {
   @MainActor func pop()
   @MainActor func navigateToRoot()
   @MainActor func view(for route: Route) -> AnyView
+  @MainActor func nextView(for state: EudiRQESUi.State) -> UIViewController
 }
 
 extension RouterGraph {

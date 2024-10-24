@@ -969,6 +969,7 @@ class MockRouterGraph<Route: Hashable & Identifiable>: RouterGraph, Cuckoo.Proto
             _storage$2$pop = defaultImpl.pointee.pop
             _storage$3$navigateToRoot = defaultImpl.pointee.navigateToRoot
             _storage$4$view = defaultImpl.pointee.view
+            _storage$5$nextView = defaultImpl.pointee.nextView
         }
     
 
@@ -990,6 +991,11 @@ class MockRouterGraph<Route: Hashable & Identifiable>: RouterGraph, Cuckoo.Proto
         private let _storage$4$view: (Route) -> AnyView
         func view(for p0: Route) -> AnyView {
             return _storage$4$view(p0)
+        }
+
+        private let _storage$5$nextView: (EudiRQESUi.State) -> UIViewController
+        func nextView(for p0: EudiRQESUi.State) -> UIViewController {
+            return _storage$5$nextView(p0)
         }
     }
 
@@ -1064,6 +1070,16 @@ class MockRouterGraph<Route: Hashable & Identifiable>: RouterGraph, Cuckoo.Proto
             defaultCall: __defaultImplStub!.view(for: p0)
         )
     }
+    
+    func nextView(for p0: EudiRQESUi.State) -> UIViewController {
+        return cuckoo_manager.call(
+            "nextView(for p0: EudiRQESUi.State) -> UIViewController",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: __defaultImplStub!.nextView(for: p0)
+        )
+    }
 
     struct __StubbingProxy_RouterGraph: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -1104,6 +1120,14 @@ class MockRouterGraph<Route: Hashable & Identifiable>: RouterGraph, Cuckoo.Proto
             let matchers: [Cuckoo.ParameterMatcher<(Route)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockRouterGraph.self,
                 method: "view(for p0: Route) -> AnyView",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func nextView<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.ProtocolStubFunction<(EudiRQESUi.State), UIViewController> where M1.MatchedType == EudiRQESUi.State {
+            let matchers: [Cuckoo.ParameterMatcher<(EudiRQESUi.State)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockRouterGraph.self,
+                method: "nextView(for p0: EudiRQESUi.State) -> UIViewController",
                 parameterMatchers: matchers
             ))
         }
@@ -1171,6 +1195,18 @@ class MockRouterGraph<Route: Hashable & Identifiable>: RouterGraph, Cuckoo.Proto
                 sourceLocation: sourceLocation
             )
         }
+        
+        
+        @discardableResult
+        func nextView<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.__DoNotUse<(EudiRQESUi.State), UIViewController> where M1.MatchedType == EudiRQESUi.State {
+            let matchers: [Cuckoo.ParameterMatcher<(EudiRQESUi.State)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "nextView(for p0: EudiRQESUi.State) -> UIViewController",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
     }
 }
 
@@ -1199,6 +1235,10 @@ class RouterGraphStub<Route: Hashable & Identifiable>:RouterGraph, @unchecked Se
     
     func view(for p0: Route) -> AnyView {
         return DefaultValueRegistry.defaultValue(for: (AnyView).self)
+    }
+    
+    func nextView(for p0: EudiRQESUi.State) -> UIViewController {
+        return DefaultValueRegistry.defaultValue(for: (UIViewController).self)
     }
 }
 

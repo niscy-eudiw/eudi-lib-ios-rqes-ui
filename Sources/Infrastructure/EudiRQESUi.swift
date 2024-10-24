@@ -49,7 +49,6 @@ public final actor EudiRQESUi {
       )
     )
     await resume(on: container, animated: animated)
-    notificationListening()
   }
   
   @MainActor
@@ -69,99 +68,7 @@ public final actor EudiRQESUi {
       (any RouterGraph).self,
       RouterGraphImpl.self
     )
-    switch Self.state {
-    case .none:
-      fatalError("EudiRQESUi: SDK has not been initialized properly")
-    case .initial(
-      let document,
-      let config
-    ):
-      return ContainerViewController(
-        rootView: RoutingView(
-          router: router
-        ) { router in
-          DocumentSelectionView(
-            router: router,
-            document: document,
-            services: config.rssps
-          )
-        }
-      )
-    case .rssps(let services):
-      return ContainerViewController(
-        rootView: RoutingView(
-          router: router
-        ) { router in
-          ServiceSelectionView(
-            router: router,
-            services: services
-          )
-        }
-      )
-    case .credentials:
-      return ContainerViewController(
-        rootView: RoutingView(
-          router: router
-        ) { router in
-          CredentialSelectionView(
-            router: router
-          )
-        }
-      )
-    case .sign(let name, let contents):
-      return ContainerViewController(
-        rootView: RoutingView(
-          router: router
-        ) { router in
-          SignedDocumentView(
-            router: router,
-            initialState: .init(
-              name: name,
-              contents: contents
-            )
-          )
-        }
-      )
-    case .view(let source):
-      return ContainerViewController(
-        rootView: RoutingView(
-          router: router
-        ) { router in
-          DocumentViewer(
-            router: router,
-            source: source
-          )
-        }
-      )
-    }
-  }
-  
-  @MainActor
-  private func notificationListening() {
-    NotificationCenter.default.publisher(for: .didCloseDocumentSelection)
-      .sinkAsync { [weak self] _ in
-        guard let self = self else { return }
-        await self.handleDocumentSelectionClosed()
-      }
-      .store(in: &cancellables)
-    
-    NotificationCenter.default.publisher(for: .stateNotification)
-      .compactMap { $0.userInfo?["state"] as? State }
-      .sinkAsync { [weak self] state in
-        guard let self = self else { return }
-        await self.handleNewState(state)
-      }
-      .store(in: &cancellables)
-  }
-  
-  @MainActor
-  private func handleDocumentSelectionClosed() async {
-    await cancel()
-  }
-  
-  @MainActor
-  private func handleNewState(_ state: State) async {
-    await setState(state)
+    return router.nextView(for: Self.state)
   }
 }
 

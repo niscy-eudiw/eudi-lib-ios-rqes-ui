@@ -38,7 +38,7 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
     content(
       view: viewModel.viewDocument,
       select: viewModel.selectService,
-      dismiss: viewModel.dismiss
+      dismiss: viewModel.cancel
     )
   }
 }

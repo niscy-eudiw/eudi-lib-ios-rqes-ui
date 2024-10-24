@@ -38,18 +38,21 @@ class ViewModel<Router: RouterGraph, UiState: ViewState>: ObservableObject {
   }
   
   func setState(_ state: EudiRQESUi.State) {
-    dismiss()
-    NotificationCenter.default.post(
-      name: .stateNotification,
-      object: nil,
-      userInfo: ["state": state]
-    )
+    pause()
+    Task {
+      try? await EudiRQESUi.instance().setState(state)
+    }
   }
   
-  func dismiss() {
-    NotificationCenter.default.post(
-      name: .didCloseDocumentSelection,
-      object: nil
-    )
+  func pause() {
+    Task {
+      try? await EudiRQESUi.instance().pause()
+    }
+  }
+  
+  func cancel() {
+    Task {
+      try? await EudiRQESUi.instance().cancel()
+    }
   }
 }

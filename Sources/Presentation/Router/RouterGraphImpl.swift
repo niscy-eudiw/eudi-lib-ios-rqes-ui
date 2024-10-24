@@ -108,4 +108,73 @@ final class RouterGraphImpl: RouterGraph {
       fatalError("TODO")
     }
   }
+  
+  @MainActor
+  func nextView(for state: EudiRQESUi.State) -> UIViewController {
+    switch state {
+    case .none:
+      fatalError("EudiRQESUi: SDK has not been initialized properly")
+    case .initial(
+      let document,
+      let config
+    ):
+      return ContainerViewController(
+        rootView: RoutingView(
+          router: self
+        ) { router in
+          DocumentSelectionView(
+            router: self,
+            document: document,
+            services: config.rssps
+          )
+        }
+      )
+    case .rssps(let services):
+      return ContainerViewController(
+        rootView: RoutingView(
+          router: self
+        ) { router in
+          ServiceSelectionView(
+            router: self,
+            services: services
+          )
+        }
+      )
+    case .credentials:
+      return ContainerViewController(
+        rootView: RoutingView(
+          router: self
+        ) { router in
+          CredentialSelectionView(
+            router: self
+          )
+        }
+      )
+    case .sign(let name, let contents):
+      return ContainerViewController(
+        rootView: RoutingView(
+          router: self
+        ) { router in
+          SignedDocumentView(
+            router: self,
+            initialState: .init(
+              name: name,
+              contents: contents
+            )
+          )
+        }
+      )
+    case .view(let source):
+      return ContainerViewController(
+        rootView: RoutingView(
+          router: self
+        ) { router in
+          DocumentViewer(
+            router: self,
+            source: source
+          )
+        }
+      )
+    }
+  }
 }

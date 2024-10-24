@@ -62,7 +62,7 @@ struct SignedDocumentView<Router: RouterGraph>: View {
     .toolbar {
       ToolbarItem(placement: .navigationBarTrailing) {
         Button("Done") {
-          viewModel.dismiss()
+          viewModel.pause()
         }
       }
     }
