@@ -19,7 +19,6 @@ extension Notification: @unchecked @retroactive Sendable {}
 
 public final actor EudiRQESUi {
   
-  private nonisolated(unsafe) var cancellables = Set<AnyCancellable>()
   private nonisolated(unsafe) var viewController: UIViewController?
   
   private static var _shared: EudiRQESUi?
