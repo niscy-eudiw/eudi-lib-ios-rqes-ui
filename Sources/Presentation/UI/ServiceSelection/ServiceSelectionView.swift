@@ -18,7 +18,7 @@ import SwiftUI
 struct ServiceSelectionView<Router: RouterGraph>: View {
   @StateObject var viewModel: ServiceSelectionViewModel<Router>
   @State private var selectedItem: String?
-  
+
   init(
     router: Router,
     services: [URL]
@@ -32,7 +32,7 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
       )
     )
   }
-  
+
   var body: some View {
     NavigationView {
       List(viewModel.viewState.services, id: \.self) { item in
