@@ -18,18 +18,18 @@ import PDFKit
 
 private struct PDFViewRepresented: UIViewRepresentable {
   let pdfDocument: PDFDocument?
-  
+
   func makeUIView(context: Context) -> PDFView {
     let pdfView = PDFView()
     pdfView.autoScales = true
-    
+
     if let document = pdfDocument {
       pdfView.document = document
     }
-    
+
     return pdfView
   }
-  
+
   func updateUIView(_ uiView: PDFView, context: Context) {
     if let document = pdfDocument {
       uiView.document = document
@@ -39,7 +39,7 @@ private struct PDFViewRepresented: UIViewRepresentable {
 
 struct DocumentViewer<Router: RouterGraph>: View {
   @StateObject var viewModel: DocumentViewModel<Router>
-  
+
   init(
     router: Router,
     source: DocumentSource
@@ -55,9 +55,10 @@ struct DocumentViewer<Router: RouterGraph>: View {
       )
     )
   }
-  
+
   var body: some View {
     content(
+      navigationTitle: viewModel.resource(.viewDocument),
       viewState: viewModel.viewState
     )
   }
@@ -65,7 +66,10 @@ struct DocumentViewer<Router: RouterGraph>: View {
 
 @MainActor
 @ViewBuilder
-private func content(viewState: DocumentState) -> some View {
+private func content(
+  navigationTitle: String,
+  viewState: DocumentState
+) -> some View {
   NavigationView {
     if let errorMessage = viewState.errorMessage {
       Text(errorMessage)
@@ -73,7 +77,7 @@ private func content(viewState: DocumentState) -> some View {
         .foregroundColor(.red)
         .padding()
         .eraseToAnyView()
-      
+
     } else if let document = viewState.pdfDocument {
       PDFViewRepresented(
         pdfDocument: document
@@ -81,7 +85,7 @@ private func content(viewState: DocumentState) -> some View {
     }
   }
   .withNavigationTitle(
-    "View document",
+    navigationTitle,
     trailingActions: [
       Action(
         image: Image(.verifiedUser))
@@ -93,9 +97,12 @@ private func content(viewState: DocumentState) -> some View {
   let data = Data(base64Encoded: "JVBERi0xLjEKJcKlwrHDqwoKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCgoyIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2VzCiAgICAgL0tpZHMgWzMgMCBSXQogICAgIC9Db3VudCAxCiAgICAgL01lZGlhQm94IFswIDAgMzAwIDE0NF0KICA+PgplbmRvYmoKCjMgMCBvYmoKICA8PCAgL1R5cGUgL1BhZ2UKICAgICAgL1BhcmVudCAyIDAgUgogICAgICAvUmVzb3VyY2VzCiAgICAgICA8PCAvRm9udAogICAgICAgICAgIDw8IC9GMQogICAgICAgICAgICAgICA8PCAvVHlwZSAvRm9udAogICAgICAgICAgICAgICAgICAvU3VidHlwZSAvVHlwZTEKICAgICAgICAgICAgICAgICAgL0Jhc2VGb250IC9UaW1lcy1Sb21hbgogICAgICAgICAgICAgICA+PgogICAgICAgICAgID4+CiAgICAgICA+PgogICAgICAvQ29udGVudHMgNCAwIFIKICA+PgplbmRvYmoKCjQgMCBvYmoKICA8PCAvTGVuZ3RoIDU1ID4+CnN0cmVhbQogIEJUCiAgICAvRjEgMTggVGYKICAgIDAgMCBUZAogICAgKEhlbGxvIFdvcmxkKSBUagogIEVUCmVuZHN0cmVhbQplbmRvYmoKCnhyZWYKMCA1CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxOCAwMDAwMCBuIAowMDAwMDAwMDc3IDAwMDAwIG4gCjAwMDAwMDAxNzggMDAwMDAgbiAKMDAwMDAwMDQ1NyAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgIC9Sb290IDEgMCBSCiAgICAgIC9TaXplIDUKICA+PgpzdGFydHhyZWYKNTY1CiUlRU9GCg==")!
   let document = PDFDocument(data: data)
   
-  content(viewState: .init(
-    pdfDocument: document,
-    errorMessage: nil,
-    documentSource: nil
-  ))
+  content(
+    navigationTitle: "View document",
+    viewState: .init(
+      pdfDocument: document,
+      errorMessage: nil,
+      documentSource: nil
+    )
+  )
 }

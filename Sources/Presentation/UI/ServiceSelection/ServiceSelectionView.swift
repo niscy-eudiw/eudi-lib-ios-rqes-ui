@@ -35,40 +35,18 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
 
   var body: some View {
     ContentScreenView(spacing: SPACING_LARGE_MEDIUM) {
-      Text("Select remote signing service.")
-        .font(Theme.shared.font.labelMedium.font)
-        .foregroundStyle(Theme.shared.color.onSurface)
-
-      Text("Remote signing enables you to digitally sign documents without the need for locally installed digital identities. Cloud-hosted signing service makes remote signing possible.")
-        .font(Theme.shared.font.labelMedium.font)
-        .foregroundStyle(Theme.shared.color.onSurface)
-
-      List(viewModel.viewState.services, id: \.qtspName) { item in
-        HStack {
-          Text(item.qtspName)
-          Spacer()
-          if selectedItem == item.uri.absoluteString {
-            Image(systemName: "checkmark")
-              .foregroundColor(.accentColor)
-          }
-        }
-        .listRowInsets(EdgeInsets())
-        .contentShape(Rectangle())
-        .onTapGesture {
-          if selectedItem == item.uri.absoluteString {
-            selectedItem = nil
-          } else {
-            selectedItem = item.uri.absoluteString
-          }
-        }
-      }
-      .listStyle(.plain)
+      content(
+        selectServiceTitle: viewModel.resource(.selectServiceTitle),
+        selectServiceSubtitle: viewModel.resource(.selectServiceSubtitle),
+        services: viewModel.viewState.services,
+        selectedItem: $selectedItem
+      )
     }
     .withNavigationTitle(
-      "Select service",
+      viewModel.resource(.selectService),
       trailingActions: [
         Action(
-          title: "State",
+          title: viewModel.resource(.state),
           callback: {
             viewModel.setFlowState(
               .credentials
@@ -77,10 +55,63 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
           }
         ),
         Action(
-          title: "Proceed",
+          title: viewModel.resource(.proceed),
           callback: viewModel.selectCredential
         )
       ]
+    )
+  }
+}
+
+@MainActor
+@ViewBuilder
+private func content(
+  selectServiceTitle: String,
+  selectServiceSubtitle: String,
+  services: [QTSPData],
+  selectedItem: Binding<String?>
+) -> some View {
+  Text(selectServiceTitle)
+    .font(Theme.shared.font.labelMedium.font)
+    .foregroundStyle(Theme.shared.color.onSurface)
+
+  Text(selectServiceSubtitle)
+    .font(Theme.shared.font.labelMedium.font)
+    .foregroundStyle(Theme.shared.color.onSurface)
+
+  List(services, id: \.qtspName) { item in
+    HStack {
+      Text(item.qtspName)
+      Spacer()
+      if selectedItem.wrappedValue == item.uri.absoluteString {
+        Image(systemName: "checkmark")
+          .foregroundColor(.accentColor)
+      }
+    }
+    .listRowInsets(EdgeInsets())
+    .contentShape(Rectangle())
+    .onTapGesture {
+      if selectedItem.wrappedValue == item.uri.absoluteString {
+        selectedItem.wrappedValue = nil
+      } else {
+        selectedItem.wrappedValue = item.uri.absoluteString
+      }
+    }
+  }
+  .listStyle(.plain)
+}
+
+#Preview {
+  ContentScreenView(spacing: SPACING_LARGE_MEDIUM) {
+    content(
+      selectServiceTitle: "Select remote signing service.",
+      selectServiceSubtitle: "Remote signing enables you to digitally sign documents without the need for locally installed digital identities. Cloud-hosted signing service makes remote signing possible.",
+      services: [
+        QTSPData(qtspName: "Entrust", uri: URL(string: "https://www.entrust.com")!),
+        QTSPData(qtspName: "Docusign", uri: URL(string: "https://www.docusign.com")!),
+        QTSPData(qtspName: "Ascertia", uri: URL(string: "https://www.ascertia.com")!)
+      ],
+      selectedItem: .constant("")
     )
   }
 }

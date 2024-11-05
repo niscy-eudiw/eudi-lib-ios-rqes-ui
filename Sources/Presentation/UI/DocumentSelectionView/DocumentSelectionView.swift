@@ -40,8 +40,11 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
 
   var body: some View {
     content(
-      localization: localization,
+      confirmSelectionTitle: viewModel.resource(.confirmSelectionTitle),
+      confirmSelection: viewModel.resource(.confirmSelection),
       documentName: viewModel.viewState.document.documentName,
+      viewString: viewModel.resource(.view),
+      cancel: viewModel.resource(.cancel),
       view: viewModel.viewDocument,
       select: viewModel.selectService,
       dismiss: viewModel.onCancel
@@ -52,21 +55,24 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
 @MainActor
 @ViewBuilder
 private func content(
-  localization: LocalizationController,
+  confirmSelectionTitle: String,
+  confirmSelection: String,
   documentName: String,
+  viewString: String,
+  cancel: String,
   view: @escaping () -> Void,
   select: @escaping () -> Void,
   dismiss: @escaping () -> Void
 ) -> some View {
   ContentScreenView(spacing: SPACING_LARGE_MEDIUM) {
-    Text(localization.get(with: .confirmSelectionTitle, args: []))
+    Text(confirmSelectionTitle)
       .font(Theme.shared.font.labelMedium.font)
       .foregroundStyle(Theme.shared.color.onSurface)
 
     CardView(
       title: documentName,
       trailingView: {
-        Text(localization.get(with: .view, args: []))
+        Text(viewString)
           .font(Theme.shared.font.bodyLarge.font)
       },
       action: {
@@ -80,10 +86,10 @@ private func content(
     Spacer()
   }
   .withNavigationTitle(
-    localization.get(with: .confirmSelection, args: []),
+    confirmSelection,
     leadingActions: [
       Action(
-        title: localization.get(with: .cancel, args: []),
+        title: cancel,
         callback: dismiss
       )
     ]
@@ -92,13 +98,12 @@ private func content(
 }
 
 #Preview {
-  let localization = DIGraph.resolver.force(
-    LocalizationController.self
-  )
-
   content(
-    localization: localization,
-    documentName: "Name",
+    confirmSelectionTitle: "confirmSelectionTitle",
+    confirmSelection: "confirmSelection",
+    documentName: "documentName",
+    viewString: "View",
+    cancel: "Cancel",
     view: {},
     select: {},
     dismiss: {}

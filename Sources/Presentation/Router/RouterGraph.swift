@@ -56,7 +56,7 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
   typealias Route = RouteTable
   
   @Published var path: NavigationPath = NavigationPath()
-  
+
   init() {}
   
   enum RouteTable: Hashable, Identifiable, Equatable {

@@ -35,57 +35,23 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
 
   var body: some View {
     ContentScreenView(spacing: SPACING_LARGE_MEDIUM) {
-      VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
-        Text("You have chosen to sign the following document:")
-          .font(Theme.shared.font.labelMedium.font)
-          .foregroundStyle(Theme.shared.color.onSurface)
-
-        CardView(
-          title: "Document_Title.PDF",
-          subtitle: "Signed by: Entrust"
-        ) {
-          Image(.verifiedUser)
-        } action: {}
-      }
-
-      VStack(alignment: .leading, spacing: SPACING_SMALL) {
-        Text("CERTIFICATE")
-          .font(Theme.shared.font.labelMedium.font)
-          .foregroundStyle(Theme.shared.color.onSurfaceVariant)
-
-        Text("Please confirm signing with one of the following certificates:")
-          .font(Theme.shared.font.labelMedium.font)
-          .foregroundStyle(Theme.shared.color.onSurface)
-      }
-
-      List(viewModel.viewState.credentials) { item in
-        HStack {
-          Text(item.name)
-          Spacer()
-          if selectedItem == item.certificateURI.absoluteString {
-            Image(systemName: "checkmark")
-              .foregroundColor(.accentColor)
-          }
-        }
-        .listRowInsets(EdgeInsets())
-        .contentShape(Rectangle())
-        .onTapGesture {
-          if selectedItem == item.certificateURI.absoluteString {
-            selectedItem = nil
-          } else {
-            selectedItem = item.certificateURI.absoluteString
-          }
-        }
-      }
-      .listStyle(.plain)
+      content(
+        title: viewModel.resource(.selectCertificateTitle),
+        documentName: "Document_Title.PDF",
+        signedBy: viewModel.resource(.signedBy, args: ["Entrust"]),
+        certificate: viewModel.resource(.certificate),
+        confirmSigning: viewModel.resource(.selectCertificateSubtitle),
+        credentials: viewModel.viewState.credentials,
+        selectedItem: $selectedItem
+      )
     }
     .onAppear {
       viewModel.fetchCredentials()
     }
     .withNavigationTitle(
-      "Select certificate",
+      viewModel.resource(.selectCertificate),
       trailingActions: [
-        Action(title: "State") {
+        Action(title: viewModel.resource(.state)) {
           viewModel.setFlowState(
             .sign(
               "Document_title.PDF",
@@ -94,15 +60,90 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
           )
           viewModel.onPause()
         },
-        Action(title: "Proceed") {
-          viewModel.signDocument()
-        }
+        Action(
+          title: viewModel.resource(.proceed)) {
+            viewModel.signDocument()
+          }
       ],
       leadingActions: [
-        Action(title: "Cancel") {
+        Action(title: viewModel.resource(.cancel)) {
           viewModel.onCancel()
         }
       ]
+    )
+  }
+}
+
+@MainActor
+@ViewBuilder
+private func content(
+  title: String,
+  documentName: String,
+  signedBy: String,
+  certificate: String,
+  confirmSigning: String,
+  credentials: [CertificateData],
+  selectedItem: Binding<String?>
+) -> some View {
+  VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+    Text(title)
+      .font(Theme.shared.font.labelMedium.font)
+      .foregroundStyle(Theme.shared.color.onSurface)
+
+    CardView(
+      title: documentName,
+      subtitle: signedBy
+    ) {
+      Image(.verifiedUser)
+    } action: {}
+  }
+
+  VStack(alignment: .leading, spacing: SPACING_SMALL) {
+    Text(certificate)
+      .font(Theme.shared.font.labelMedium.font)
+      .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+
+    Text(confirmSigning)
+      .font(Theme.shared.font.labelMedium.font)
+      .foregroundStyle(Theme.shared.color.onSurface)
+  }
+
+  List(credentials) { item in
+    HStack {
+      Text(item.name)
+      Spacer()
+      if selectedItem.wrappedValue == item.certificateURI.absoluteString {
+        Image(systemName: "checkmark")
+          .foregroundColor(.accentColor)
+      }
+    }
+    .listRowInsets(EdgeInsets())
+    .contentShape(Rectangle())
+    .onTapGesture {
+      if selectedItem.wrappedValue == item.certificateURI.absoluteString {
+        selectedItem.wrappedValue = nil
+      } else {
+        selectedItem.wrappedValue = item.certificateURI.absoluteString
+      }
+    }
+  }
+  .listStyle(.plain)
+}
+
+#Preview {
+  ContentScreenView(spacing: SPACING_LARGE_MEDIUM) {
+    content(
+      title: "You have chosen to sign the following document:",
+      documentName: "Document_Title.PDF",
+      signedBy: "Signed by:Entrust",
+      certificate: "CERTIFICATE",
+      confirmSigning: "Please confirm signing with one of the following certificates:",
+      credentials: [
+        CertificateData(name: "Certificate 1", certificateURI: URL(string: "uri 1")!),
+        CertificateData(name: "Certificate 2", certificateURI: URL(string: "uri 2")!),
+        CertificateData(name: "Certificate 3", certificateURI: URL(string: "uri 3")!)
+      ],
+      selectedItem: .constant("")
     )
   }
 }

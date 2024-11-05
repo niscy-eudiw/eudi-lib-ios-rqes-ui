@@ -32,47 +32,82 @@ struct SignedDocumentView<Router: RouterGraph>: View {
 
   var body: some View {
     ContentScreenView(spacing: SPACING_LARGE_MEDIUM) {
-      VStack(alignment: .leading, spacing: SPACING_NONE) {
-        Text("Success")
-          .font(Theme.shared.font.headlineLarge.font)
-          .foregroundStyle(Theme.shared.color.success)
-          .padding(.top, SPACING_LARGE_MEDIUM)
-
-        VStack(alignment: .leading, spacing: SPACING_NONE) {
-          Text("You successfully signed your document")
-            .foregroundStyle(Theme.shared.color.onSurface)
-
-          Text(viewModel.viewState.name)
-            .foregroundStyle(Theme.shared.color.onSurface)
-            .fontWeight(.semibold)
-            .leftImage(image: Image(.verifiedUser))
-        }
-        .padding(.top, SPACING_SMALL)
-
-        CardView(
-          type: .success,
-          title: viewModel.viewState.name,
-          subtitle: "Signed by: Entrust",
-          trailingView: {
-            Text("View")
-              .font(Theme.shared.font.bodyLarge.font)
-          },
-          action: { viewModel.viewDocument() },
-          trailingAction: { viewModel.viewDocument() }
-        )
-        .padding(.top, SPACING_MEDIUM)
-      }
-
-      Spacer()
+      content(
+        success: viewModel.resource(.success),
+        successfullySigned: viewModel.resource(.successfullySignedDocument),
+        documentName: viewModel.viewState.name,
+        signedBy: viewModel.resource(.signedBy, args: ["Entrust"]),
+        viewString: viewModel.resource(.view),
+        view: viewModel.viewDocument
+      )
     }
     .withNavigationTitle(
-      "Document signed",
+      viewModel.resource(.documentSigned),
       trailingActions: [
         Action(
-          title: "Done",
-          callback: viewModel.onPause
+          title: viewModel.resource(.done),
+          callback: {
+            viewModel.onPause()
+          }
         )
       ]
+    )
+  }
+}
+
+@MainActor
+@ViewBuilder
+private func content(
+  success: String,
+  successfullySigned: String,
+  documentName: String,
+  signedBy: String,
+  viewString: String,
+  view: @escaping () -> Void
+) -> some View {
+  VStack(alignment: .leading, spacing: SPACING_NONE) {
+    Text(success)
+      .font(Theme.shared.font.headlineLarge.font)
+      .foregroundStyle(Theme.shared.color.success)
+      .padding(.top, SPACING_LARGE_MEDIUM)
+
+    VStack(alignment: .leading, spacing: SPACING_NONE) {
+      Text(successfullySigned)
+        .foregroundStyle(Theme.shared.color.onSurface)
+
+      Text(documentName)
+        .foregroundStyle(Theme.shared.color.onSurface)
+        .fontWeight(.semibold)
+        .leftImage(image: Image(.verifiedUser))
+    }
+    .padding(.top, SPACING_SMALL)
+
+    CardView(
+      type: .success,
+      title: documentName,
+      subtitle: signedBy,
+      trailingView: {
+        Text(viewString)
+          .font(Theme.shared.font.bodyLarge.font)
+      },
+      action: { view() },
+      trailingAction: { view() }
+    )
+    .padding(.top, SPACING_MEDIUM)
+
+    Spacer()
+  }
+}
+
+#Preview {
+  ContentScreenView(spacing: SPACING_LARGE_MEDIUM) {
+    content(
+      success: "Success",
+      successfullySigned: "You successfully signed your document",
+      documentName: "Document title",
+      signedBy: "Signed by: Entrust",
+      viewString: "View",
+      view: {}
     )
   }
 }

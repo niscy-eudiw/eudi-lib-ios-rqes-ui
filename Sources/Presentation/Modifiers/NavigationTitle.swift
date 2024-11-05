@@ -68,23 +68,7 @@ private struct NavigationTitleModifier: ViewModifier {
         if let leadingActions {
           ToolbarItemGroup(placement: .topBarLeading) {
             ForEach(leadingActions, id: \.id) { action in
-              if let callback = action.callback {
-                Button(action: callback) {
-                  if let title = action.title {
-                    Text(title)
-                  }
-                  if let image = action.image {
-                    image
-                  }
-                }
-              } else {
-                if let title = action.title {
-                  Text(title)
-                }
-                if let image = action.image {
-                  image
-                }
-              }
+              ActionView(action: action)
             }
           }
         }
@@ -92,27 +76,38 @@ private struct NavigationTitleModifier: ViewModifier {
         if let trailingActions {
           ToolbarItemGroup(placement: .topBarTrailing) {
             ForEach(trailingActions, id: \.id) { action in
-              if let callback = action.callback {
-                Button(action: callback) {
-                  if let title = action.title {
-                    Text(title)
-                  }
-                  if let image = action.image {
-                    image
-                  }
-                }
-              } else {
-                if let title = action.title {
-                  Text(title)
-                }
-                if let image = action.image {
-                  image
-                }
-              }
+              ActionView(action: action)
             }
           }
         }
       }
+  }
+}
+
+
+private struct ActionView: View {
+  let action: Action
+
+  var body: some View {
+    Group {
+      if let callback = action.callback {
+        Button(action: callback) {
+          content
+        }
+      } else {
+        content
+      }
+    }
+  }
+
+  @ViewBuilder
+  private var content: some View {
+    if let title = action.title {
+      Text(title)
+    }
+    if let image = action.image {
+      image
+    }
   }
 }
 
