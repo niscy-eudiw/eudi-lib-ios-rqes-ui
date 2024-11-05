@@ -17,8 +17,8 @@ import SwiftUI
 
 @Copyable
 struct DocumentSelectionState: ViewState {
-  let document: URL
-  let services: [URL]
+  let document: DocumentData
+  let services: [QTSPData]
 }
 
 class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, DocumentSelectionState> {
@@ -38,7 +38,7 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
       router.navigateTo(
         .viewDocument(
           .pdfUrl(
-            viewState.document
+            viewState.document.uri
           )
         )
       )

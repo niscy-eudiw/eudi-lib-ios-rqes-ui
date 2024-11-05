@@ -24,8 +24,8 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
 
   init(
     router: Router,
-    document: URL,
-    services: [URL]
+    document: DocumentData,
+    services: [QTSPData]
   ) {
     _viewModel = .init(
       wrappedValue: .init(
@@ -41,6 +41,7 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
   var body: some View {
     content(
       localization: localization,
+      documentName: viewModel.viewState.document.documentName,
       view: viewModel.viewDocument,
       select: viewModel.selectService,
       dismiss: viewModel.onCancel
@@ -52,6 +53,7 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
 @ViewBuilder
 private func content(
   localization: LocalizationController,
+  documentName: String,
   view: @escaping () -> Void,
   select: @escaping () -> Void,
   dismiss: @escaping () -> Void
@@ -62,24 +64,16 @@ private func content(
       .foregroundStyle(Theme.shared.color.onSurface)
 
     CardView(
-      title: "Document_Title.PDF",
-      trailingView: {
-        Text(localization.get(with: .view, args: []))
-          .font(Theme.shared.font.bodyLarge.font)
-      },
-      action: {
-        view()
-      }
-    )
-
-    CardView(
-      title: "Select RSSP",
+      title: documentName,
       trailingView: {
         Text(localization.get(with: .view, args: []))
           .font(Theme.shared.font.bodyLarge.font)
       },
       action: {
         select()
+      },
+      trailingAction: {
+        view()
       }
     )
 
@@ -104,6 +98,7 @@ private func content(
 
   content(
     localization: localization,
+    documentName: "Name",
     view: {},
     select: {},
     dismiss: {}

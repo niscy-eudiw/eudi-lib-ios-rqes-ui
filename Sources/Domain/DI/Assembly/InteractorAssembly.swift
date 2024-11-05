@@ -20,6 +20,9 @@ final class InteractorAssembly: Assembly {
   init() {}
   
   func assemble(container: Container) {
-    
+    container.register(SelectCertificateInteractor.self) { r in
+      SelectCertificateInteractorImpl()
+    }
+    .inObjectScope(ObjectScope.transient)
   }
 }

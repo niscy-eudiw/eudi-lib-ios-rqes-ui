@@ -32,19 +32,22 @@ struct CardView<Label: View>: View {
   private let trailingView: () -> Label
   private let type: CardViewType
   private let action: () -> Void
+  private let trailingAction: (() -> Void)?
 
   init(
     type: CardViewType = .info,
     title: String,
     subtitle: String? = nil,
     @ViewBuilder trailingView: @escaping () -> Label,
-    action: @escaping () -> Void
+    action: @escaping () -> Void,
+    trailingAction: (() -> Void)? = nil
   ) {
     self.title = title
     self.subtitle = subtitle
     self.trailingView = trailingView
     self.type = type
     self.action = action
+    self.trailingAction = trailingAction
   }
 
   var body: some View {
@@ -65,7 +68,7 @@ struct CardView<Label: View>: View {
       }
       Spacer()
       Button {
-        action()
+        trailingAction?()
       } label: {
         trailingView()
       }

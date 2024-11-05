@@ -21,7 +21,7 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
 
   init(
     router: Router,
-    services: [URL]
+    services: [QTSPData]
   ) {
     _viewModel = .init(
       wrappedValue: .init(
@@ -43,22 +43,22 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
         .font(Theme.shared.font.labelMedium.font)
         .foregroundStyle(Theme.shared.color.onSurface)
 
-      List(viewModel.viewState.services, id: \.self) { item in
+      List(viewModel.viewState.services, id: \.qtspName) { item in
         HStack {
-          Text(item.absoluteString)
+          Text(item.qtspName)
           Spacer()
-          if selectedItem == item.absoluteString {
+          if selectedItem == item.uri.absoluteString {
             Image(systemName: "checkmark")
-              .foregroundColor(.blue)
+              .foregroundColor(.accentColor)
           }
         }
         .listRowInsets(EdgeInsets())
         .contentShape(Rectangle())
         .onTapGesture {
-          if selectedItem == item.absoluteString {
+          if selectedItem == item.uri.absoluteString {
             selectedItem = nil
           } else {
-            selectedItem = item.absoluteString
+            selectedItem = item.uri.absoluteString
           }
         }
       }

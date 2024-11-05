@@ -38,7 +38,7 @@ public struct ContentScreenView<Content: View>: View {
 
   public var body: some View {
     NavigationView {
-      VStack(spacing: spacing) {
+      VStack(alignment: .leading, spacing: spacing) {
         content
       }
       .padding([.all], padding)

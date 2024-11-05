@@ -58,22 +58,22 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
           .foregroundStyle(Theme.shared.color.onSurface)
       }
 
-      List(viewModel.viewState.credentials, id: \.self) { item in
+      List(viewModel.viewState.credentials) { item in
         HStack {
-          Text(item)
+          Text(item.name)
           Spacer()
-          if selectedItem == item {
+          if selectedItem == item.certificateURI.absoluteString {
             Image(systemName: "checkmark")
-              .foregroundColor(.blue)
+              .foregroundColor(.accentColor)
           }
         }
         .listRowInsets(EdgeInsets())
         .contentShape(Rectangle())
         .onTapGesture {
-          if selectedItem == item {
+          if selectedItem == item.certificateURI.absoluteString {
             selectedItem = nil
           } else {
-            selectedItem = item
+            selectedItem = item.certificateURI.absoluteString
           }
         }
       }

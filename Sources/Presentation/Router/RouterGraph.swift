@@ -60,8 +60,8 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
   init() {}
   
   enum RouteTable: Hashable, Identifiable, Equatable {
-    case documentSelection(document: URL, services: [URL])
-    case serviceSelection(services: [URL])
+    case documentSelection(document: DocumentData, services: [QTSPData])
+    case serviceSelection(services: [QTSPData])
     case credentialSelection
     case signedDocument(title: String, contents: String)
     case viewDocument(DocumentSource)

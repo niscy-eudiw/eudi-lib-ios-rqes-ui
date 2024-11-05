@@ -42,7 +42,7 @@ struct SignedDocumentView<Router: RouterGraph>: View {
           Text("You successfully signed your document")
             .foregroundStyle(Theme.shared.color.onSurface)
 
-          Text("Document_Title.PDF")
+          Text(viewModel.viewState.name)
             .foregroundStyle(Theme.shared.color.onSurface)
             .fontWeight(.semibold)
             .leftImage(image: Image(.verifiedUser))
@@ -51,13 +51,14 @@ struct SignedDocumentView<Router: RouterGraph>: View {
 
         CardView(
           type: .success,
-          title: "Document_Title.PDF",
+          title: viewModel.viewState.name,
           subtitle: "Signed by: Entrust",
           trailingView: {
             Text("View")
               .font(Theme.shared.font.bodyLarge.font)
           },
-          action: { viewModel.viewDocument() }
+          action: { viewModel.viewDocument() },
+          trailingAction: { viewModel.viewDocument() }
         )
         .padding(.top, SPACING_MEDIUM)
       }

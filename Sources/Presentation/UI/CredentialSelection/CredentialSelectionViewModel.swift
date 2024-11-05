@@ -17,31 +17,39 @@ import SwiftUI
 
 @Copyable
 struct CredentialSelectionState: ViewState {
-  let credentials: [String]
+  let credentials: [CertificateData]
 }
 
-class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router, CredentialSelectionState> {
-  
-  override init(
+final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router, CredentialSelectionState> {
+
+  private let interactor: SelectCertificateInteractor
+
+  init(
     router: Router,
+    interactor: SelectCertificateInteractor = SelectCertificateInteractorImpl(),
     initialState: CredentialSelectionState = .init(credentials: [])
   ) {
+    self.interactor = interactor
     super.init(
       router: router,
       initialState: initialState
     )
   }
-  
+
+  @MainActor
   func fetchCredentials() {
-    setState {
-      $0.copy(credentials: [
-        "Certificate 1",
-        "Certificate 2",
-        "Certificate 3"
-      ])
+    Task {
+      do {
+        let credentials = try await interactor.qtspCertificates(qtspCertificateEndpoint: URL(string: "uri")!)
+        self.setState {
+          $0.copy(credentials: credentials)
+        }
+      } catch {
+
+      }
     }
   }
-  
+
   func signDocument() {
     if let router = self.router as? RouterGraphImpl {
       router.navigateTo(

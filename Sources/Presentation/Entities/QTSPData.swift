@@ -13,3 +13,8 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+
+public struct QTSPData: Codable, Equatable, Sendable {
+  let qtspName: String
+  let uri: URL
+}

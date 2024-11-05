@@ -35,7 +35,7 @@ public final actor EudiRQESUi {
   @MainActor
   public func initiate(
     on container: UIViewController,
-    fileUrl: URL,
+    fileUrl: DocumentData,
     animated: Bool = true
   ) async throws {
     guard let config = Self._config else {
@@ -114,8 +114,8 @@ extension EudiRQESUi {
   enum State: Equatable, Sendable {
     
     case none
-    case initial(URL, any EudiRQESUiConfig)
-    case rssps([URL])
+    case initial(DocumentData, any EudiRQESUiConfig)
+    case rssps([QTSPData])
     case credentials
     case sign(String, String)
     case view(DocumentSource)

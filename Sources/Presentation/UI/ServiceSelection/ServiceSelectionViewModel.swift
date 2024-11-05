@@ -17,7 +17,7 @@ import SwiftUI
 
 @Copyable
 struct ServiceSelectionState: ViewState {
-  let services: [URL]
+  let services: [QTSPData]
 }
 
 class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceSelectionState> {

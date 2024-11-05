@@ -16,18 +16,18 @@
 import Foundation
 
 public protocol EudiRQESUiConfig: Sendable {
-
+  
   // Remote signing service provider list
-  var rssps : [URL] { get }
+  var rssps : [QTSPData] { get }
   
   // OAuth redirect url
   var redirectUrl: URL? { get }
   
   // Transactions per locale
   var translations: [String: [LocalizableKey: String]] { get }
-
+  
   var theme: ThemeProtocol { get }
-
+  
   // Logging is enabled
   var printLogs: Bool { get }
 }
@@ -36,7 +36,7 @@ extension EudiRQESUiConfig {
   public var translations: [String: [LocalizableKey: String]] {
     [:]
   }
-
+  
   public var theme: ThemeProtocol {
     AppTheme()
   }
@@ -44,13 +44,13 @@ extension EudiRQESUiConfig {
 
 // MARK: - TODO To be removed once SDK is stable
 public struct DefaultUIConfig: EudiRQESUiConfig {
-  public let rssps: [URL]
+  public let rssps: [QTSPData]
   public let redirectUrl: URL?
   public let printLogs: Bool
   public var theme: ThemeProtocol
-
+  
   private init(
-    rssps: [URL],
+    rssps: [QTSPData],
     redirectUrl: URL?,
     printLogs: Bool,
     theme: ThemeProtocol
@@ -59,16 +59,16 @@ public struct DefaultUIConfig: EudiRQESUiConfig {
     self.redirectUrl = redirectUrl
     self.printLogs = printLogs
     self.theme = theme
-
+    
     Theme.config(with: theme)
   }
   
   public static func createDefault() -> DefaultUIConfig {
     return DefaultUIConfig(
       rssps: [
-        URL(string: "https://www.entrust.com")!,
-        URL(string: "https://www.docusign.com")!,
-        URL(string: "https://www.ascertia.com")!
+        QTSPData(qtspName: "Entrust", uri: URL(string: "https://www.entrust.com")!),
+        QTSPData(qtspName: "Docusign", uri: URL(string: "https://www.docusign.com")!),
+        QTSPData(qtspName: "Ascertia", uri: URL(string: "https://www.ascertia.com")!)
       ],
       redirectUrl: URL(string: "openid-rqes://code"),
       printLogs: true,
