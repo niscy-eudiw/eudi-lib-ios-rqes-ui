@@ -17,7 +17,11 @@ import SwiftUI
 
 struct DocumentSelectionView<Router: RouterGraph>: View {
   @StateObject var viewModel: DocumentSelectionViewModel<Router>
-  
+
+  private let localization = DIGraph.resolver.force(
+    LocalizationController.self
+  )
+
   init(
     router: Router,
     document: URL,
@@ -33,9 +37,10 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
       )
     )
   }
-  
+
   var body: some View {
     content(
+      localization: localization,
       view: viewModel.viewDocument,
       select: viewModel.selectService,
       dismiss: viewModel.onCancel
@@ -46,39 +51,61 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
 @MainActor
 @ViewBuilder
 private func content(
+  localization: LocalizationController,
   view: @escaping () -> Void,
   select: @escaping () -> Void,
   dismiss: @escaping () -> Void
 ) -> some View {
-  NavigationView {
-    VStack(alignment: .center, spacing: 10.0) {
-      Button(action: {
+  ContentScreenView(spacing: SPACING_LARGE_MEDIUM) {
+    Text(localization.get(with: .confirmSelectionTitle, args: []))
+      .font(Theme.shared.font.labelMedium.font)
+      .foregroundStyle(Theme.shared.color.onSurface)
+
+    CardView(
+      title: "Document_Title.PDF",
+      trailingView: {
+        Text(localization.get(with: .view, args: []))
+          .font(Theme.shared.font.bodyLarge.font)
+      },
+      action: {
         view()
-      }) {
-        Text("View PDF")
-          .foregroundColor(.blue)
       }
-      
-      Button(action: {
+    )
+
+    CardView(
+      title: "Select RSSP",
+      trailingView: {
+        Text(localization.get(with: .view, args: []))
+          .font(Theme.shared.font.bodyLarge.font)
+      },
+      action: {
         select()
-      }) {
-        Text("Select RSSP")
-          .foregroundColor(.blue)
       }
-      
-      Spacer()
-    }
-    .navigationTitle("Confirm Selection")
-    .navigationBarTitleDisplayMode(.inline)
-    .toolbar {
-      ToolbarItem(placement: .topBarLeading) {
-        Button(action: {
-          dismiss()
-        }) {
-          Text("Close")
-        }
-      }
-    }
+    )
+
+    Spacer()
   }
+  .withNavigationTitle(
+    localization.get(with: .confirmSelection, args: []),
+    leadingActions: [
+      Action(
+        title: localization.get(with: .cancel, args: []),
+        callback: dismiss
+      )
+    ]
+  )
   .eraseToAnyView()
+}
+
+#Preview {
+  let localization = DIGraph.resolver.force(
+    LocalizationController.self
+  )
+
+  content(
+    localization: localization,
+    view: {},
+    select: {},
+    dismiss: {}
+  )
 }

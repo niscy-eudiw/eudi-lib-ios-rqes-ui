@@ -17,7 +17,7 @@ import SwiftUI
 
 struct SignedDocumentView<Router: RouterGraph>: View {
   @StateObject var viewModel: SignedDocumentViewModel<Router>
-  
+
   init(
     router: Router,
     initialState: SignedDocumenState
@@ -29,42 +29,49 @@ struct SignedDocumentView<Router: RouterGraph>: View {
       )
     )
   }
-  
+
   var body: some View {
-    NavigationView {
-      VStack(spacing: 20) {
+    ContentScreenView(spacing: SPACING_LARGE_MEDIUM) {
+      VStack(alignment: .leading, spacing: SPACING_NONE) {
         Text("Success")
-          .font(.largeTitle)
-          .foregroundColor(.green)
-        
-        Button(action: {
-          viewModel.viewDocument()
-        }) {
-          HStack {
-            Image(systemName: "eye")
-              .font(.system(size: 24))
-              .foregroundColor(.blue)
-            
+          .font(Theme.shared.font.headlineLarge.font)
+          .foregroundStyle(Theme.shared.color.success)
+          .padding(.top, SPACING_LARGE_MEDIUM)
+
+        VStack(alignment: .leading, spacing: SPACING_NONE) {
+          Text("You successfully signed your document")
+            .foregroundStyle(Theme.shared.color.onSurface)
+
+          Text("Document_Title.PDF")
+            .foregroundStyle(Theme.shared.color.onSurface)
+            .fontWeight(.semibold)
+            .leftImage(image: Image(.verifiedUser))
+        }
+        .padding(.top, SPACING_SMALL)
+
+        CardView(
+          type: .success,
+          title: "Document_Title.PDF",
+          subtitle: "Signed by: Entrust",
+          trailingView: {
             Text("View")
-              .font(.headline)
-              .foregroundColor(.black)
-          }
-          .padding()
-          .background(Color.white)
-          .cornerRadius(8)
-          .shadow(radius: 4)
-        }
+              .font(Theme.shared.font.bodyLarge.font)
+          },
+          action: { viewModel.viewDocument() }
+        )
+        .padding(.top, SPACING_MEDIUM)
       }
-      .padding()
+
+      Spacer()
     }
-    .navigationTitle("Status")
-    .navigationBarTitleDisplayMode(.inline)
-    .toolbar {
-      ToolbarItem(placement: .navigationBarTrailing) {
-        Button("Done") {
-          viewModel.onPause()
-        }
-      }
-    }
+    .withNavigationTitle(
+      "Document signed",
+      trailingActions: [
+        Action(
+          title: "Done",
+          callback: viewModel.onPause
+        )
+      ]
+    )
   }
 }

@@ -32,46 +32,46 @@ public protocol ColorManagerProtocol: Sendable {
 
 final class ColorManager: ColorManagerProtocol {
   var error: Color {
-    Color("error", bundle: .module)
+    Color("Error", bundle: .module)
   }
 
   var textPrimaryDark: Color {
-    Color("textPrimaryDark", bundle: .module)
+    Color("TextPrimaryDark", bundle: .module)
   }
 
   var onSurface: Color {
-    Color("onSurface", bundle: .module)
+    Color("OnSurface", bundle: .module)
   }
 
   var onSurfaceVariant: Color {
-    Color("onSurfaceVariant", bundle: .module)
+    Color("OnSurfaceVariant", bundle: .module)
   }
 
   var primaryMain: Color {
-    Color("primaryMain", bundle: .module)
+    Color("PrimaryMain", bundle: .module)
   }
 
   var success: Color{
-    Color("success", bundle: .module)
+    Color("Success", bundle: .module)
   }
 
   var successVariant: Color {
-    Color("successVariant", bundle: .module)
+    Color("SuccessVariant", bundle: .module)
   }
 
   var warning: Color{
-    Color("warning", bundle: .module)
+    Color("Warning", bundle: .module)
   }
 
   var background: Color {
-    Color("background", bundle: .module)
+    Color("Background", bundle: .module)
   }
 
   var primaryVariant: Color {
-    Color("primaryVariant", bundle: .module)
+    Color("PrimaryVariant", bundle: .module)
   }
 
   var secondary: Color {
-    Color("secondary", bundle: .module)
+    Color("Secondary", bundle: .module)
   }
 }

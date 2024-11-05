@@ -13,3 +13,13 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+
+let SPACING_NONE: CGFloat = 0
+let SPACING_EXTRA_SMALL: CGFloat = 4
+let SPACING_SMALL: CGFloat = 8
+let SPACING_MEDIUM_SMALL: CGFloat = 12
+let SPACING_MEDIUM: CGFloat = 16
+let SPACING_MEDIUM_LARGE: CGFloat = 20
+let SPACING_LARGE_MEDIUM: CGFloat = 24
+let SPACING_LARGE: CGFloat = 32
+let SPACING_EXTRA_LARGE: CGFloat = 48

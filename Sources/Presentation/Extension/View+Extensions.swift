@@ -15,8 +15,21 @@
  */
 import SwiftUI
 
-public extension View {
+extension View {
   func eraseToAnyView() -> AnyView {
     return AnyView(self)
+  }
+}
+
+extension View {
+  @ViewBuilder func `if`<Content: View>(
+    _ condition: Bool,
+    transform: (Self) -> Content
+  ) -> some View {
+    if condition {
+      transform(self)
+    } else {
+      self
+    }
   }
 }

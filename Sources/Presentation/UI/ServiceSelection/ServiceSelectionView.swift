@@ -34,7 +34,15 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
   }
 
   var body: some View {
-    NavigationView {
+    ContentScreenView(spacing: SPACING_LARGE_MEDIUM) {
+      Text("Select remote signing service.")
+        .font(Theme.shared.font.labelMedium.font)
+        .foregroundStyle(Theme.shared.color.onSurface)
+
+      Text("Remote signing enables you to digitally sign documents without the need for locally installed digital identities. Cloud-hosted signing service makes remote signing possible.")
+        .font(Theme.shared.font.labelMedium.font)
+        .foregroundStyle(Theme.shared.color.onSurface)
+
       List(viewModel.viewState.services, id: \.self) { item in
         HStack {
           Text(item.absoluteString)
@@ -44,6 +52,7 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
               .foregroundColor(.blue)
           }
         }
+        .listRowInsets(EdgeInsets())
         .contentShape(Rectangle())
         .onTapGesture {
           if selectedItem == item.absoluteString {
@@ -53,29 +62,25 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
           }
         }
       }
+      .listStyle(.plain)
     }
-    .navigationTitle("Select service")
-    .navigationBarTitleDisplayMode(.inline)
-    .toolbar {
-      ToolbarItem(placement: .navigationBarTrailing) {
-        if selectedItem != nil {
-          Button("Proceed") {
-            viewModel.selectCredential()
-          }
-        }
-      }
-    }
-    .toolbar {
-      ToolbarItem(placement: .navigationBarTrailing) {
-        if selectedItem != nil {
-          Button("State") {
+    .withNavigationTitle(
+      "Select service",
+      trailingActions: [
+        Action(
+          title: "State",
+          callback: {
             viewModel.setFlowState(
               .credentials
             )
             viewModel.onPause()
           }
-        }
-      }
-    }
+        ),
+        Action(
+          title: "Proceed",
+          callback: viewModel.selectCredential
+        )
+      ]
+    )
   }
 }

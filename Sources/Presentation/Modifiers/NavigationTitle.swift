@@ -17,13 +17,13 @@
 extension View {
   func withNavigationTitle(
     _ title: String,
-    trailingAction: Action? = nil,
-    leadingAction: Action? = nil
+    trailingActions: [Action]? = nil,
+    leadingActions: [Action]? = nil
   ) -> some View {
     self.modifier(NavigationTitleModifier(
       title: title,
-      trailingAction: trailingAction,
-      leadingAction: leadingAction
+      trailingActions: trailingActions,
+      leadingActions: leadingActions
     ))
   }
 }
@@ -32,12 +32,12 @@ struct Action: Identifiable {
   let id = UUID()
   let title: String?
   let image: Image?
-  let callback: () -> Void
+  let callback: (() -> Void)?
 
   init(
     title: String? = nil,
     image: Image? = nil,
-    callback: @escaping () -> Void
+    callback: (() -> Void)? = nil
   ) {
     self.title = title
     self.image = image
@@ -47,17 +47,17 @@ struct Action: Identifiable {
 
 private struct NavigationTitleModifier: ViewModifier {
   private let title: String
-  private let trailingAction: Action?
-  private let leadingAction: Action?
+  private let trailingActions: [Action]?
+  private let leadingActions: [Action]?
 
   init(
     title: String,
-    trailingAction: Action?,
-    leadingAction: Action?
+    trailingActions: [Action]?,
+    leadingActions: [Action]?
   ) {
     self.title = title
-    self.trailingAction = trailingAction
-    self.leadingAction = leadingAction
+    self.trailingActions = trailingActions
+    self.leadingActions = leadingActions
   }
 
   func body(content: Content) -> some View {
@@ -65,26 +65,49 @@ private struct NavigationTitleModifier: ViewModifier {
       .navigationTitle(title)
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
-        if let leadingAction {
-          ToolbarItem(placement: .topBarLeading) {
-            Button(action: leadingAction.callback) {
-              if let title = leadingAction.title {
-                Text(title)
-              }
-              if let image = leadingAction.image {
-                image
+        if let leadingActions {
+          ToolbarItemGroup(placement: .topBarLeading) {
+            ForEach(leadingActions, id: \.id) { action in
+              if let callback = action.callback {
+                Button(action: callback) {
+                  if let title = action.title {
+                    Text(title)
+                  }
+                  if let image = action.image {
+                    image
+                  }
+                }
+              } else {
+                if let title = action.title {
+                  Text(title)
+                }
+                if let image = action.image {
+                  image
+                }
               }
             }
           }
         }
-        if let trailingAction {
-          ToolbarItem(placement: .topBarTrailing) {
-            Button(action: trailingAction.callback) {
-              if let title = trailingAction.title {
-                Text(title)
-              }
-              if let image = trailingAction.image {
-                image
+
+        if let trailingActions {
+          ToolbarItemGroup(placement: .topBarTrailing) {
+            ForEach(trailingActions, id: \.id) { action in
+              if let callback = action.callback {
+                Button(action: callback) {
+                  if let title = action.title {
+                    Text(title)
+                  }
+                  if let image = action.image {
+                    image
+                  }
+                }
+              } else {
+                if let title = action.title {
+                  Text(title)
+                }
+                if let image = action.image {
+                  image
+                }
               }
             }
           }
@@ -98,14 +121,22 @@ private struct NavigationTitleModifier: ViewModifier {
     Text("Hello, World!")
       .withNavigationTitle(
         "Confirm Selection",
-        trailingAction: Action(
-          title: "Save",
-          callback: {}
-        ),
-        leadingAction: Action(
-          title: "Cancel",
-          callback: {}
-        )
+        trailingActions: [
+          Action(
+            title: "State",
+            callback: {}
+          ),
+          Action(
+            title: "Proceed",
+            callback: {}
+          )
+        ],
+        leadingActions: [
+          Action(
+            title: "Cancel",
+            callback: {}
+          )
+        ]
       )
   }
 }

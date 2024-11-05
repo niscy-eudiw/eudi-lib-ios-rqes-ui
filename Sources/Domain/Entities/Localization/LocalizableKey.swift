@@ -37,6 +37,7 @@ public enum LocalizableKey: String, Sendable {
   case shared
   case proceed
   case viewDocument
+  case cancel
 
   func defaultTranslation(args: [String]) -> String {
     let value = switch self {
@@ -61,6 +62,7 @@ public enum LocalizableKey: String, Sendable {
     case .shared: "Shared"
     case .proceed: "Proceed"
     case .viewDocument: "View document"
+    case .cancel: "Cancel"
     }
     return value.format(arguments: args)
   }

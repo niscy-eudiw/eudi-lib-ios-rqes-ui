@@ -14,38 +14,36 @@
  * governing permissions and limitations under the Licence.
  */
 
-typealias Theme = ThemeManager
+import SwiftUI
 
-protocol ThemeManagerProtocol: Sendable {
-  static var shared: ThemeProtocol { get }
+public struct ContentScreenView<Content: View>: View {
 
-  static func config(with theme: ThemeProtocol)
-}
+  let content: Content
+  let padding: CGFloat
+  let spacing: CGFloat
+  let background: Color
 
-final class ThemeManager: ThemeManagerProtocol {
-
-  nonisolated(unsafe) static var shared: ThemeProtocol = AppTheme()
-
-  static func config(with theme: ThemeProtocol) {
-    self.shared = theme
-  }
-}
-
-public protocol ThemeProtocol: Sendable {
-  var color: ColorManagerProtocol { get }
-  var font: TypographyManagerProtocol { get }
-}
-
-extension ThemeProtocol {
-  var color: ColorManagerProtocol {
-    ColorManager()
+  public init(
+    padding: CGFloat = 16,
+    canScroll: Bool = false,
+    spacing: CGFloat = 0,
+    background: Color = .white,
+    @ViewBuilder content: () -> Content
+  ) {
+    self.content = content()
+    self.padding = padding
+    self.spacing = spacing
+    self.background = background
   }
 
-  var font: TypographyManagerProtocol {
-    TypographyManager()
+  public var body: some View {
+    NavigationView {
+      VStack(spacing: spacing) {
+        content
+      }
+      .padding([.all], padding)
+    }
+    .background(background)
+    .fastenDynamicType()
   }
-}
-
-final class AppTheme: ThemeProtocol {
-  init() {}
 }

@@ -80,8 +80,13 @@ private func content(viewState: DocumentState) -> some View {
       )
     }
   }
-  .navigationTitle("View document")
-  .navigationBarTitleDisplayMode(.inline)
+  .withNavigationTitle(
+    "View document",
+    trailingActions: [
+      Action(
+        image: Image(.verifiedUser))
+    ]
+  )
 }
 
 #Preview {

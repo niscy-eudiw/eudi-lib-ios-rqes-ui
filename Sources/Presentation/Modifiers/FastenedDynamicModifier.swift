@@ -13,39 +13,16 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import SwiftUI
 
-typealias Theme = ThemeManager
-
-protocol ThemeManagerProtocol: Sendable {
-  static var shared: ThemeProtocol { get }
-
-  static func config(with theme: ThemeProtocol)
-}
-
-final class ThemeManager: ThemeManagerProtocol {
-
-  nonisolated(unsafe) static var shared: ThemeProtocol = AppTheme()
-
-  static func config(with theme: ThemeProtocol) {
-    self.shared = theme
+public struct FastenedDynamicModifier: ViewModifier {
+  public func body(content: Content) -> some View {
+    content.dynamicTypeSize(...DynamicTypeSize.accessibility1)
   }
 }
 
-public protocol ThemeProtocol: Sendable {
-  var color: ColorManagerProtocol { get }
-  var font: TypographyManagerProtocol { get }
-}
-
-extension ThemeProtocol {
-  var color: ColorManagerProtocol {
-    ColorManager()
+public extension View {
+  func fastenDynamicType() -> some View {
+    modifier(FastenedDynamicModifier())
   }
-
-  var font: TypographyManagerProtocol {
-    TypographyManager()
-  }
-}
-
-final class AppTheme: ThemeProtocol {
-  init() {}
 }
