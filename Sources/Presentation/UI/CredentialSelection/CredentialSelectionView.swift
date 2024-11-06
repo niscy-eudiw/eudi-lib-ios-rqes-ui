@@ -16,7 +16,11 @@
 import SwiftUI
 
 struct CredentialSelectionView<Router: RouterGraph>: View {
+  @Environment(\.dismiss) var dismiss
+
   @State private var selectedItem: String?
+  @State private var showSheet = false
+
   @StateObject var viewModel: CredentialSelectionViewModel<Router>
 
   private let localization = DIGraph.resolver.force(
@@ -67,9 +71,32 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
       ],
       leadingActions: [
         Action(title: viewModel.resource(.cancel)) {
-          viewModel.onCancel()
+          showSheet.toggle()
         }
       ]
+    )
+    .dynamicBottomSheet(isPresented: $showSheet) {
+      bottomSheet()
+    }
+  }
+
+  @ViewBuilder
+  private func bottomSheet() -> some View {
+    let cancelAction = BottomSheetAction(
+      title: viewModel.resource(.cancelSigning),
+      action: { dismiss() }
+    )
+
+    let deleteAction = BottomSheetAction(
+      title: viewModel.resource(.continueSigning),
+      action: { viewModel.onCancel() }
+    )
+
+    BottomSheetViewWithActions(
+      title: viewModel.resource(.cancelSigningProcessTitle),
+      subtitle: viewModel.resource(.cancelSigningProcessSubtitle),
+      negativeAction: cancelAction,
+      positiveAction: deleteAction
     )
   }
 }

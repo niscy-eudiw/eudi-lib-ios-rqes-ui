@@ -39,6 +39,10 @@ public enum LocalizableKey: String, Sendable {
   case viewDocument
   case cancel
   case state
+  case cancelSigning
+  case continueSigning
+  case cancelSigningProcessTitle
+  case cancelSigningProcessSubtitle
 
   func defaultTranslation(args: [String]) -> String {
     let value = switch self {
@@ -65,6 +69,10 @@ public enum LocalizableKey: String, Sendable {
     case .viewDocument: "View document"
     case .cancel: "Cancel"
     case .state: "State"
+    case .cancelSigning: "Cancel signing"
+    case .continueSigning: "Continue signing"
+    case .cancelSigningProcessTitle: "Cancel signing process"
+    case .cancelSigningProcessSubtitle: "Cancel  will will redirect you back to the document list without signing your document."
     }
     return value.format(arguments: args)
   }

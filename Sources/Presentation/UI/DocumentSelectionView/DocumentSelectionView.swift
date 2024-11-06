@@ -16,11 +16,10 @@
 import SwiftUI
 
 struct DocumentSelectionView<Router: RouterGraph>: View {
+  @Environment(\.dismiss) var dismiss
   @StateObject var viewModel: DocumentSelectionViewModel<Router>
 
-  private let localization = DIGraph.resolver.force(
-    LocalizationController.self
-  )
+  @State private var showSheet = false
 
   init(
     router: Router,
@@ -39,15 +38,47 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
   }
 
   var body: some View {
-    content(
-      confirmSelectionTitle: viewModel.resource(.confirmSelectionTitle),
-      confirmSelection: viewModel.resource(.confirmSelection),
-      documentName: viewModel.viewState.document.documentName,
-      viewString: viewModel.resource(.view),
-      cancel: viewModel.resource(.cancel),
-      view: viewModel.viewDocument,
-      select: viewModel.selectService,
-      dismiss: viewModel.onCancel
+    ContentScreenView(spacing: SPACING_LARGE_MEDIUM) {
+      content(
+        confirmSelectionTitle: viewModel.resource(.confirmSelectionTitle),
+        documentName: viewModel.viewState.document.documentName,
+        viewString: viewModel.resource(.view),
+        view: viewModel.viewDocument,
+        select: viewModel.selectService
+      )
+    }
+    .withNavigationTitle(
+      viewModel.resource(.confirmSelection),
+      leadingActions: [
+        Action(
+          title: viewModel.resource(.cancel),
+          callback: { showSheet.toggle() }
+        )
+      ]
+    )
+    .dynamicBottomSheet(isPresented: $showSheet) {
+      bottomSheet()
+    }
+    .eraseToAnyView()
+  }
+
+  @ViewBuilder
+  private func bottomSheet() -> some View {
+    let cancelAction = BottomSheetAction(
+      title: viewModel.resource(.cancelSigning),
+      action: { dismiss() }
+    )
+
+    let deleteAction = BottomSheetAction(
+      title: viewModel.resource(.continueSigning),
+      action: { viewModel.onCancel() }
+    )
+
+    BottomSheetViewWithActions(
+      title: viewModel.resource(.cancelSigningProcessTitle),
+      subtitle: viewModel.resource(.cancelSigningProcessSubtitle),
+      negativeAction: cancelAction,
+      positiveAction: deleteAction
     )
   }
 }
@@ -56,56 +87,40 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
 @ViewBuilder
 private func content(
   confirmSelectionTitle: String,
-  confirmSelection: String,
   documentName: String,
   viewString: String,
-  cancel: String,
   view: @escaping () -> Void,
-  select: @escaping () -> Void,
-  dismiss: @escaping () -> Void
+  select: @escaping () -> Void
 ) -> some View {
-  ContentScreenView(spacing: SPACING_LARGE_MEDIUM) {
-    Text(confirmSelectionTitle)
-      .font(Theme.shared.font.labelMedium.font)
-      .foregroundStyle(Theme.shared.color.onSurface)
+  Text(confirmSelectionTitle)
+    .font(Theme.shared.font.labelMedium.font)
+    .foregroundStyle(Theme.shared.color.onSurface)
 
-    CardView(
-      title: documentName,
-      trailingView: {
-        Text(viewString)
-          .font(Theme.shared.font.bodyLarge.font)
-      },
-      action: {
-        select()
-      },
-      trailingAction: {
-        view()
-      }
-    )
-
-    Spacer()
-  }
-  .withNavigationTitle(
-    confirmSelection,
-    leadingActions: [
-      Action(
-        title: cancel,
-        callback: dismiss
-      )
-    ]
+  CardView(
+    title: documentName,
+    trailingView: {
+      Text(viewString)
+        .font(Theme.shared.font.bodyLarge.font)
+    },
+    action: {
+      select()
+    },
+    trailingAction: {
+      view()
+    }
   )
-  .eraseToAnyView()
+
+  Spacer()
 }
 
 #Preview {
-  content(
-    confirmSelectionTitle: "confirmSelectionTitle",
-    confirmSelection: "confirmSelection",
-    documentName: "documentName",
-    viewString: "View",
-    cancel: "Cancel",
-    view: {},
-    select: {},
-    dismiss: {}
-  )
+  ContentScreenView(spacing: SPACING_LARGE_MEDIUM) {
+    content(
+      confirmSelectionTitle: "confirmSelectionTitle",
+      documentName: "documentName",
+      viewString: "View",
+      view: {},
+      select: {}
+    )
+  }
 }

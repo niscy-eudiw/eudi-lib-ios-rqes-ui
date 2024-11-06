@@ -28,6 +28,7 @@ public protocol ColorManagerProtocol: Sendable {
   var successVariant: Color { get }
   var warning: Color { get }
   var secondary: Color { get }
+  var onPrimary: Color { get }
 }
 
 final class ColorManager: ColorManagerProtocol {
@@ -73,5 +74,9 @@ final class ColorManager: ColorManagerProtocol {
 
   var secondary: Color {
     Color("Secondary", bundle: .module)
+  }
+
+  var onPrimary: Color {
+    Color("OnPrimary", bundle: .module)
   }
 }
