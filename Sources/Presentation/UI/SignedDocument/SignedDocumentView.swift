@@ -50,7 +50,7 @@ struct SignedDocumentView<Router: RouterGraph>: View {
         success: localization.get(with: .success),
         successfullySigned: localization.get(with: .successfullySignedDocument),
         documentName: viewModel.viewState.name,
-        signedBy: localization.get(with: .signedBy, args: ["Entrust"]),
+        signedBy: localization.get(with: .signedBy, args: [viewModel.viewState.qtspName]),
         viewString: localization.get(with: .view),
         view: viewModel.viewDocument
       )

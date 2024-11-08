@@ -22,11 +22,13 @@ struct CredentialSelectionState: ViewState {
 
 final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router, CredentialSelectionState> {
 
-  private let interactor: SelectCertificateInteractor
+  private let interactor: QTSPInteractor
+  @Published var document: DocumentData?
+  @Published var qtspName: String?
 
   init(
     router: Router,
-    interactor: SelectCertificateInteractor = SelectCertificateInteractorImpl(),
+    interactor: QTSPInteractor = QTSPInteractorImpl(),
     initialState: CredentialSelectionState = .init(credentials: [])
   ) {
     self.interactor = interactor
@@ -50,14 +52,16 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
     }
   }
 
-  func signDocument() {
-    if let router = self.router as? RouterGraphImpl {
-      router.navigateTo(
-        .signedDocument(
-          title: "Document_Title.PDF",
-          contents: ""
-        )
-      )
+  func setCertificate(_ certificate: String? = nil) {
+    Task {
+      try? await EudiRQESUi.instance().updateCertificate(with: certificate)
+    }
+  }
+
+  func getDocument() {
+    Task {
+      document = try? await EudiRQESUi.instance().selection.document
+      qtspName = try? await EudiRQESUi.instance().selection.qtsp?.qtspName
     }
   }
 }

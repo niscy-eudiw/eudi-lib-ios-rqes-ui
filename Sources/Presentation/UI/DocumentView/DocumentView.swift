@@ -41,9 +41,12 @@ struct DocumentViewer<Router: RouterGraph>: View {
   @StateObject var viewModel: DocumentViewModel<Router>
   @Environment(\.localizationController) var localization
 
+  private let isSigned: Bool
+
   init(
     router: Router,
-    source: DocumentSource
+    source: DocumentSource,
+    isSigned: Bool = false
   ) {
     _viewModel = .init(
       wrappedValue: .init(
@@ -55,12 +58,24 @@ struct DocumentViewer<Router: RouterGraph>: View {
         )
       )
     )
+    self.isSigned = isSigned
   }
 
   var body: some View {
     content(
       navigationTitle: localization.get(with: .viewDocument),
+      toolbarContent: isSigned ? toolbarAction() : nil,
       viewState: viewModel.viewState
+    )
+  }
+
+  private func toolbarAction() -> ToolBarContent {
+    ToolBarContent(
+      trailingActions: [
+        Action(
+          image: Image(.verifiedUser)
+        )
+      ]
     )
   }
 }
@@ -69,16 +84,12 @@ struct DocumentViewer<Router: RouterGraph>: View {
 @ViewBuilder
 private func content(
   navigationTitle: String,
+  toolbarContent: ToolBarContent?,
   viewState: DocumentState
 ) -> some View {
   ContentScreenView(
     title: navigationTitle,
-    toolbarContent: ToolBarContent(
-      trailingActions: [
-        Action(
-          image: Image(.verifiedUser))
-      ]
-    )
+    toolbarContent: toolbarContent
   ) {
     if let errorMessage = viewState.errorMessage {
       Text(errorMessage)
@@ -86,7 +97,7 @@ private func content(
         .foregroundColor(.red)
         .padding()
         .eraseToAnyView()
-      
+
     } else if let document = viewState.pdfDocument {
       PDFViewRepresented(
         pdfDocument: document
@@ -101,6 +112,7 @@ private func content(
 
   content(
     navigationTitle: "View document",
+    toolbarContent: nil,
     viewState: .init(
       pdfDocument: document,
       errorMessage: nil,

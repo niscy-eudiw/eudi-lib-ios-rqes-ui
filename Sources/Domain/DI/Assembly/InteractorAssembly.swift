@@ -20,8 +20,8 @@ final class InteractorAssembly: Assembly {
   init() {}
   
   func assemble(container: Container) {
-    container.register(SelectCertificateInteractor.self) { r in
-      SelectCertificateInteractorImpl()
+    container.register(QTSPInteractor.self) { r in
+      QTSPInteractorImpl()
     }
     .inObjectScope(ObjectScope.transient)
   }

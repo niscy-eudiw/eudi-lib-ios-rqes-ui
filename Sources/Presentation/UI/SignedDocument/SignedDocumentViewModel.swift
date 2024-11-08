@@ -19,6 +19,7 @@ import SwiftUI
 struct SignedDocumenState: ViewState {
   let name: String
   let contents: String
+  let qtspName: String
 }
 
 class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocumenState> {
@@ -37,7 +38,8 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
     if let router = router as? RouterGraphImpl {
       router.navigateTo(
         .viewDocument(
-          .pdfBase64(viewState.contents)
+          .pdfBase64(viewState.contents),
+          true
         )
       )
     }

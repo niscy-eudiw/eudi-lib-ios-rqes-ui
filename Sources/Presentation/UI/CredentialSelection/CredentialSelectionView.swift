@@ -42,16 +42,13 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
           Action(title: localization.get(with: .state)) {
             viewModel.setFlowState(
               .sign(
-                "Document_title.PDF",
-                "JVBERi0xLjEKJcKlwrHDqwoKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCgoyIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2VzCiAgICAgL0tpZHMgWzMgMCBSXQogICAgIC9Db3VudCAxCiAgICAgL01lZGlhQm94IFswIDAgMzAwIDE0NF0KICA+PgplbmRvYmoKCjMgMCBvYmoKICA8PCAgL1R5cGUgL1BhZ2UKICAgICAgL1BhcmVudCAyIDAgUgogICAgICAvUmVzb3VyY2VzCiAgICAgICA8PCAvRm9udAogICAgICAgICAgIDw8IC9GMQogICAgICAgICAgICAgICA8PCAvVHlwZSAvRm9udAogICAgICAgICAgICAgICAgICAvU3VidHlwZSAvVHlwZTEKICAgICAgICAgICAgICAgICAgL0Jhc2VGb250IC9UaW1lcy1Sb21hbgogICAgICAgICAgICAgICA+PgogICAgICAgICAgID4+CiAgICAgICA+PgogICAgICAvQ29udGVudHMgNCAwIFIKICA+PgplbmRvYmoKCjQgMCBvYmoKICA8PCAvTGVuZ3RoIDU1ID4+CnN0cmVhbQogIEJUCiAgICAvRjEgMTggVGYKICAgIDAgMCBUZAogICAgKEhlbGxvIFdvcmxkKSBUagogIEVUCmVuZHN0cmVhbQplbmRvYmoKCnhyZWYKMCA1CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxOCAwMDAwMCBuIAowMDAwMDAwMDc3IDAwMDAwIG4gCjAwMDAwMDAxNzggMDAwMDAgbiAKMDAwMDAwMDQ1NyAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgIC9Sb290IDEgMCBSCiAgICAgIC9TaXplIDUKICA+PgpzdGFydHhyZWYKNTY1CiUlRU9GCg=="
+                viewModel.document?.documentName ?? "",
+                viewModel.document?.uri.absoluteString ?? "",
+                viewModel.qtspName ?? ""
               )
             )
             viewModel.onPause()
-          },
-          Action(
-            title: localization.get(with: .proceed)) {
-              viewModel.signDocument()
-            }
+          }
         ],
         leadingActions: [
           Action(title: localization.get(with: .cancel)) {
@@ -62,16 +59,23 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
     ) {
       content(
         title: localization.get(with: .selectCertificateTitle),
-        documentName: "Document_Title.PDF",
-        signedBy: localization.get(with: .signedBy, args: ["Entrust"]),
+        documentName: viewModel.document?.documentName ?? "",
         certificate: localization.get(with: .certificate),
         confirmSigning: localization.get(with: .selectCertificateSubtitle),
         credentials: viewModel.viewState.credentials,
         selectedItem: $selectedItem
       )
+      .onChange(of: selectedItem) { newValue in
+        if let newValue {
+          viewModel.setCertificate(newValue)
+        } else {
+          viewModel.setCertificate(nil)
+        }
+      }
     }
     .onAppear {
       viewModel.fetchCredentials()
+      viewModel.getDocument()
     }
     .confirmationDialog(
       localization.get(with: .cancelSigningProcessTitle),
@@ -98,7 +102,6 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
 private func content(
   title: String,
   documentName: String,
-  signedBy: String,
   certificate: String,
   confirmSigning: String,
   credentials: [CertificateData],
@@ -111,10 +114,8 @@ private func content(
 
     CardView(
       title: documentName,
-      subtitle: signedBy
-    ) {
-      Image(.verifiedUser)
-    } action: {}
+      trailingView: {}
+    )
   }
 
   VStack(alignment: .leading, spacing: SPACING_SMALL) {
@@ -157,7 +158,6 @@ private func content(
     content(
       title: "You have chosen to sign the following document:",
       documentName: "Document_Title.PDF",
-      signedBy: "Signed by:Entrust",
       certificate: "CERTIFICATE",
       confirmSigning: "Please confirm signing with one of the following certificates:",
       credentials: [

@@ -34,12 +34,12 @@ struct CertificateData: Identifiable {
   let certificateURI: URL
 }
 
-protocol SelectCertificateInteractor: Sendable {
+protocol QTSPInteractor: Sendable {
   func qtspCertificates(qtspCertificateEndpoint: URL) async throws -> [CertificateData]
   func signDocument(documentUri: URL)
 }
 
-final class SelectCertificateInteractorImpl: SelectCertificateInteractor {
+final class QTSPInteractorImpl: QTSPInteractor {
   func qtspCertificates(qtspCertificateEndpoint: URL) async throws -> [CertificateData] {
     do {
       return [

@@ -18,7 +18,7 @@ import SwiftUI
 struct ServiceSelectionView<Router: RouterGraph>: View {
   @Environment(\.localizationController) var localization
   @StateObject var viewModel: ServiceSelectionViewModel<Router>
-  @State private var selectedItem: String?
+  @State private var selectedItem: QTSPData?
 
   init(
     router: Router,
@@ -48,10 +48,6 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
               )
               viewModel.onPause()
             }
-          ),
-          Action(
-            title: localization.get(with: .proceed),
-            callback: viewModel.selectCredential
           )
         ]
       )
@@ -62,6 +58,13 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
         services: viewModel.viewState.services,
         selectedItem: $selectedItem
       )
+      .onChange(of: selectedItem) { newValue in
+        if let newValue = newValue {
+          viewModel.selectQTSP(newValue)
+        } else {
+          viewModel.selectQTSP(nil)
+        }
+      }
     }
   }
 }
@@ -72,7 +75,7 @@ private func content(
   selectServiceTitle: String,
   selectServiceSubtitle: String,
   services: [QTSPData],
-  selectedItem: Binding<String?>
+  selectedItem: Binding<QTSPData?>
 ) -> some View {
   Text(selectServiceTitle)
     .font(Theme.shared.font.labelMedium.font)
@@ -86,7 +89,7 @@ private func content(
     HStack {
       Text(item.qtspName)
       Spacer()
-      if selectedItem.wrappedValue == item.uri.absoluteString {
+      if selectedItem.wrappedValue?.uri == item.uri {
         Image(systemName: "checkmark")
           .foregroundColor(.accentColor)
       }
@@ -94,10 +97,10 @@ private func content(
     .listRowInsets(EdgeInsets())
     .contentShape(Rectangle())
     .onTapGesture {
-      if selectedItem.wrappedValue == item.uri.absoluteString {
+      if selectedItem.wrappedValue?.uri == item.uri {
         selectedItem.wrappedValue = nil
       } else {
-        selectedItem.wrappedValue = item.uri.absoluteString
+        selectedItem.wrappedValue = item
       }
     }
   }
@@ -117,7 +120,12 @@ private func content(
         QTSPData(qtspName: "Docusign", uri: URL(string: "https://www.docusign.com")!),
         QTSPData(qtspName: "Ascertia", uri: URL(string: "https://www.ascertia.com")!)
       ],
-      selectedItem: .constant("")
+      selectedItem: .constant(
+        QTSPData(
+          qtspName: "Entrust",
+          uri: URL(string: "https://www.entrust.com")!
+        )
+      )
     )
   }
 }

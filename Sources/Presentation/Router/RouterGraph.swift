@@ -63,8 +63,8 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
     case documentSelection(document: DocumentData, services: [QTSPData])
     case serviceSelection(services: [QTSPData])
     case credentialSelection
-    case signedDocument(title: String, contents: String)
-    case viewDocument(DocumentSource)
+    case signedDocument(title: String, contents: String, qtspName: String)
+    case viewDocument(DocumentSource, Bool)
     case certificateSelection(any EudiRQESUiConfig)
     
     var id: String {
@@ -126,19 +126,21 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
         router: self
       )
       .eraseToAnyView()
-    case .signedDocument(let name, let contents):
+    case .signedDocument(let name, let contents, let qtspName):
       SignedDocumentView(
         router: self,
         initialState: .init(
           name: name,
-          contents: contents
+          contents: contents,
+          qtspName: qtspName
         )
       )
       .eraseToAnyView()
-    case .viewDocument(let source):
+    case .viewDocument(let source, let isSigned):
       DocumentViewer(
         router: self,
-        source: source
+        source: source,
+        isSigned: isSigned
       )
       .eraseToAnyView()
     case .certificateSelection:
@@ -177,12 +179,13 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
           CredentialSelectionView(
             router: self
           )
-        case .sign(let name, let contents):
+        case .sign(let name, let contents, let qtspName):
           SignedDocumentView(
             router: self,
             initialState: .init(
               name: name,
-              contents: contents
+              contents: contents,
+              qtspName: qtspName
             )
           )
         case .view(let source):

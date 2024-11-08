@@ -31,7 +31,7 @@ struct CardView<Label: View>: View {
   private let subtitle: String?
   private let trailingView: () -> Label
   private let type: CardViewType
-  private let action: () -> Void
+  private let action: (() -> Void)?
   private let trailingAction: (() -> Void)?
 
   init(
@@ -39,7 +39,7 @@ struct CardView<Label: View>: View {
     title: String,
     subtitle: String? = nil,
     @ViewBuilder trailingView: @escaping () -> Label,
-    action: @escaping () -> Void,
+    action: (() -> Void)? = nil,
     trailingAction: (() -> Void)? = nil
   ) {
     self.title = title
@@ -75,7 +75,7 @@ struct CardView<Label: View>: View {
     }
     .contentShape(Rectangle())
     .onTapGesture {
-      action()
+      action?()
     }
     .padding(SPACING_MEDIUM)
     .frame(height: 80, alignment: .leading)

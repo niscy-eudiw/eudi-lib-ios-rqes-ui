@@ -31,7 +31,13 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
       initialState: initialState
     )
   }
-  
+
+  func selectQTSP(_ qtsp: QTSPData? = nil) {
+    Task {
+      try? await EudiRQESUi.instance().updateQTSP(with: qtsp)
+    }
+  }
+
   func selectCredential() {
     if let router = self.router as? RouterGraphImpl {
       router.navigateTo(

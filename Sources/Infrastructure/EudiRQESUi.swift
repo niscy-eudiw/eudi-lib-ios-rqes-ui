@@ -15,6 +15,19 @@
  */
 import UIKit
 
+@Copyable
+struct CurrentSelection {
+  var document: DocumentData?
+  var qtsp: QTSPData?
+  var certificate: String?
+
+  init(document: DocumentData? = nil, qtsp: QTSPData? = nil, certificate: String? = nil) {
+    self.document = document
+    self.qtsp = qtsp
+    self.certificate = certificate
+  }
+}
+
 public final actor EudiRQESUi {
   
   private static var _shared: EudiRQESUi?
@@ -23,6 +36,7 @@ public final actor EudiRQESUi {
   private static var _viewController: UIViewController?
   
   private let router: any RouterGraph
+  var selection = CurrentSelection()
 
   @discardableResult
   public init(config: any EudiRQESUiConfig) {
@@ -64,6 +78,18 @@ public final actor EudiRQESUi {
     if let viewController = await getViewController() {
       container.present(viewController, animated: animated)
     }
+  }
+
+  func updateSelectionDocument(with document: DocumentData) async {
+    selection.document = document
+  }
+
+  func updateQTSP(with qtsp: QTSPData? = nil) async {
+    selection.qtsp = qtsp
+  }
+
+  func updateCertificate(with certificate: String? = nil) async {
+    selection.certificate = certificate
   }
 }
 
@@ -121,7 +147,7 @@ extension EudiRQESUi {
     case initial(DocumentData, any EudiRQESUiConfig)
     case rssps([QTSPData])
     case credentials
-    case sign(String, String)
+    case sign(String, String, String)
     case view(DocumentSource)
     
     var id: String {

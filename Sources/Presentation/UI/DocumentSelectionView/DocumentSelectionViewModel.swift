@@ -39,13 +39,18 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
         .viewDocument(
           .pdfUrl(
             viewState.document.uri
-          )
+          ),
+          false
         )
       )
     }
   }
   
   func selectService() {
+    Task {
+      try? await EudiRQESUi.instance().updateSelectionDocument(with: viewState.document)
+    }
+    
     if let router = self.router as? RouterGraphImpl {
       router.navigateTo(
         .serviceSelection(
