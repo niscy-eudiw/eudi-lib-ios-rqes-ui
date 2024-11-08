@@ -16,9 +16,8 @@
 import SwiftUI
 
 struct CredentialSelectionView<Router: RouterGraph>: View {
-  @Environment(\.dismiss) var dismiss
   @Environment(\.localizationController) var localization
-  
+
   @State private var selectedItem: String?
   @State private var showSheet = false
 
@@ -74,29 +73,23 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
     .onAppear {
       viewModel.fetchCredentials()
     }
-    .dynamicBottomSheet(isPresented: $showSheet) {
-      bottomSheet()
+    .confirmationDialog(
+      localization.get(with: .cancelSigningProcessTitle),
+      isPresented: $showSheet,
+      titleVisibility: .visible
+    ) {
+      Button(
+        localization.get(with: .cancelSigning),
+        role: .destructive
+      ) {
+        viewModel.onCancel()
+      }
+      Button(
+        localization.get(with: .continueSigning),
+        role: .cancel) {
+          showSheet.toggle()
+      }
     }
-  }
-
-  @ViewBuilder
-  private func bottomSheet() -> some View {
-    let cancelAction = BottomSheetAction(
-      title: localization.get(with: .cancelSigning),
-      action: { dismiss() }
-    )
-
-    let deleteAction = BottomSheetAction(
-      title: localization.get(with: .continueSigning),
-      action: { viewModel.onCancel() }
-    )
-
-    BottomSheetViewWithActions(
-      title: localization.get(with: .cancelSigningProcessTitle),
-      subtitle: localization.get(with: .cancelSigningProcessSubtitle),
-      negativeAction: cancelAction,
-      positiveAction: deleteAction
-    )
   }
 }
 

@@ -16,7 +16,6 @@
 import SwiftUI
 
 struct DocumentSelectionView<Router: RouterGraph>: View {
-  @Environment(\.dismiss) var dismiss
   @Environment(\.localizationController) var localization
   @StateObject var viewModel: DocumentSelectionViewModel<Router>
 
@@ -59,30 +58,24 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
         select: viewModel.selectService
       )
     }
-    .dynamicBottomSheet(isPresented: $showSheet) {
-      bottomSheet()
+    .confirmationDialog(
+      localization.get(with: .cancelSigningProcessTitle),
+      isPresented: $showSheet,
+      titleVisibility: .visible
+    ) {
+      Button(
+        localization.get(with: .cancelSigning),
+        role: .destructive
+      ) {
+        viewModel.onCancel()
+      }
+      Button(
+        localization.get(with: .continueSigning),
+        role: .cancel) {
+          showSheet.toggle()
+      }
     }
     .eraseToAnyView()
-  }
-
-  @ViewBuilder
-  private func bottomSheet() -> some View {
-    let cancelAction = BottomSheetAction(
-      title: localization.get(with: .cancelSigning),
-      action: { dismiss() }
-    )
-
-    let deleteAction = BottomSheetAction(
-      title: localization.get(with: .continueSigning),
-      action: { viewModel.onCancel() }
-    )
-
-    BottomSheetViewWithActions(
-      title: localization.get(with: .cancelSigningProcessTitle),
-      subtitle: localization.get(with: .cancelSigningProcessSubtitle),
-      negativeAction: cancelAction,
-      positiveAction: deleteAction
-    )
   }
 }
 
