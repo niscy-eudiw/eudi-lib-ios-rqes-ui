@@ -38,7 +38,32 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
   }
 
   var body: some View {
-    ContentScreenView(spacing: SPACING_LARGE_MEDIUM) {
+    ContentScreenView(
+      spacing: SPACING_LARGE_MEDIUM,
+      title: viewModel.resource(.selectCertificate),
+      toolbarContent: ToolBarContent(
+        trailingActions: [
+          Action(title: viewModel.resource(.state)) {
+            viewModel.setFlowState(
+              .sign(
+                "Document_title.PDF",
+                "JVBERi0xLjEKJcKlwrHDqwoKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCgoyIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2VzCiAgICAgL0tpZHMgWzMgMCBSXQogICAgIC9Db3VudCAxCiAgICAgL01lZGlhQm94IFswIDAgMzAwIDE0NF0KICA+PgplbmRvYmoKCjMgMCBvYmoKICA8PCAgL1R5cGUgL1BhZ2UKICAgICAgL1BhcmVudCAyIDAgUgogICAgICAvUmVzb3VyY2VzCiAgICAgICA8PCAvRm9udAogICAgICAgICAgIDw8IC9GMQogICAgICAgICAgICAgICA8PCAvVHlwZSAvRm9udAogICAgICAgICAgICAgICAgICAvU3VidHlwZSAvVHlwZTEKICAgICAgICAgICAgICAgICAgL0Jhc2VGb250IC9UaW1lcy1Sb21hbgogICAgICAgICAgICAgICA+PgogICAgICAgICAgID4+CiAgICAgICA+PgogICAgICAvQ29udGVudHMgNCAwIFIKICA+PgplbmRvYmoKCjQgMCBvYmoKICA8PCAvTGVuZ3RoIDU1ID4+CnN0cmVhbQogIEJUCiAgICAvRjEgMTggVGYKICAgIDAgMCBUZAogICAgKEhlbGxvIFdvcmxkKSBUagogIEVUCmVuZHN0cmVhbQplbmRvYmoKCnhyZWYKMCA1CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxOCAwMDAwMCBuIAowMDAwMDAwMDc3IDAwMDAwIG4gCjAwMDAwMDAxNzggMDAwMDAgbiAKMDAwMDAwMDQ1NyAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgIC9Sb290IDEgMCBSCiAgICAgIC9TaXplIDUKICA+PgpzdGFydHhyZWYKNTY1CiUlRU9GCg=="
+              )
+            )
+            viewModel.onPause()
+          },
+          Action(
+            title: viewModel.resource(.proceed)) {
+              viewModel.signDocument()
+            }
+        ],
+        leadingActions: [
+          Action(title: viewModel.resource(.cancel)) {
+            showSheet.toggle()
+          }
+        ]
+      )
+    ) {
       content(
         title: viewModel.resource(.selectCertificateTitle),
         documentName: "Document_Title.PDF",
@@ -52,29 +77,6 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
     .onAppear {
       viewModel.fetchCredentials()
     }
-    .withNavigationTitle(
-      viewModel.resource(.selectCertificate),
-      trailingActions: [
-        Action(title: viewModel.resource(.state)) {
-          viewModel.setFlowState(
-            .sign(
-              "Document_title.PDF",
-              "JVBERi0xLjEKJcKlwrHDqwoKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCgoyIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2VzCiAgICAgL0tpZHMgWzMgMCBSXQogICAgIC9Db3VudCAxCiAgICAgL01lZGlhQm94IFswIDAgMzAwIDE0NF0KICA+PgplbmRvYmoKCjMgMCBvYmoKICA8PCAgL1R5cGUgL1BhZ2UKICAgICAgL1BhcmVudCAyIDAgUgogICAgICAvUmVzb3VyY2VzCiAgICAgICA8PCAvRm9udAogICAgICAgICAgIDw8IC9GMQogICAgICAgICAgICAgICA8PCAvVHlwZSAvRm9udAogICAgICAgICAgICAgICAgICAvU3VidHlwZSAvVHlwZTEKICAgICAgICAgICAgICAgICAgL0Jhc2VGb250IC9UaW1lcy1Sb21hbgogICAgICAgICAgICAgICA+PgogICAgICAgICAgID4+CiAgICAgICA+PgogICAgICAvQ29udGVudHMgNCAwIFIKICA+PgplbmRvYmoKCjQgMCBvYmoKICA8PCAvTGVuZ3RoIDU1ID4+CnN0cmVhbQogIEJUCiAgICAvRjEgMTggVGYKICAgIDAgMCBUZAogICAgKEhlbGxvIFdvcmxkKSBUagogIEVUCmVuZHN0cmVhbQplbmRvYmoKCnhyZWYKMCA1CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxOCAwMDAwMCBuIAowMDAwMDAwMDc3IDAwMDAwIG4gCjAwMDAwMDAxNzggMDAwMDAgbiAKMDAwMDAwMDQ1NyAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgIC9Sb290IDEgMCBSCiAgICAgIC9TaXplIDUKICA+PgpzdGFydHhyZWYKNTY1CiUlRU9GCg=="
-            )
-          )
-          viewModel.onPause()
-        },
-        Action(
-          title: viewModel.resource(.proceed)) {
-            viewModel.signDocument()
-          }
-      ],
-      leadingActions: [
-        Action(title: viewModel.resource(.cancel)) {
-          showSheet.toggle()
-        }
-      ]
-    )
     .dynamicBottomSheet(isPresented: $showSheet) {
       bottomSheet()
     }
@@ -158,7 +160,10 @@ private func content(
 }
 
 #Preview {
-  ContentScreenView(spacing: SPACING_LARGE_MEDIUM) {
+  ContentScreenView(
+    spacing: SPACING_LARGE_MEDIUM,
+    title: "Select certificate"
+  ) {
     content(
       title: "You have chosen to sign the following document:",
       documentName: "Document_Title.PDF",

@@ -16,32 +16,45 @@
 
 import SwiftUI
 
-public struct ContentScreenView<Content: View>: View {
+struct ContentScreenView<Content: View>: View {
 
-  let content: Content
-  let padding: CGFloat
-  let spacing: CGFloat
-  let background: Color
+  private let content: Content
+  private let padding: CGFloat
+  private let spacing: CGFloat
+  private let background: Color
+  private let title: String
+  private let toolbarContent: ToolBarContent?
 
-  public init(
+  init(
     padding: CGFloat = 16,
     canScroll: Bool = false,
     spacing: CGFloat = 0,
     background: Color = .white,
+    title: String,
+    toolbarContent: ToolBarContent? = nil,
     @ViewBuilder content: () -> Content
   ) {
     self.content = content()
     self.padding = padding
     self.spacing = spacing
     self.background = background
+    self.title = title
+    self.toolbarContent = toolbarContent
   }
 
-  public var body: some View {
+  var body: some View {
     NavigationView {
       VStack(alignment: .leading, spacing: spacing) {
         content
       }
       .padding([.all], padding)
+    }
+    .navigationTitle(title)
+    .navigationBarTitleDisplayMode(.inline)
+    .if(toolbarContent != nil) {
+      $0.toolbar {
+        toolbarContent
+      }
     }
     .background(background)
     .fastenDynamicType()

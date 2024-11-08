@@ -38,7 +38,18 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
   }
 
   var body: some View {
-    ContentScreenView(spacing: SPACING_LARGE_MEDIUM) {
+    ContentScreenView(
+      spacing: SPACING_LARGE_MEDIUM,
+      title: viewModel.resource(.confirmSelection),
+      toolbarContent: .init(
+        leadingActions: [
+          Action(
+            title: viewModel.resource(.cancel),
+            callback: { showSheet.toggle() }
+          )
+        ]
+      )
+    ) {
       content(
         confirmSelectionTitle: viewModel.resource(.confirmSelectionTitle),
         documentName: viewModel.viewState.document.documentName,
@@ -47,15 +58,6 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
         select: viewModel.selectService
       )
     }
-    .withNavigationTitle(
-      viewModel.resource(.confirmSelection),
-      leadingActions: [
-        Action(
-          title: viewModel.resource(.cancel),
-          callback: { showSheet.toggle() }
-        )
-      ]
-    )
     .dynamicBottomSheet(isPresented: $showSheet) {
       bottomSheet()
     }
@@ -114,7 +116,10 @@ private func content(
 }
 
 #Preview {
-  ContentScreenView(spacing: SPACING_LARGE_MEDIUM) {
+  ContentScreenView(
+    spacing: SPACING_LARGE_MEDIUM,
+    title: "title"
+  ) {
     content(
       confirmSelectionTitle: "confirmSelectionTitle",
       documentName: "documentName",

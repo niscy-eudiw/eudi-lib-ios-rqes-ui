@@ -32,7 +32,7 @@ public enum LocalizableKey: String, Sendable {
   case successfullySignedDocument
   case signedBy
   case view
-  case done
+  case save
   case documentSigned
   case shared
   case proceed
@@ -62,7 +62,7 @@ public enum LocalizableKey: String, Sendable {
     case .successfullySignedDocument: "You successfully signed your document"
     case .signedBy: "Signed by: %@"
     case .view: "View"
-    case .done: "Done"
+    case .save: "Save"
     case .documentSigned: "Document signed"
     case .shared: "Shared"
     case .proceed: "Proceed"

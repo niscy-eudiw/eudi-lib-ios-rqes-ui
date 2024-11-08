@@ -34,7 +34,27 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
   }
 
   var body: some View {
-    ContentScreenView(spacing: SPACING_LARGE_MEDIUM) {
+    ContentScreenView(
+      spacing: SPACING_LARGE_MEDIUM,
+      title: viewModel.resource(.selectService),
+      toolbarContent: ToolBarContent(
+        trailingActions: [
+          Action(
+            title: viewModel.resource(.state),
+            callback: {
+              viewModel.setFlowState(
+                .credentials
+              )
+              viewModel.onPause()
+            }
+          ),
+          Action(
+            title: viewModel.resource(.proceed),
+            callback: viewModel.selectCredential
+          )
+        ]
+      )
+    ) {
       content(
         selectServiceTitle: viewModel.resource(.selectServiceTitle),
         selectServiceSubtitle: viewModel.resource(.selectServiceSubtitle),
@@ -42,24 +62,6 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
         selectedItem: $selectedItem
       )
     }
-    .withNavigationTitle(
-      viewModel.resource(.selectService),
-      trailingActions: [
-        Action(
-          title: viewModel.resource(.state),
-          callback: {
-            viewModel.setFlowState(
-              .credentials
-            )
-            viewModel.onPause()
-          }
-        ),
-        Action(
-          title: viewModel.resource(.proceed),
-          callback: viewModel.selectCredential
-        )
-      ]
-    )
   }
 }
 
@@ -102,7 +104,10 @@ private func content(
 }
 
 #Preview {
-  ContentScreenView(spacing: SPACING_LARGE_MEDIUM) {
+  ContentScreenView(
+    spacing: SPACING_LARGE_MEDIUM,
+    title: "Navigation Title"
+  ) {
     content(
       selectServiceTitle: "Select remote signing service.",
       selectServiceSubtitle: "Remote signing enables you to digitally sign documents without the need for locally installed digital identities. Cloud-hosted signing service makes remote signing possible.",

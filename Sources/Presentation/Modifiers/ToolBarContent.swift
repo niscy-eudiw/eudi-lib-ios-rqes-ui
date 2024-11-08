@@ -13,27 +13,14 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-
-extension View {
-  func withNavigationTitle(
-    _ title: String,
-    trailingActions: [Action]? = nil,
-    leadingActions: [Action]? = nil
-  ) -> some View {
-    self.modifier(NavigationTitleModifier(
-      title: title,
-      trailingActions: trailingActions,
-      leadingActions: leadingActions
-    ))
-  }
-}
+import SwiftUI
 
 struct Action: Identifiable {
   let id = UUID()
   let title: String?
   let image: Image?
   let callback: (() -> Void)?
-
+  
   init(
     title: String? = nil,
     image: Image? = nil,
@@ -45,49 +32,40 @@ struct Action: Identifiable {
   }
 }
 
-private struct NavigationTitleModifier: ViewModifier {
-  private let title: String
+struct ToolBarContent: ToolbarContent {
+  
   private let trailingActions: [Action]?
   private let leadingActions: [Action]?
-
+  
   init(
-    title: String,
-    trailingActions: [Action]?,
-    leadingActions: [Action]?
+    trailingActions: [Action]? = nil,
+    leadingActions: [Action]? = nil
   ) {
-    self.title = title
     self.trailingActions = trailingActions
     self.leadingActions = leadingActions
   }
-
-  func body(content: Content) -> some View {
-    content
-      .navigationTitle(title)
-      .navigationBarTitleDisplayMode(.inline)
-      .toolbar {
-        if let leadingActions {
-          ToolbarItemGroup(placement: .topBarLeading) {
-            ForEach(leadingActions, id: \.id) { action in
-              ActionView(action: action)
-            }
-          }
-        }
-
-        if let trailingActions {
-          ToolbarItemGroup(placement: .topBarTrailing) {
-            ForEach(trailingActions, id: \.id) { action in
-              ActionView(action: action)
-            }
-          }
+  
+  var body: some ToolbarContent {
+    if let leadingActions {
+      ToolbarItemGroup(placement: .topBarLeading) {
+        ForEach(leadingActions, id: \.id) { action in
+          ActionView(action: action)
         }
       }
+    }
+    if let trailingActions {
+      ToolbarItemGroup(placement: .topBarTrailing) {
+        ForEach(trailingActions, id: \.id) { action in
+          ActionView(action: action)
+        }
+      }
+    }
   }
 }
 
-
 private struct ActionView: View {
   let action: Action
-
+  
   var body: some View {
     Group {
       if let callback = action.callback {
@@ -99,7 +77,7 @@ private struct ActionView: View {
       }
     }
   }
-
+  
   @ViewBuilder
   private var content: some View {
     if let title = action.title {
@@ -114,24 +92,25 @@ private struct ActionView: View {
 #Preview {
   NavigationStack {
     Text("Hello, World!")
-      .withNavigationTitle(
-        "Confirm Selection",
-        trailingActions: [
-          Action(
-            title: "State",
-            callback: {}
-          ),
-          Action(
-            title: "Proceed",
-            callback: {}
-          )
-        ],
-        leadingActions: [
-          Action(
-            title: "Cancel",
-            callback: {}
-          )
-        ]
-      )
+      .toolbar {
+        ToolBarContent(
+          trailingActions: [
+            Action(
+              title: "State",
+              callback: {}
+            ),
+            Action(
+              title: "Proceed",
+              callback: {}
+            )
+          ],
+          leadingActions: [
+            Action(
+              title: "Cancel",
+              callback: {}
+            )
+          ]
+        )
+      }
   }
 }

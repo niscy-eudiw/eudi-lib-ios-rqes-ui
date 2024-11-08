@@ -31,7 +31,20 @@ struct SignedDocumentView<Router: RouterGraph>: View {
   }
 
   var body: some View {
-    ContentScreenView(spacing: SPACING_LARGE_MEDIUM) {
+    ContentScreenView(
+      spacing: SPACING_LARGE_MEDIUM,
+      title: viewModel.resource(.documentSigned),
+      toolbarContent: ToolBarContent(
+        trailingActions: [
+          Action(
+            title: viewModel.resource(.save),
+            callback: {
+              viewModel.onPause()
+            }
+          )
+        ]
+      )
+    ) {
       content(
         success: viewModel.resource(.success),
         successfullySigned: viewModel.resource(.successfullySignedDocument),
@@ -41,17 +54,6 @@ struct SignedDocumentView<Router: RouterGraph>: View {
         view: viewModel.viewDocument
       )
     }
-    .withNavigationTitle(
-      viewModel.resource(.documentSigned),
-      trailingActions: [
-        Action(
-          title: viewModel.resource(.done),
-          callback: {
-            viewModel.onPause()
-          }
-        )
-      ]
-    )
   }
 }
 
@@ -100,7 +102,10 @@ private func content(
 }
 
 #Preview {
-  ContentScreenView(spacing: SPACING_LARGE_MEDIUM) {
+  ContentScreenView(
+    spacing: SPACING_LARGE_MEDIUM,
+    title: "Navigation title"
+  ) {
     content(
       success: "Success",
       successfullySigned: "You successfully signed your document",
