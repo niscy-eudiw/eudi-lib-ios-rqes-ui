@@ -89,7 +89,7 @@ private func content(
   select: @escaping () -> Void
 ) -> some View {
   Text(confirmSelectionTitle)
-    .font(Theme.shared.font.labelMedium.font)
+    .font(Theme.shared.font.bodyLarge.font)
     .foregroundStyle(Theme.shared.color.onSurface)
 
   CardView(

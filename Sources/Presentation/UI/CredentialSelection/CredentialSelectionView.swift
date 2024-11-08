@@ -109,7 +109,7 @@ private func content(
 ) -> some View {
   VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
     Text(title)
-      .font(Theme.shared.font.labelMedium.font)
+      .font(Theme.shared.font.bodyMedium.font)
       .foregroundStyle(Theme.shared.color.onSurface)
 
     CardView(
@@ -124,13 +124,15 @@ private func content(
       .foregroundStyle(Theme.shared.color.onSurfaceVariant)
 
     Text(confirmSigning)
-      .font(Theme.shared.font.labelMedium.font)
+      .font(Theme.shared.font.bodyMedium.font)
       .foregroundStyle(Theme.shared.color.onSurface)
   }
 
   List(credentials) { item in
     HStack {
       Text(item.name)
+        .font(Theme.shared.font.bodyMedium.font)
+        .foregroundStyle(Theme.shared.color.onSurface)
       Spacer()
       if selectedItem.wrappedValue == item.certificateURI.absoluteString {
         Image(systemName: "checkmark")

@@ -78,16 +78,18 @@ private func content(
   selectedItem: Binding<QTSPData?>
 ) -> some View {
   Text(selectServiceTitle)
-    .font(Theme.shared.font.labelMedium.font)
+    .font(Theme.shared.font.bodyLarge.font)
     .foregroundStyle(Theme.shared.color.onSurface)
 
   Text(selectServiceSubtitle)
-    .font(Theme.shared.font.labelMedium.font)
+    .font(Theme.shared.font.bodyMedium.font)
     .foregroundStyle(Theme.shared.color.onSurface)
 
   List(services, id: \.qtspName) { item in
     HStack {
       Text(item.qtspName)
+        .font(Theme.shared.font.bodyMedium.font)
+        .foregroundStyle(Theme.shared.color.onSurface)
       Spacer()
       if selectedItem.wrappedValue?.uri == item.uri {
         Image(systemName: "checkmark")

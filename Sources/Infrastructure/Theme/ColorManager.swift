@@ -18,14 +18,13 @@ import SwiftUI
 
 public protocol ColorManagerProtocol: Sendable {
   var background: Color { get }
-  var primaryVariant: Color { get }
+  var surfaceContriner: Color { get }
   var error: Color { get }
-  var textPrimaryDark: Color { get }
   var onSurface: Color { get }
   var onSurfaceVariant: Color { get }
   var primaryMain: Color { get }
   var success: Color { get }
-  var successVariant: Color { get }
+  var tertiary: Color { get }
   var warning: Color { get }
   var secondary: Color { get }
   var onPrimary: Color { get }
@@ -34,10 +33,6 @@ public protocol ColorManagerProtocol: Sendable {
 final class ColorManager: ColorManagerProtocol {
   var error: Color {
     Color("Error", bundle: .module)
-  }
-
-  var textPrimaryDark: Color {
-    Color("TextPrimaryDark", bundle: .module)
   }
 
   var onSurface: Color {
@@ -56,8 +51,8 @@ final class ColorManager: ColorManagerProtocol {
     Color("Success", bundle: .module)
   }
 
-  var successVariant: Color {
-    Color("SuccessVariant", bundle: .module)
+  var tertiary: Color {
+    Color("Tertiary", bundle: .module)
   }
 
   var warning: Color{
@@ -68,8 +63,8 @@ final class ColorManager: ColorManagerProtocol {
     Color("Background", bundle: .module)
   }
 
-  var primaryVariant: Color {
-    Color("PrimaryVariant", bundle: .module)
+  var surfaceContriner: Color {
+    Color("SurfaceContriner", bundle: .module)
   }
 
   var secondary: Color {

@@ -70,15 +70,18 @@ private func content(
 ) -> some View {
   VStack(alignment: .leading, spacing: SPACING_NONE) {
     Text(success)
-      .font(Theme.shared.font.headlineLarge.font)
+      .font(Theme.shared.font.headlineMedium.font)
+      .fontWeight(.bold)
       .foregroundStyle(Theme.shared.color.success)
       .padding(.top, SPACING_LARGE_MEDIUM)
 
     VStack(alignment: .leading, spacing: SPACING_NONE) {
       Text(successfullySigned)
+        .font(Theme.shared.font.bodyLarge.font)
         .foregroundStyle(Theme.shared.color.onSurface)
 
       Text(documentName)
+        .font(Theme.shared.font.bodyLarge.font)
         .foregroundStyle(Theme.shared.color.onSurface)
         .fontWeight(.semibold)
         .leftImage(image: Image(.verifiedUser))
