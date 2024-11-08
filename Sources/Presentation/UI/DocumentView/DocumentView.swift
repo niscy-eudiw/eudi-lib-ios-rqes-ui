@@ -39,6 +39,7 @@ private struct PDFViewRepresented: UIViewRepresentable {
 
 struct DocumentViewer<Router: RouterGraph>: View {
   @StateObject var viewModel: DocumentViewModel<Router>
+  @Environment(\.localizationController) var localization
 
   init(
     router: Router,
@@ -58,7 +59,7 @@ struct DocumentViewer<Router: RouterGraph>: View {
 
   var body: some View {
     content(
-      navigationTitle: viewModel.resource(.viewDocument),
+      navigationTitle: localization.get(with: .viewDocument),
       viewState: viewModel.viewState
     )
   }

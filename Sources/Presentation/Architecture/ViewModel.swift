@@ -26,10 +26,6 @@ class ViewModel<Router: RouterGraph, UiState: ViewState>: ObservableObject {
   
   @Published private(set) var viewState: UiState
 
-  private let localization = DIGraph.resolver.force(
-    LocalizationController.self
-  )
-
   let router: Router
   
   init(router: Router, initialState: UiState) {
@@ -57,9 +53,5 @@ class ViewModel<Router: RouterGraph, UiState: ViewState>: ObservableObject {
     Task {
       try? await EudiRQESUi.instance().cancel()
     }
-  }
-
-  func resource(_ key: LocalizableKey, args: [String] = []) -> String {
-    localization.get(with: key, args: args)
   }
 }

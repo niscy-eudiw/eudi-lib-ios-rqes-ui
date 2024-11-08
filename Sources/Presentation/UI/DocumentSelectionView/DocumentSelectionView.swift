@@ -17,6 +17,7 @@ import SwiftUI
 
 struct DocumentSelectionView<Router: RouterGraph>: View {
   @Environment(\.dismiss) var dismiss
+  @Environment(\.localizationController) var localization
   @StateObject var viewModel: DocumentSelectionViewModel<Router>
 
   @State private var showSheet = false
@@ -40,20 +41,20 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
   var body: some View {
     ContentScreenView(
       spacing: SPACING_LARGE_MEDIUM,
-      title: viewModel.resource(.confirmSelection),
+      title: localization.get(with: .confirmSelection),
       toolbarContent: .init(
         leadingActions: [
           Action(
-            title: viewModel.resource(.cancel),
+            title: localization.get(with: .cancel),
             callback: { showSheet.toggle() }
           )
         ]
       )
     ) {
       content(
-        confirmSelectionTitle: viewModel.resource(.confirmSelectionTitle),
+        confirmSelectionTitle: localization.get(with: .confirmSelectionTitle),
         documentName: viewModel.viewState.document.documentName,
-        viewString: viewModel.resource(.view),
+        viewString: localization.get(with: .view),
         view: viewModel.viewDocument,
         select: viewModel.selectService
       )
@@ -67,18 +68,18 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
   @ViewBuilder
   private func bottomSheet() -> some View {
     let cancelAction = BottomSheetAction(
-      title: viewModel.resource(.cancelSigning),
+      title: localization.get(with: .cancelSigning),
       action: { dismiss() }
     )
 
     let deleteAction = BottomSheetAction(
-      title: viewModel.resource(.continueSigning),
+      title: localization.get(with: .continueSigning),
       action: { viewModel.onCancel() }
     )
 
     BottomSheetViewWithActions(
-      title: viewModel.resource(.cancelSigningProcessTitle),
-      subtitle: viewModel.resource(.cancelSigningProcessSubtitle),
+      title: localization.get(with: .cancelSigningProcessTitle),
+      subtitle: localization.get(with: .cancelSigningProcessSubtitle),
       negativeAction: cancelAction,
       positiveAction: deleteAction
     )

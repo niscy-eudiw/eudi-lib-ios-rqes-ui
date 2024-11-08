@@ -16,6 +16,7 @@
 import SwiftUI
 
 struct ServiceSelectionView<Router: RouterGraph>: View {
+  @Environment(\.localizationController) var localization
   @StateObject var viewModel: ServiceSelectionViewModel<Router>
   @State private var selectedItem: String?
 
@@ -36,11 +37,11 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
   var body: some View {
     ContentScreenView(
       spacing: SPACING_LARGE_MEDIUM,
-      title: viewModel.resource(.selectService),
+      title: localization.get(with: .selectService),
       toolbarContent: ToolBarContent(
         trailingActions: [
           Action(
-            title: viewModel.resource(.state),
+            title: localization.get(with: .state),
             callback: {
               viewModel.setFlowState(
                 .credentials
@@ -49,15 +50,15 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
             }
           ),
           Action(
-            title: viewModel.resource(.proceed),
+            title: localization.get(with: .proceed),
             callback: viewModel.selectCredential
           )
         ]
       )
     ) {
       content(
-        selectServiceTitle: viewModel.resource(.selectServiceTitle),
-        selectServiceSubtitle: viewModel.resource(.selectServiceSubtitle),
+        selectServiceTitle: localization.get(with: .selectServiceTitle),
+        selectServiceSubtitle: localization.get(with: .selectServiceSubtitle),
         services: viewModel.viewState.services,
         selectedItem: $selectedItem
       )

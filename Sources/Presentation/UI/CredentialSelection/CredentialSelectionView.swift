@@ -17,15 +17,12 @@ import SwiftUI
 
 struct CredentialSelectionView<Router: RouterGraph>: View {
   @Environment(\.dismiss) var dismiss
-
+  @Environment(\.localizationController) var localization
+  
   @State private var selectedItem: String?
   @State private var showSheet = false
 
   @StateObject var viewModel: CredentialSelectionViewModel<Router>
-
-  private let localization = DIGraph.resolver.force(
-    LocalizationController.self
-  )
 
   init(
     router: Router
@@ -40,10 +37,10 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
   var body: some View {
     ContentScreenView(
       spacing: SPACING_LARGE_MEDIUM,
-      title: viewModel.resource(.selectCertificate),
+      title: localization.get(with: .selectCertificate),
       toolbarContent: ToolBarContent(
         trailingActions: [
-          Action(title: viewModel.resource(.state)) {
+          Action(title: localization.get(with: .state)) {
             viewModel.setFlowState(
               .sign(
                 "Document_title.PDF",
@@ -53,23 +50,23 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
             viewModel.onPause()
           },
           Action(
-            title: viewModel.resource(.proceed)) {
+            title: localization.get(with: .proceed)) {
               viewModel.signDocument()
             }
         ],
         leadingActions: [
-          Action(title: viewModel.resource(.cancel)) {
+          Action(title: localization.get(with: .cancel)) {
             showSheet.toggle()
           }
         ]
       )
     ) {
       content(
-        title: viewModel.resource(.selectCertificateTitle),
+        title: localization.get(with: .selectCertificateTitle),
         documentName: "Document_Title.PDF",
-        signedBy: viewModel.resource(.signedBy, args: ["Entrust"]),
-        certificate: viewModel.resource(.certificate),
-        confirmSigning: viewModel.resource(.selectCertificateSubtitle),
+        signedBy: localization.get(with: .signedBy, args: ["Entrust"]),
+        certificate: localization.get(with: .certificate),
+        confirmSigning: localization.get(with: .selectCertificateSubtitle),
         credentials: viewModel.viewState.credentials,
         selectedItem: $selectedItem
       )
@@ -85,18 +82,18 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
   @ViewBuilder
   private func bottomSheet() -> some View {
     let cancelAction = BottomSheetAction(
-      title: viewModel.resource(.cancelSigning),
+      title: localization.get(with: .cancelSigning),
       action: { dismiss() }
     )
 
     let deleteAction = BottomSheetAction(
-      title: viewModel.resource(.continueSigning),
+      title: localization.get(with: .continueSigning),
       action: { viewModel.onCancel() }
     )
 
     BottomSheetViewWithActions(
-      title: viewModel.resource(.cancelSigningProcessTitle),
-      subtitle: viewModel.resource(.cancelSigningProcessSubtitle),
+      title: localization.get(with: .cancelSigningProcessTitle),
+      subtitle: localization.get(with: .cancelSigningProcessSubtitle),
       negativeAction: cancelAction,
       positiveAction: deleteAction
     )

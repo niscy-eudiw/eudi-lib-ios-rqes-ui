@@ -23,27 +23,31 @@ public final actor EudiRQESUi {
   private static var _viewController: UIViewController?
   
   private let router: any RouterGraph
-  
+
   @discardableResult
   public init(config: any EudiRQESUiConfig) {
+    DIGraph.shared.load()
     self.router = RouterGraphImpl()
     Self._config = config
     Self._shared = self
-    DIGraph.shared.load()
   }
   
   @MainActor
   public func initiate(
     on container: UIViewController,
-    fileUrl: DocumentData,
+    fileUrl: URL,
     animated: Bool = true
   ) async throws {
     guard let config = Self._config else {
       fatalError("EudiRQESUi: SDK has not been initialized properly")
     }
+    let document = DocumentData(
+      documentName: fileUrl.lastPathComponent,
+      uri: fileUrl
+    )
     await setState(
       .initial(
-        fileUrl,
+        document,
         config
       )
     )

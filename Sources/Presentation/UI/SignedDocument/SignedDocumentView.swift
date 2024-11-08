@@ -17,6 +17,7 @@ import SwiftUI
 
 struct SignedDocumentView<Router: RouterGraph>: View {
   @StateObject var viewModel: SignedDocumentViewModel<Router>
+  @Environment(\.localizationController) var localization
 
   init(
     router: Router,
@@ -33,11 +34,11 @@ struct SignedDocumentView<Router: RouterGraph>: View {
   var body: some View {
     ContentScreenView(
       spacing: SPACING_LARGE_MEDIUM,
-      title: viewModel.resource(.documentSigned),
+      title: localization.get(with: .documentSigned),
       toolbarContent: ToolBarContent(
         trailingActions: [
           Action(
-            title: viewModel.resource(.save),
+            title: localization.get(with: .save),
             callback: {
               viewModel.onPause()
             }
@@ -46,11 +47,11 @@ struct SignedDocumentView<Router: RouterGraph>: View {
       )
     ) {
       content(
-        success: viewModel.resource(.success),
-        successfullySigned: viewModel.resource(.successfullySignedDocument),
+        success: localization.get(with: .success),
+        successfullySigned: localization.get(with: .successfullySignedDocument),
         documentName: viewModel.viewState.name,
-        signedBy: viewModel.resource(.signedBy, args: ["Entrust"]),
-        viewString: viewModel.resource(.view),
+        signedBy: localization.get(with: .signedBy, args: ["Entrust"]),
+        viewString: localization.get(with: .view),
         view: viewModel.viewDocument
       )
     }
