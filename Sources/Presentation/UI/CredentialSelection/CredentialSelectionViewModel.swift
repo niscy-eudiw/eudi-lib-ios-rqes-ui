@@ -29,7 +29,7 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
 
   init(
     router: Router,
-    interactor: QTSPInteractor = QTSPInteractorImpl(),
+    interactor: QTSPInteractor,
     initialState: CredentialSelectionState = .init(credentials: [], error: nil)
   ) {
     self.interactor = interactor

@@ -21,16 +21,10 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
   @State private var selectedItem: String?
   @State private var showSheet = false
 
-  @StateObject var viewModel: CredentialSelectionViewModel<Router>
+  @ObservedObject private var viewModel: CredentialSelectionViewModel<Router>
 
-  init(
-    router: Router
-  ) {
-    _viewModel = .init(
-      wrappedValue: .init(
-        router: router
-      )
-    )
+  init(with viewModel:CredentialSelectionViewModel<Router>) {
+    self.viewModel = viewModel
   }
 
   var body: some View {

@@ -123,7 +123,12 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
       .eraseToAnyView()
     case .credentialSelection:
       CredentialSelectionView(
-        router: self
+        with: CredentialSelectionViewModel(
+          router: self,
+          interactor: DIGraph.resolver.force(
+            QTSPInteractor.self
+          )
+        )
       )
       .eraseToAnyView()
     case .signedDocument(let name, let contents, let qtspName):
@@ -177,7 +182,12 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
           )
         case .credentials:
           CredentialSelectionView(
-            router: self
+            with: CredentialSelectionViewModel(
+              router: self,
+              interactor: DIGraph.resolver.force(
+                QTSPInteractor.self
+              )
+            )
           )
         case .sign(let name, let contents, let qtspName):
           SignedDocumentView(

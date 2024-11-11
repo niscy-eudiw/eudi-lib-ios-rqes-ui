@@ -47,8 +47,6 @@ protocol QTSPInteractor: Sendable {
 final class QTSPInteractorImpl: QTSPInteractor {
   func qtspCertificates(qtspCertificateEndpoint: URL) async -> CredentialSelectionPartialState {
     do {
-      throw QTSPCertificateError.simulatedError
-      
       let qtsps = [
         CertificateDataResponseDTO(name: "Certificate 1", certificateURI: URL(string: "uri 1")!),
         CertificateDataResponseDTO(name: "Certificate 2", certificateURI: URL(string: "uri 2")!),
