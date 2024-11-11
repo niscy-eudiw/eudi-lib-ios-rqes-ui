@@ -123,3 +123,19 @@ private func content(
     )
   }
 }
+
+#Preview("Dark Mode") {
+  ContentScreenView(
+    spacing: SPACING_LARGE_MEDIUM,
+    title: "title"
+  ) {
+    content(
+      confirmSelectionTitle: "confirmSelectionTitle",
+      documentName: "documentName",
+      viewString: "View",
+      view: {},
+      select: {}
+    )
+  }
+  .darkModePreview()
+}

@@ -131,3 +131,27 @@ private func content(
     )
   }
 }
+
+#Preview("Dark Mode") {
+  ContentScreenView(
+    spacing: SPACING_LARGE_MEDIUM,
+    title: "Navigation Title"
+  ) {
+    content(
+      selectServiceTitle: "Select remote signing service.",
+      selectServiceSubtitle: "Remote signing enables you to digitally sign documents without the need for locally installed digital identities. Cloud-hosted signing service makes remote signing possible.",
+      services: [
+        QTSPData(qtspName: "Entrust", uri: URL(string: "https://www.entrust.com")!),
+        QTSPData(qtspName: "Docusign", uri: URL(string: "https://www.docusign.com")!),
+        QTSPData(qtspName: "Ascertia", uri: URL(string: "https://www.ascertia.com")!)
+      ],
+      selectedItem: .constant(
+        QTSPData(
+          qtspName: "Entrust",
+          uri: URL(string: "https://www.entrust.com")!
+        )
+      )
+    )
+  }
+  .darkModePreview()
+}

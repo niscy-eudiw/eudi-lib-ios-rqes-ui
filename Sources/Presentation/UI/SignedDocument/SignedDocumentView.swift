@@ -120,3 +120,20 @@ private func content(
     )
   }
 }
+
+#Preview("Dark Mode") {
+  ContentScreenView(
+    spacing: SPACING_LARGE_MEDIUM,
+    title: "Navigation title"
+  ) {
+    content(
+      success: "Success",
+      successfullySigned: "You successfully signed your document",
+      documentName: "Document title",
+      signedBy: "Signed by: Entrust",
+      viewString: "View",
+      view: {}
+    )
+  }
+  .darkModePreview()
+}

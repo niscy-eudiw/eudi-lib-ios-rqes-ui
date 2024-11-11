@@ -33,3 +33,17 @@ extension View {
     }
   }
 }
+
+extension View {
+  func lightModePreview() -> some View {
+    return self.background(Color.white)
+      .environment(\.colorScheme, .light)
+      .previewDisplayName("Light Mode")
+  }
+
+  func darkModePreview() -> some View {
+    return self.background(Color.black)
+      .environment(\.colorScheme, .dark)
+      .previewDisplayName("Dark Mode")
+  }
+}

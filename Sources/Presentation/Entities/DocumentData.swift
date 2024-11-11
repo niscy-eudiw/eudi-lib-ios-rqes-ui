@@ -18,7 +18,10 @@ public struct DocumentData: Equatable, Sendable {
   let documentName: String
   let uri: URL
 
-  public init(documentName: String, uri: URL) {
+  public init(
+    documentName: String,
+    uri: URL
+  ) {
     self.documentName = documentName
     self.uri = uri
   }

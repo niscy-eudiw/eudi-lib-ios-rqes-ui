@@ -92,7 +92,7 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
         localization.get(with: .continueSigning),
         role: .cancel) {
           showSheet.toggle()
-      }
+        }
     }
   }
 }
@@ -170,4 +170,26 @@ private func content(
       selectedItem: .constant("")
     )
   }
+  .lightModePreview()
+}
+
+#Preview("Dark Mode") {
+  ContentScreenView(
+    spacing: SPACING_LARGE_MEDIUM,
+    title: "Select certificate"
+  ) {
+    content(
+      title: "You have chosen to sign the following document:",
+      documentName: "Document_Title.PDF",
+      certificate: "CERTIFICATE",
+      confirmSigning: "Please confirm signing with one of the following certificates:",
+      credentials: [
+        CertificateData(name: "Certificate 1", certificateURI: URL(string: "uri 1")!),
+        CertificateData(name: "Certificate 2", certificateURI: URL(string: "uri 2")!),
+        CertificateData(name: "Certificate 3", certificateURI: URL(string: "uri 3")!)
+      ],
+      selectedItem: .constant("")
+    )
+  }
+  .darkModePreview()
 }

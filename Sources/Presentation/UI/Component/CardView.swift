@@ -110,3 +110,30 @@ struct CardView<Label: View>: View {
   )
   .padding()
 }
+
+#Preview("Dark Mode") {
+  CardView(
+    title: "Select document",
+    trailingView: { Image(systemName: "plus") },
+    action: {}
+  )
+  .padding()
+
+  CardView(
+    type: .success,
+    title: "Select document",
+    subtitle: "Signed by: Entrust",
+    trailingView: { Image(systemName: "plus") },
+    action: {}
+  )
+  .padding()
+
+  CardView(
+    type: .success,
+    title: "Select document",
+    subtitle: "Signed by: Entrust",
+    trailingView: { Text("View") },
+    action: {}
+  )
+  .padding()
+}
