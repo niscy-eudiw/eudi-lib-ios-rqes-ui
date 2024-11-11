@@ -18,6 +18,7 @@ import SwiftUI
 @Copyable
 struct CredentialSelectionState: ViewState {
   let credentials: [CertificateData]
+  let error: ContentErrorView.Config?
 }
 
 final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router, CredentialSelectionState> {
@@ -29,7 +30,7 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
   init(
     router: Router,
     interactor: QTSPInteractor = QTSPInteractorImpl(),
-    initialState: CredentialSelectionState = .init(credentials: [])
+    initialState: CredentialSelectionState = .init(credentials: [], error: nil)
   ) {
     self.interactor = interactor
     super.init(
@@ -39,15 +40,29 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
   }
 
   @MainActor
-  func fetchCredentials() {
-    Task {
-      do {
-        let credentials = try await interactor.qtspCertificates(qtspCertificateEndpoint: URL(string: "uri")!)
-        self.setState {
-          $0.copy(credentials: credentials)
-        }
-      } catch {
+  func fetchCredentials() async {
+    let state = await Task.detached { () -> CredentialSelectionPartialState in
+      return await self.interactor.qtspCertificates(qtspCertificateEndpoint: URL(string: "uri")!)
+    }.value
 
+    switch state {
+    case .success(let credentials):
+      setState {
+        $0
+          .copy(credentials: credentials)
+          .copy(error: nil)
+      }
+    case .failure(let error):
+      setState {
+        $0
+          .copy(
+            error: ContentErrorView.Config(
+              title: .genericErrorMessage,
+              description: .genericErrorMessage,
+              cancelAction: {}(),
+              action: {}
+            )
+          )
       }
     }
   }

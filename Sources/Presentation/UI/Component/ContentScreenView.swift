@@ -24,6 +24,7 @@ struct ContentScreenView<Content: View>: View {
   private let background: Color
   private let title: String
   private let toolbarContent: ToolBarContent?
+  let errorConfig: ContentErrorView.Config?
 
   init(
     padding: CGFloat = 16,
@@ -31,6 +32,7 @@ struct ContentScreenView<Content: View>: View {
     spacing: CGFloat = 0,
     background: Color = .white,
     title: String,
+    errorConfig: ContentErrorView.Config? = nil,
     toolbarContent: ToolBarContent? = nil,
     @ViewBuilder content: () -> Content
   ) {
@@ -40,14 +42,19 @@ struct ContentScreenView<Content: View>: View {
     self.background = background
     self.title = title
     self.toolbarContent = toolbarContent
+    self.errorConfig = errorConfig
   }
 
   var body: some View {
     NavigationView {
-      VStack(alignment: .leading, spacing: spacing) {
-        content
+      if let errorConfig {
+        ContentErrorView(config: errorConfig)
+      } else {
+        VStack(alignment: .leading, spacing: spacing) {
+          content
+        }
+        .padding([.all], padding)
       }
-      .padding([.all], padding)
     }
     .navigationTitle(title)
     .navigationBarTitleDisplayMode(.inline)

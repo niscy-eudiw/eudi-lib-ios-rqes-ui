@@ -34,27 +34,39 @@ struct CertificateData: Identifiable {
   let certificateURI: URL
 }
 
+enum CredentialSelectionPartialState: Sendable {
+  case success([CertificateData])
+  case failure(Error)
+}
+
 protocol QTSPInteractor: Sendable {
-  func qtspCertificates(qtspCertificateEndpoint: URL) async throws -> [CertificateData]
+  func qtspCertificates(qtspCertificateEndpoint: URL) async -> CredentialSelectionPartialState
   func signDocument(documentUri: URL)
 }
 
 final class QTSPInteractorImpl: QTSPInteractor {
-  func qtspCertificates(qtspCertificateEndpoint: URL) async throws -> [CertificateData] {
+  func qtspCertificates(qtspCertificateEndpoint: URL) async -> CredentialSelectionPartialState {
     do {
-      return [
+      throw QTSPCertificateError.simulatedError
+      
+      let qtsps = [
         CertificateDataResponseDTO(name: "Certificate 1", certificateURI: URL(string: "uri 1")!),
         CertificateDataResponseDTO(name: "Certificate 2", certificateURI: URL(string: "uri 2")!),
         CertificateDataResponseDTO(name: "Certificate 3", certificateURI: URL(string: "uri 3")!)
       ].map {
         $0.mapToDomain()
       }
+      return .success(qtsps)
     } catch {
-      print("\(error)")
+      return .failure(error)
     }
   }
 
   func signDocument(documentUri: URL) {
     // TODO
   }
+}
+
+enum QTSPCertificateError: Error {
+    case simulatedError
 }

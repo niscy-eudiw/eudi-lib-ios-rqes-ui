@@ -37,25 +37,8 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
     ContentScreenView(
       spacing: SPACING_LARGE_MEDIUM,
       title: localization.get(with: .selectCertificate),
-      toolbarContent: ToolBarContent(
-        trailingActions: [
-          Action(title: localization.get(with: .state)) {
-            viewModel.setFlowState(
-              .sign(
-                viewModel.document?.documentName ?? "",
-                viewModel.document?.uri.absoluteString ?? "",
-                viewModel.qtspName ?? ""
-              )
-            )
-            viewModel.onPause()
-          }
-        ],
-        leadingActions: [
-          Action(title: localization.get(with: .cancel)) {
-            showSheet.toggle()
-          }
-        ]
-      )
+      errorConfig: viewModel.viewState.error,
+      toolbarContent: toolbarAction()
     ) {
       content(
         title: localization.get(with: .selectCertificateTitle),
@@ -73,8 +56,10 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
         }
       }
     }
+    .task {
+      await viewModel.fetchCredentials()
+    }
     .onAppear {
-      viewModel.fetchCredentials()
       viewModel.getDocument()
     }
     .confirmationDialog(
@@ -93,6 +78,38 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
         role: .cancel) {
           showSheet.toggle()
         }
+    }
+  }
+
+  private func toolbarAction() -> ToolBarContent? {
+    if viewModel.viewState.error != nil {
+      return ToolBarContent(
+        leadingActions: [
+          Action(image: Image(systemName: "xmark")) {
+            viewModel.viewState.error?.cancelAction()
+          }
+        ]
+      )
+    } else {
+      return ToolBarContent(
+        trailingActions: [
+          Action(title: localization.get(with: .state)) {
+            viewModel.setFlowState(
+              .sign(
+                viewModel.document?.documentName ?? "",
+                viewModel.document?.uri.absoluteString ?? "",
+                viewModel.qtspName ?? ""
+              )
+            )
+            viewModel.onPause()
+          }
+        ],
+        leadingActions: [
+          Action(title: localization.get(with: .cancel)) {
+            showSheet.toggle()
+          }
+        ]
+      )
     }
   }
 }
