@@ -59,9 +59,9 @@ public final actor EudiRQESUi {
       documentName: fileUrl.lastPathComponent,
       uri: fileUrl
     )
+    await updateSelectionDocument(with: document)
     await setState(
       .initial(
-        document,
         config
       )
     )
@@ -80,7 +80,7 @@ public final actor EudiRQESUi {
     }
   }
 
-  func updateSelectionDocument(with document: DocumentData) async {
+  func updateSelectionDocument(with document: DocumentData? = nil) async {
     selection.document = document
   }
 
@@ -144,11 +144,11 @@ extension EudiRQESUi {
   enum State: Equatable, Sendable {
     
     case none
-    case initial(DocumentData, any EudiRQESUiConfig)
-    case rssps([QTSPData])
+    case initial(any EudiRQESUiConfig)
+    case rssps
     case credentials
-    case sign(String, String, String)
-    case view(DocumentSource)
+    case sign
+    case view
     
     var id: String {
       return switch self {

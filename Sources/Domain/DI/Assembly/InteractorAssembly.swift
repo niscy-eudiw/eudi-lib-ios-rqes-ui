@@ -20,7 +20,7 @@ final class InteractorAssembly: Assembly {
   init() {}
   
   func assemble(container: Container) {
-    container.register(QTSPInteractor.self) { r in
+    container.register(RQESInteractor.self) { r in
       QTSPInteractorImpl()
     }
     .inObjectScope(ObjectScope.transient)

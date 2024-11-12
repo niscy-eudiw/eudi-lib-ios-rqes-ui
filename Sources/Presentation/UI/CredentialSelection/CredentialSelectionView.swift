@@ -89,11 +89,7 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
         trailingActions: [
           Action(title: localization.get(with: .state)) {
             viewModel.setFlowState(
-              .sign(
-                viewModel.document?.documentName ?? "",
-                viewModel.document?.uri.absoluteString ?? "",
-                viewModel.qtspName ?? ""
-              )
+              .sign
             )
             viewModel.onPause()
           }

@@ -23,13 +23,13 @@ struct CredentialSelectionState: ViewState {
 
 final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router, CredentialSelectionState> {
 
-  private let interactor: QTSPInteractor
+  private let interactor: RQESInteractor
   @Published var document: DocumentData?
   @Published var qtspName: String?
 
   init(
     router: Router,
-    interactor: QTSPInteractor,
+    interactor: RQESInteractor,
     initialState: CredentialSelectionState = .init(credentials: [], error: nil)
   ) {
     self.interactor = interactor
@@ -76,7 +76,6 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
   func getDocument() {
     Task {
       document = try? await EudiRQESUi.instance().selection.document
-      qtspName = try? await EudiRQESUi.instance().selection.qtsp?.qtspName
     }
   }
 }

@@ -18,18 +18,52 @@ import SwiftUI
 @Copyable
 struct ServiceSelectionState: ViewState {
   let services: [QTSPData]
+  let error: ContentErrorView.Config?
 }
 
 class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceSelectionState> {
-  
-  override init(
+
+  private let interactor: RQESInteractor
+
+  init(
     router: Router,
-    initialState: ServiceSelectionState
+    interactor: RQESInteractor
   ) {
+    self.interactor = interactor
     super.init(
       router: router,
-      initialState: initialState
+      initialState: ServiceSelectionState(
+        services: [],
+        error: nil
+      )
     )
+  }
+
+  func initiate() {
+    Task {
+      let services = try? await interactor.getQTSps()
+
+      if let services {
+        setState {
+          $0
+            .copy(
+              services: services
+            )
+        }
+      } else {
+        setState {
+          $0
+            .copy(
+              error: ContentErrorView.Config(
+                title: .genericErrorMessage,
+                description: .genericErrorQtspNotFound,
+                cancelAction: {}(),
+                action: initiate
+              )
+            )
+        }
+      }
+    }
   }
 
   func selectQTSP(_ qtsp: QTSPData? = nil) {

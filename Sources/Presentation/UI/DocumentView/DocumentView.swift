@@ -38,26 +38,13 @@ private struct PDFViewRepresented: UIViewRepresentable {
 }
 
 struct DocumentViewer<Router: RouterGraph>: View {
-  @StateObject var viewModel: DocumentViewModel<Router>
+  @ObservedObject var viewModel: DocumentViewModel<Router>
   @Environment(\.localizationController) var localization
 
   private let isSigned: Bool
 
-  init(
-    router: Router,
-    source: DocumentSource,
-    isSigned: Bool = false
-  ) {
-    _viewModel = .init(
-      wrappedValue: .init(
-        router: router,
-        initialState: .init(
-          pdfDocument: nil,
-          errorMessage: nil,
-          documentSource: source
-        )
-      )
-    )
+  init(with viewModel:DocumentViewModel<Router>, isSigned: Bool = false) {
+    self.viewModel = viewModel
     self.isSigned = isSigned
   }
 

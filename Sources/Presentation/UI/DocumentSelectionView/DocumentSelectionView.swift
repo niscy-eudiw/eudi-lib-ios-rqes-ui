@@ -17,24 +17,12 @@ import SwiftUI
 
 struct DocumentSelectionView<Router: RouterGraph>: View {
   @Environment(\.localizationController) var localization
-  @StateObject var viewModel: DocumentSelectionViewModel<Router>
+  @ObservedObject var viewModel: DocumentSelectionViewModel<Router>
 
   @State private var showSheet = false
 
-  init(
-    router: Router,
-    document: DocumentData,
-    services: [QTSPData]
-  ) {
-    _viewModel = .init(
-      wrappedValue: .init(
-        router: router,
-        initialState: .init(
-          document: document,
-          services: services
-        )
-      )
-    )
+  init(with viewModel:DocumentSelectionViewModel<Router>) {
+    self.viewModel = viewModel
   }
 
   var body: some View {
@@ -52,11 +40,14 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
     ) {
       content(
         confirmSelectionTitle: localization.get(with: .confirmSelectionTitle),
-        documentName: viewModel.viewState.document.documentName,
+        documentName: viewModel.viewState.document?.documentName ?? "",
         viewString: localization.get(with: .view),
         view: viewModel.viewDocument,
         select: viewModel.selectService
       )
+    }
+    .onAppear {
+      viewModel.initiate()
     }
     .confirmationDialog(
       localization.get(with: .cancelSigningProcessTitle),

@@ -16,19 +16,11 @@
 import SwiftUI
 
 struct SignedDocumentView<Router: RouterGraph>: View {
-  @StateObject var viewModel: SignedDocumentViewModel<Router>
+  @ObservedObject var viewModel: SignedDocumentViewModel<Router>
   @Environment(\.localizationController) var localization
 
-  init(
-    router: Router,
-    initialState: SignedDocumenState
-  ) {
-    _viewModel = .init(
-      wrappedValue: .init(
-        router: router,
-        initialState: initialState
-      )
-    )
+  init(with viewModel: SignedDocumentViewModel<Router>) {
+    self.viewModel = viewModel
   }
 
   var body: some View {
@@ -49,8 +41,8 @@ struct SignedDocumentView<Router: RouterGraph>: View {
       content(
         success: localization.get(with: .success),
         successfullySigned: localization.get(with: .successfullySignedDocument),
-        documentName: viewModel.viewState.name,
-        signedBy: localization.get(with: .signedBy, args: [viewModel.viewState.qtspName]),
+        documentName: viewModel.viewState.document?.documentName ?? "",
+        signedBy: localization.get(with: .signedBy, args: [viewModel.viewState.qtsp?.qtspName ?? ""]),
         viewString: localization.get(with: .view),
         view: viewModel.viewDocument
       )

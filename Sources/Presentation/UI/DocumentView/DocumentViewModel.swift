@@ -29,14 +29,26 @@ struct DocumentState: ViewState {
 }
 
 class DocumentViewModel<Router: RouterGraph>: ViewModel<Router, DocumentState> {
-  
-  override init(router: Router, initialState: DocumentState) {
+
+  private let interactor: RQESInteractor
+
+  init(
+    router: Router,
+    interactor: RQESInteractor
+  ) {
+    self.interactor = interactor
     super.init(
       router: router,
-      initialState: initialState
+      initialState: DocumentState(
+        pdfDocument: nil,
+        errorMessage: nil,
+        documentSource: nil
+      )
     )
-    
-    if let source = initialState.documentSource {
+  }
+
+  func initiate() {
+    if let source = viewState.documentSource {
       loadDocument(from: source)
     } else {
       setState {
@@ -44,7 +56,7 @@ class DocumentViewModel<Router: RouterGraph>: ViewModel<Router, DocumentState> {
       }
     }
   }
-  
+
   private func loadDocument(from source: DocumentSource) {
     setState {
       $0.copy(documentSource: source)

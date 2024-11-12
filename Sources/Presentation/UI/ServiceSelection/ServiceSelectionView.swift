@@ -17,21 +17,11 @@ import SwiftUI
 
 struct ServiceSelectionView<Router: RouterGraph>: View {
   @Environment(\.localizationController) var localization
-  @StateObject var viewModel: ServiceSelectionViewModel<Router>
+  @ObservedObject var viewModel: ServiceSelectionViewModel<Router>
   @State private var selectedItem: QTSPData?
 
-  init(
-    router: Router,
-    services: [QTSPData]
-  ) {
-    _viewModel = .init(
-      wrappedValue: .init(
-        router: router,
-        initialState: .init(
-          services: services
-        )
-      )
-    )
+  init(with viewModel:ServiceSelectionViewModel<Router>) {
+    self.viewModel = viewModel
   }
 
   var body: some View {
@@ -64,6 +54,9 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
         } else {
           viewModel.selectQTSP(nil)
         }
+      }
+      .onAppear {
+        viewModel.initiate()
       }
     }
   }

@@ -60,12 +60,12 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
   init() {}
   
   enum RouteTable: Hashable, Identifiable, Equatable {
-    case documentSelection(document: DocumentData, services: [QTSPData])
-    case serviceSelection(services: [QTSPData])
+    case documentSelection
+    case serviceSelection
     case credentialSelection
-    case signedDocument(title: String, contents: String, qtspName: String)
-    case viewDocument(DocumentSource, Bool)
-    case certificateSelection(any EudiRQESUiConfig)
+    case signedDocument
+    case viewDocument(Bool)
+    case certificateSelection
     
     var id: String {
       switch self {
@@ -108,17 +108,24 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
   
   func view(for route: Route) -> AnyView {
     switch route {
-    case .documentSelection(let document, let services):
+    case .documentSelection:
       DocumentSelectionView(
-        router: self,
-        document: document,
-        services: services
+        with: DocumentSelectionViewModel(
+          router: self,
+          interactor: DIGraph.resolver.force(
+            RQESInteractor.self
+          )
+        )
       )
       .eraseToAnyView()
-    case .serviceSelection(let services):
+    case .serviceSelection:
       ServiceSelectionView(
-        router: self,
-        services: services
+        with: ServiceSelectionViewModel(
+          router: self,
+          interactor: DIGraph.resolver.force(
+            RQESInteractor.self
+          )
+        )
       )
       .eraseToAnyView()
     case .credentialSelection:
@@ -126,25 +133,29 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
         with: CredentialSelectionViewModel(
           router: self,
           interactor: DIGraph.resolver.force(
-            QTSPInteractor.self
+            RQESInteractor.self
           )
         )
       )
       .eraseToAnyView()
-    case .signedDocument(let name, let contents, let qtspName):
+    case .signedDocument:
       SignedDocumentView(
-        router: self,
-        initialState: .init(
-          name: name,
-          contents: contents,
-          qtspName: qtspName
+        with: SignedDocumentViewModel(
+          router: self,
+          interactor: DIGraph.resolver.force(
+            RQESInteractor.self
+          )
         )
       )
       .eraseToAnyView()
-    case .viewDocument(let source, let isSigned):
+    case .viewDocument(let isSigned):
       DocumentViewer(
-        router: self,
-        source: source,
+        with: DocumentViewModel(
+          router: self,
+          interactor: DIGraph.resolver.force(
+            RQESInteractor.self
+          )
+        ),
         isSigned: isSigned
       )
       .eraseToAnyView()
@@ -167,41 +178,51 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
         case .none:
           EmptyView()
         case .initial(
-          let document,
           let config
         ):
           DocumentSelectionView(
-            router: self,
-            document: document,
-            services: config.rssps
+            with: DocumentSelectionViewModel(
+              router: self,
+              interactor: DIGraph.resolver.force(
+                RQESInteractor.self
+              )
+            )
           )
-        case .rssps(let services):
+        case .rssps:
           ServiceSelectionView(
-            router: self,
-            services: services
+            with: ServiceSelectionViewModel(
+              router: self,
+              interactor: DIGraph.resolver.force(
+                RQESInteractor.self
+              )
+            )
           )
         case .credentials:
           CredentialSelectionView(
             with: CredentialSelectionViewModel(
               router: self,
               interactor: DIGraph.resolver.force(
-                QTSPInteractor.self
+                RQESInteractor.self
               )
             )
           )
-        case .sign(let name, let contents, let qtspName):
+        case .sign:
           SignedDocumentView(
-            router: self,
-            initialState: .init(
-              name: name,
-              contents: contents,
-              qtspName: qtspName
+            with: SignedDocumentViewModel(
+              router: self,
+              interactor: DIGraph.resolver.force(
+                RQESInteractor.self
+              )
             )
           )
-        case .view(let source):
+        case .view:
           DocumentViewer(
-            router: self,
-            source: source
+            with: DocumentViewModel(
+              router: self,
+              interactor: DIGraph.resolver.force(
+                RQESInteractor.self
+              )
+            )
           )
         }
       }

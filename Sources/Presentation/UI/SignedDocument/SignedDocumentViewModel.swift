@@ -17,30 +17,48 @@ import SwiftUI
 
 @Copyable
 struct SignedDocumenState: ViewState {
-  let name: String
-  let contents: String
-  let qtspName: String
+  let document: DocumentData?
+//  let name: String
+//  let contents: String
+  let qtsp: QTSPData?
+  let error: ContentErrorView.Config?
 }
 
 class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocumenState> {
-  
-  override init(
+
+  private let interactor: RQESInteractor
+
+  init(
     router: Router,
-    initialState: SignedDocumenState
+    interactor: RQESInteractor
   ) {
+    self.interactor = interactor
     super.init(
       router: router,
-      initialState: initialState
+      initialState: SignedDocumenState(
+        document: nil,
+        qtsp: nil,
+        error: nil
+      )
     )
+
+    Task {
+      let selection = try? await EudiRQESUi.instance().selection
+
+      setState {
+        $0
+          .copy(
+            document: selection?.document,
+            qtsp: selection?.qtsp
+          )
+      }
+    }
   }
   
   func viewDocument() {
     if let router = router as? RouterGraphImpl {
       router.navigateTo(
-        .viewDocument(
-          .pdfBase64(viewState.contents),
-          true
-        )
+        .viewDocument(true)
       )
     }
   }

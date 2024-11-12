@@ -17,45 +17,68 @@ import SwiftUI
 
 @Copyable
 struct DocumentSelectionState: ViewState {
-  let document: DocumentData
+  let document: DocumentData?
   let services: [QTSPData]
+  let error: ContentErrorView.Config?
 }
 
 class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, DocumentSelectionState> {
-  
-  override init(
+
+  private let interactor: RQESInteractor
+
+  init(
     router: Router,
-    initialState: DocumentSelectionState
+    interactor: RQESInteractor
   ) {
+    self.interactor = interactor
     super.init(
       router: router,
-      initialState: initialState
+      initialState: DocumentSelectionState(
+        document: nil,
+        services: [],
+        error: nil)
     )
   }
-  
+
+  func initiate() {
+    Task {
+      let document = try? await interactor.getCurrentSelection()?.document
+
+      if let name = document?.documentName {
+        setState {
+          $0
+            .copy(
+              document: document
+            )
+        }
+      } else {
+        setState {
+          $0
+            .copy(
+              error: ContentErrorView.Config(
+                title: .genericErrorMessage,
+                description: .genericErrorDocumentNotFound,
+                cancelAction: {}(),
+                action: initiate
+              )
+            )
+        }
+      }
+    }
+  }
+
   func viewDocument() {
     if let router = self.router as? RouterGraphImpl {
       router.navigateTo(
-        .viewDocument(
-          .pdfUrl(
-            viewState.document.uri
-          ),
-          false
-        )
+        .viewDocument(false)
       )
     }
   }
   
   func selectService() {
-    Task {
-      try? await EudiRQESUi.instance().updateSelectionDocument(with: viewState.document)
-    }
-    
     if let router = self.router as? RouterGraphImpl {
       router.navigateTo(
-        .serviceSelection(
-          services: viewState.services
-        )
+        .serviceSelection
       )
     }
   }

@@ -39,12 +39,14 @@ enum CredentialSelectionPartialState: Sendable {
   case failure(Error)
 }
 
-protocol QTSPInteractor: Sendable {
+protocol RQESInteractor: Sendable {
   func qtspCertificates(qtspCertificateEndpoint: URL) async -> CredentialSelectionPartialState
   func signDocument(documentUri: URL)
+  func getCurrentSelection() async -> CurrentSelection?
+  func getQTSps() async throws -> [QTSPData]?
 }
 
-final class QTSPInteractorImpl: QTSPInteractor {
+final class QTSPInteractorImpl: RQESInteractor {
   func qtspCertificates(qtspCertificateEndpoint: URL) async -> CredentialSelectionPartialState {
     do {
       let qtsps = [
@@ -62,6 +64,14 @@ final class QTSPInteractorImpl: QTSPInteractor {
 
   func signDocument(documentUri: URL) {
     // TODO
+  }
+
+  func getCurrentSelection() async -> CurrentSelection? {
+    try? await EudiRQESUi.instance().selection
+  }
+
+  func getQTSps() async throws -> [QTSPData]? {
+    try? await EudiRQESUi.getConfig().rssps
   }
 }
 
