@@ -18,7 +18,7 @@ import SwiftUI
 @Copyable
 struct DocumentSelectionState: ViewState {
   let document: DocumentData?
-  let services: [QTSPData]
+  let documentName: String
   let error: ContentErrorView.Config?
 }
 
@@ -35,20 +35,20 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
       router: router,
       initialState: DocumentSelectionState(
         document: nil,
-        services: [],
+        documentName: "",
         error: nil)
     )
   }
 
   func initiate() {
     Task {
-      let document = try? await interactor.getCurrentSelection()?.document
+      let documentName = try? await interactor.getCurrentSelection()?.document?.documentName
 
-      if let name = document?.documentName {
+      if let documentName {
         setState {
           $0
             .copy(
-              document: document
+              documentName: documentName
             )
         }
       } else {

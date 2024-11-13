@@ -36,7 +36,7 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
     ) {
       content(
         title: localization.get(with: .selectCertificateTitle),
-        documentName: viewModel.document?.documentName ?? "",
+        documentName: viewModel.viewState.documentName,
         certificate: localization.get(with: .certificate),
         confirmSigning: localization.get(with: .selectCertificateSubtitle),
         credentials: viewModel.viewState.credentials,

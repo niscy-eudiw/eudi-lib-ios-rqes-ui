@@ -52,8 +52,12 @@ struct DocumentViewer<Router: RouterGraph>: View {
     content(
       navigationTitle: localization.get(with: .viewDocument),
       toolbarContent: isSigned ? toolbarAction() : nil,
-      viewState: viewModel.viewState
+      viewState: viewModel.viewState,
+      error: viewModel.viewState.error
     )
+    .onAppear {
+      viewModel.initiate()
+    }
   }
 
   private func toolbarAction() -> ToolBarContent {
@@ -72,20 +76,15 @@ struct DocumentViewer<Router: RouterGraph>: View {
 private func content(
   navigationTitle: String,
   toolbarContent: ToolBarContent?,
-  viewState: DocumentState
+  viewState: DocumentState,
+  error: ContentErrorView.Config?
 ) -> some View {
   ContentScreenView(
     title: navigationTitle,
+    errorConfig: error,
     toolbarContent: toolbarContent
   ) {
-    if let errorMessage = viewState.errorMessage {
-      Text(errorMessage)
-        .font(.headline)
-        .foregroundColor(.red)
-        .padding()
-        .eraseToAnyView()
-
-    } else if let document = viewState.pdfDocument {
+    if let document = viewState.pdfDocument {
       PDFViewRepresented(
         pdfDocument: document
       )
@@ -102,8 +101,9 @@ private func content(
     toolbarContent: nil,
     viewState: .init(
       pdfDocument: document,
-      errorMessage: nil,
-      documentSource: nil
-    )
+      documentSource: nil,
+      error: nil
+    ),
+    error: nil
   )
 }

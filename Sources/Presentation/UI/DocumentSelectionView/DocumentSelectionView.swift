@@ -29,6 +29,7 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
     ContentScreenView(
       spacing: SPACING_LARGE_MEDIUM,
       title: localization.get(with: .confirmSelection),
+      errorConfig: viewModel.viewState.error,
       toolbarContent: .init(
         leadingActions: [
           Action(
@@ -40,7 +41,7 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
     ) {
       content(
         confirmSelectionTitle: localization.get(with: .confirmSelectionTitle),
-        documentName: viewModel.viewState.document?.documentName ?? "",
+        documentName: viewModel.viewState.documentName,
         viewString: localization.get(with: .view),
         view: viewModel.viewDocument,
         select: viewModel.selectService

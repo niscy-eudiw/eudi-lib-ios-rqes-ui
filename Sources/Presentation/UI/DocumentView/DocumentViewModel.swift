@@ -24,8 +24,8 @@ enum DocumentSource: Hashable, Equatable {
 @Copyable
 struct DocumentState: ViewState {
   let pdfDocument: PDFDocument?
-  let errorMessage: String?
   let documentSource: DocumentSource?
+  let error: ContentErrorView.Config?
 }
 
 class DocumentViewModel<Router: RouterGraph>: ViewModel<Router, DocumentState> {
@@ -41,18 +41,29 @@ class DocumentViewModel<Router: RouterGraph>: ViewModel<Router, DocumentState> {
       router: router,
       initialState: DocumentState(
         pdfDocument: nil,
-        errorMessage: nil,
-        documentSource: nil
+        documentSource: nil,
+        error: nil
       )
     )
   }
 
   func initiate() {
-    if let source = viewState.documentSource {
-      loadDocument(from: source)
-    } else {
-      setState {
-        $0.copy(errorMessage: "Not document source provided")
+    Task {
+      let uri = try? await interactor.getCurrentSelection()?.document?.uri
+      if let uri {
+        let source = DocumentSource.pdfUrl(uri)
+        loadDocument(from: source)
+      } else {
+        setState {
+          $0.copy(
+            error: ContentErrorView.Config(
+              title: .genericErrorMessage,
+              description: .genericErrorDocumentNotFound,
+              cancelAction: {}(),
+              action: initiate
+            )
+          )
+        }
       }
     }
   }
@@ -79,14 +90,19 @@ class DocumentViewModel<Router: RouterGraph>: ViewModel<Router, DocumentState> {
       setState {
         $0.copy(
           pdfDocument: document,
-          errorMessage: nil
+          error: nil
         )
       }
     } else {
       setState {
         $0.copy(
           pdfDocument: nil,
-          errorMessage: "Failed to load PDF."
+          error: ContentErrorView.Config(
+            title: .genericErrorMessage,
+            description: .genericErrorDocumentNotFound,
+            cancelAction: {}(),
+            action: initiate
+          )
         )
       }
     }
@@ -99,14 +115,19 @@ class DocumentViewModel<Router: RouterGraph>: ViewModel<Router, DocumentState> {
       setState {
         $0.copy(
           pdfDocument: document,
-          errorMessage: nil
+          error: nil
         )
       }
     } else {
       setState {
         $0.copy(
           pdfDocument: nil,
-          errorMessage: "Failed to load PDF."
+          error: ContentErrorView.Config(
+            title: .genericErrorMessage,
+            description: .genericErrorDocumentNotFound,
+            cancelAction: {}(),
+            action: initiate
+          )
         )
       }
     }

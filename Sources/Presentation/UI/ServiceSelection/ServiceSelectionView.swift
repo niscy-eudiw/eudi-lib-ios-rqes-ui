@@ -28,6 +28,7 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
     ContentScreenView(
       spacing: SPACING_LARGE_MEDIUM,
       title: localization.get(with: .selectService),
+      errorConfig: viewModel.viewState.error,
       toolbarContent: ToolBarContent(
         trailingActions: [
           Action(

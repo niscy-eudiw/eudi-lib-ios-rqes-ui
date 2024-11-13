@@ -27,6 +27,7 @@ struct SignedDocumentView<Router: RouterGraph>: View {
     ContentScreenView(
       spacing: SPACING_LARGE_MEDIUM,
       title: localization.get(with: .documentSigned),
+      errorConfig: viewModel.viewState.error,
       toolbarContent: ToolBarContent(
         trailingActions: [
           Action(

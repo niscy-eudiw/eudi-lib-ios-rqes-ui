@@ -56,6 +56,9 @@ struct ContentScreenView<Content: View>: View {
         .padding([.all], padding)
       }
     }
+    .if(errorConfig != nil) {
+      $0.navigationBarHidden(true)
+    }
     .navigationTitle(title)
     .navigationBarTitleDisplayMode(.inline)
     .if(toolbarContent != nil) {

@@ -10,20 +10,35 @@ struct ContentErrorView: View {
   }
 
   var body: some View {
-    VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+    VStack(alignment: .leading, spacing: SPACING_LARGE_MEDIUM) {
       HStack {
-        Text(localization.get(with: config.title))
-          .font(Theme.shared.font.headlineSmall.font)
-          .foregroundStyle(Theme.shared.color.onSurface)
+        Button(
+          action: {
+            config.cancelAction()
+          },
+          label: {
+            Image(systemName: "xmark")
+              .foregroundColor(.accentColor)
+          }
+        )
       }
       .frame(maxWidth: .infinity, alignment: .leading)
 
-      HStack {
-        Text(localization.get(with: config.description))
-          .font(Theme.shared.font.bodyMedium.font)
-          .foregroundStyle(Theme.shared.color.onSurface)
+      VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+        HStack {
+          Text(localization.get(with: config.title))
+            .font(Theme.shared.font.headlineSmall.font)
+            .foregroundStyle(Theme.shared.color.onSurface)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+
+        HStack {
+          Text(localization.get(with: config.description))
+            .font(Theme.shared.font.bodyMedium.font)
+            .foregroundStyle(Theme.shared.color.onSurface)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
       }
-      .frame(maxWidth: .infinity, alignment: .leading)
 
       Spacer()
 

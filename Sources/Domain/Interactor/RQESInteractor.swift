@@ -74,7 +74,3 @@ final class QTSPInteractorImpl: RQESInteractor {
     try? await EudiRQESUi.getConfig().rssps
   }
 }
-
-enum QTSPCertificateError: Error {
-    case simulatedError
-}

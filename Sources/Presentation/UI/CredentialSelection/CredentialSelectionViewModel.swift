@@ -18,6 +18,7 @@ import SwiftUI
 @Copyable
 struct CredentialSelectionState: ViewState {
   let credentials: [CertificateData]
+  let documentName: String
   let error: ContentErrorView.Config?
 }
 
@@ -29,13 +30,16 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
 
   init(
     router: Router,
-    interactor: RQESInteractor,
-    initialState: CredentialSelectionState = .init(credentials: [], error: nil)
+    interactor: RQESInteractor
   ) {
     self.interactor = interactor
     super.init(
       router: router,
-      initialState: initialState
+      initialState: CredentialSelectionState(
+        credentials: [],
+        documentName: "",
+        error: nil
+      )
     )
   }
 
@@ -50,7 +54,6 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
       setState {
         $0
           .copy(credentials: credentials)
-          .copy(error: nil)
       }
     case .failure(let error):
       setState {
@@ -75,7 +78,28 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
 
   func getDocument() {
     Task {
-      document = try? await EudiRQESUi.instance().selection.document
+      let documentName = try? await interactor.getCurrentSelection()?.document?.documentName
+
+      if let documentName {
+        setState {
+          $0
+            .copy(
+              documentName: documentName
+            )
+        }
+      } else {
+        setState {
+          $0
+            .copy(
+              error: ContentErrorView.Config(
+                title: .genericErrorMessage,
+                description: .genericErrorDocumentNotFound,
+                cancelAction: {}(),
+                action: getDocument
+              )
+            )
+        }
+      }
     }
   }
 }
