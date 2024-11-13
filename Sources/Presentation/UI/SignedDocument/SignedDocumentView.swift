@@ -18,6 +18,7 @@ import SwiftUI
 struct SignedDocumentView<Router: RouterGraph>: View {
   @ObservedObject var viewModel: SignedDocumentViewModel<Router>
   @Environment(\.localizationController) var localization
+  @State private var showSheet = false
 
   init(with viewModel: SignedDocumentViewModel<Router>) {
     self.viewModel = viewModel
@@ -33,7 +34,7 @@ struct SignedDocumentView<Router: RouterGraph>: View {
           Action(
             title: localization.get(with: .save),
             callback: {
-              viewModel.onPause()
+              showSheet = true
             }
           )
         ]
@@ -42,11 +43,31 @@ struct SignedDocumentView<Router: RouterGraph>: View {
       content(
         success: localization.get(with: .success),
         successfullySigned: localization.get(with: .successfullySignedDocument),
-        documentName: viewModel.viewState.document?.documentName ?? "",
-        signedBy: localization.get(with: .signedBy, args: [viewModel.viewState.qtsp?.qtspName ?? ""]),
+        documentName: viewModel.viewState.documentName,
+        signedBy: localization.get(with: .signedBy, args: [viewModel.viewState.qtspName]),
         viewString: localization.get(with: .view),
         view: viewModel.viewDocument
       )
+    }
+    .onAppear {
+      viewModel.initiate()
+    }
+    .confirmationDialog(
+      localization.get(with: .sharingDocument),
+      isPresented: $showSheet,
+      titleVisibility: .visible
+    ) {
+      Button(localization.get(with: .close), role: .destructive) {
+        viewModel.onCancel()
+      }
+
+      if let pdfURL = viewModel.pdfURL {
+        ShareLink(item: pdfURL) {
+          Label(localization.get(with: .share), systemImage: "")
+        }
+      }
+    } message: {
+      Text(localization.get(with: .closeSharingDocument))
     }
   }
 }

@@ -48,6 +48,10 @@ public enum LocalizableKey: String, Sendable {
   case genericErrorDescription
   case genericErrorDocumentNotFound
   case genericErrorQtspNotFound
+  case sharingDocument
+  case closeSharingDocument
+  case close
+  case share
 
   func defaultTranslation(args: [String]) -> String {
     let value = switch self {
@@ -76,13 +80,17 @@ public enum LocalizableKey: String, Sendable {
     case .state: "State"
     case .cancelSigning: "Cancel signing"
     case .continueSigning: "Continue signing"
-    case .cancelSigningProcessTitle: "Cancel signing process"
+    case .cancelSigningProcessTitle: "Cancel signing process?"
     case .cancelSigningProcessSubtitle: "Cancel  will will redirect you back to the document list without signing your document."
     case .genericErrorButtonRetry: "TRY AGAIN"
     case .genericErrorMessage: "Oups! Something went wrong"
     case .genericErrorDescription: "If the issue persists, please contact customer support"
     case .genericErrorDocumentNotFound: "No Document data found"
     case .genericErrorQtspNotFound: "No selected QTSP found"
+    case .sharingDocument: "Sharing document"
+    case .closeSharingDocument: "Closing will redirect you back to the dashboard without saving or sharing the document."
+    case .close: "Close"
+    case .share: "Share"
     }
     return value.format(arguments: args)
   }

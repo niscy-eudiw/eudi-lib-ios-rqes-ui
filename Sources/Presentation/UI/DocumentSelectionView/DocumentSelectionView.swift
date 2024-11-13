@@ -51,22 +51,18 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
       viewModel.initiate()
     }
     .confirmationDialog(
-      localization.get(with: .cancelSigningProcessTitle),
+      title: localization.get(with: .cancelSigningProcessTitle),
+      message: localization.get(with: .cancelSigningProcessSubtitle),
+      destructiveText: localization.get(with: .cancelSigning),
+      cancelText: localization.get(with: .continueSigning),
       isPresented: $showSheet,
-      titleVisibility: .visible
-    ) {
-      Button(
-        localization.get(with: .cancelSigning),
-        role: .destructive
-      ) {
+      destructiveAction: {
         viewModel.onCancel()
+      },
+      cancelAction: {
+        showSheet.toggle()
       }
-      Button(
-        localization.get(with: .continueSigning),
-        role: .cancel) {
-          showSheet.toggle()
-      }
-    }
+    )
     .eraseToAnyView()
   }
 }
