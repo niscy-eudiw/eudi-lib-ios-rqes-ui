@@ -17,6 +17,10 @@ let package = Package(
       from: "2.9.1"
     ),
     .package(
+      url: "https://github.com/niscy-eudiw/eudi-lib-ios-rqes-kit.git",
+      branch: "initial"
+    ),
+    .package(
       url: "https://github.com/Brightify/Cuckoo.git",
       from: "2.0.9"
     ),
@@ -30,6 +34,10 @@ let package = Package(
       name: "EudiRQESUi",
       dependencies: [
         "Swinject",
+        .product(
+          name: "RqesKit",
+          package: "eudi-lib-ios-rqes-kit"
+        ),
         .product(
           name: "Copyable",
           package: "SwiftCopyableMacro"

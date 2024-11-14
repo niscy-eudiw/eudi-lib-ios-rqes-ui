@@ -13,64 +13,130 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import Foundation
+import RqesKit
 
-struct CertificateDataResponseDTO: Decodable, Equatable, Sendable {
-  let name: String
-  let certificateURI: URL
-}
+extension Document: @unchecked @retroactive Sendable {}
 
-extension CertificateDataResponseDTO {
-  func mapToDomain() -> CertificateData {
+extension CredentialInfo {
+  func toDomain() -> CertificateData {
     CertificateData(
-      name: name,
-      certificateURI: certificateURI
+      id: credentialID,
+      name: description!,
+      certificateURI: URL(string: "https://www.example.com")!
     )
   }
 }
 
-struct CertificateData: Identifiable {
-  let id = UUID()
+struct CertificateData: Identifiable, Equatable {
+  let id: String
   let name: String
   let certificateURI: URL
 }
 
-enum CredentialSelectionPartialState: Sendable {
-  case success([CertificateData])
-  case failure(Error)
-}
-
 protocol RQESInteractor: Sendable {
-  func qtspCertificates(qtspCertificateEndpoint: URL) async -> CredentialSelectionPartialState
-  func signDocument(documentUri: URL)
+  var rQESServiceAuthorized: RQESServiceAuthorized? { get set }
+
+  func signDocument() async throws -> Document?
   func getCurrentSelection() async -> CurrentSelection?
   func getQTSps() async throws -> [QTSPData]?
+  @MainActor
+  func openAuthrorizationURL() async throws
+  @MainActor
+  func openCredentialAuthrorizationURL() async throws
+  func fetchCredentials() async throws -> Result<[CredentialInfo], any Error>
+  func updateQTSP(_ qtsp: QTSPData?) async
+  func updateDocument(_ url: URL) async
 }
 
-final class QTSPInteractorImpl: RQESInteractor {
-  func qtspCertificates(qtspCertificateEndpoint: URL) async -> CredentialSelectionPartialState {
-    do {
-      let qtsps = [
-        CertificateDataResponseDTO(name: "Certificate 1", certificateURI: URL(string: "uri 1")!),
-        CertificateDataResponseDTO(name: "Certificate 2", certificateURI: URL(string: "uri 2")!),
-        CertificateDataResponseDTO(name: "Certificate 3", certificateURI: URL(string: "uri 3")!)
-      ].map {
-        $0.mapToDomain()
-      }
-      return .success(qtsps)
-    } catch {
-      return .failure(error)
-    }
-  }
+final class RQESInteractorImpl: RQESInteractor {
 
-  func signDocument(documentUri: URL) {
-    // TODO
+  nonisolated(unsafe) internal var rQESServiceAuthorized: RQESServiceAuthorized? = nil
+
+  func signDocument() async throws -> Document? {
+    let authorizationCode = try? await EudiRQESUi.instance().selection.code
+    if let authorizationCode,
+       let rQESServiceAuthorized {
+
+      let authorizedCredential = try await rQESServiceAuthorized.authorizeCredential(authorizationCode: authorizationCode)
+      let signAlgorithm = SigningAlgorithmOID.RSA
+      let signedDocuments = try await authorizedCredential.signDocuments(signAlgorithmOID: signAlgorithm)
+      
+      return signedDocuments.first
+    } else {
+      throw CustomError.unknownError
+    }
   }
 
   func getCurrentSelection() async -> CurrentSelection? {
     try? await EudiRQESUi.instance().selection
   }
 
-  func getQTSps() async throws -> [QTSPData]? {
-    try? await EudiRQESUi.getConfig().rssps
+  func updateQTSP(_ qtsp: QTSPData? = nil) async {
+    try? await EudiRQESUi.instance().updateQTSP(with: qtsp)
   }
+
+  func updateDocument(_ url: URL) async {
+    let name = try? await EudiRQESUi.instance().selection.document?.documentName
+    if let name {
+      let document = DocumentData(documentName: name, uri: url)
+      try? await EudiRQESUi.instance().updateSelectionDocument(with: document)
+    }
+  }
+
+  func getQTSps() async throws -> [QTSPData]? {
+    EudiRQESUi.getConfig().rssps
+  }
+
+  @MainActor
+  func openAuthrorizationURL() async throws {
+    let _ = try await EudiRQESUi.instance().rqesService.getRSSPMetadata()
+    let authorizationUrl = try await EudiRQESUi.instance().rqesService.getServiceAuthorizationUrl()
+
+    await UIApplication.shared.open(authorizationUrl)
+  }
+
+  @MainActor
+  func openCredentialAuthrorizationURL() async throws {
+    if let uri = try? await EudiRQESUi.instance().selection.document?.uri,
+       let certificate = try? await EudiRQESUi.instance().selection.certificate {
+      let unsignedDocuments = [
+        Document(
+          id: UUID().uuidString,
+          fileURL: uri
+        )
+      ]
+
+      let credentialAuthorizationUrl = try await rQESServiceAuthorized?.getCredentialAuthorizationUrl(
+        credentialInfo: certificate,
+        documents: unsignedDocuments
+      )
+
+      if let credentialAuthorizationUrl {
+        await UIApplication.shared.open(credentialAuthorizationUrl)
+      } else {
+        throw CustomError.unknownError
+      }
+    } else {
+      throw CustomError.unknownError
+    }
+  }
+
+  func fetchCredentials() async throws -> Result<[CredentialInfo], any Error> {
+    if let authorizationCode = try? await EudiRQESUi.instance().selection.code {
+      rQESServiceAuthorized = try await EudiRQESUi.instance().rqesService.authorizeService(authorizationCode: authorizationCode)
+      do {
+        let credentials = try await rQESServiceAuthorized!.getCredentialsList()
+        return .success(credentials)
+      } catch {
+        return .failure(error)
+      }
+    } else {
+      return .failure(CustomError.unknownError)
+    }
+  }
+}
+
+enum CustomError: Error {
+  case unknownError
 }

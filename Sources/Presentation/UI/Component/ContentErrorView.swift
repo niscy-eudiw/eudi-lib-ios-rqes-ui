@@ -14,7 +14,7 @@ struct ContentErrorView: View {
       HStack {
         Button(
           action: {
-            config.cancelAction()
+            config.cancelAction?()
           },
           label: {
             Image(systemName: "xmark")
@@ -60,14 +60,14 @@ extension ContentErrorView {
     let title: LocalizableKey
     let description: LocalizableKey
     let button: LocalizableKey
-    let cancelAction: () -> Void
+    let cancelAction: (() -> Void)?
     let action: (() -> Void)?
 
     public init(
       title: LocalizableKey = .genericErrorMessage,
       description: LocalizableKey = .genericErrorDescription,
       button: LocalizableKey = .genericErrorButtonRetry,
-      cancelAction: @escaping @autoclosure () -> Void,
+      cancelAction: (() -> Void)? = nil,
       action: (() -> Void)? = nil
     ) {
       self.title = title

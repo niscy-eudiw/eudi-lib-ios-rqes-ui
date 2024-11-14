@@ -100,6 +100,7 @@ private func content(
     navigationTitle: "View document",
     toolbarContent: nil,
     viewState: .init(
+      isLoading: false,
       pdfDocument: document,
       documentSource: nil,
       error: nil

@@ -14,12 +14,16 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
+import RqesKit
 
 @Copyable
 struct CredentialSelectionState: ViewState {
+  let isLoading: Bool
   let credentials: [CertificateData]
   let documentName: String
   let error: ContentErrorView.Config?
+  let credentialInfos: [CredentialInfo]
+  let selectedCredential: CredentialInfo?
 }
 
 final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router, CredentialSelectionState> {
@@ -36,70 +40,89 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
     super.init(
       router: router,
       initialState: CredentialSelectionState(
+        isLoading: true,
         credentials: [],
         documentName: "",
-        error: nil
+        error: nil,
+        credentialInfos: [],
+        selectedCredential: nil
       )
     )
   }
 
   @MainActor
-  func fetchCredentials() async {
-    let state = await Task.detached { () -> CredentialSelectionPartialState in
-      return await self.interactor.qtspCertificates(qtspCertificateEndpoint: URL(string: "uri")!)
-    }.value
-
-    switch state {
-    case .success(let credentials):
-      setState {
-        $0
-          .copy(credentials: credentials)
-      }
-    case .failure(let error):
-      setState {
-        $0
-          .copy(
-            error: ContentErrorView.Config(
-              title: .genericErrorMessage,
-              description: .genericErrorMessage,
-              cancelAction: {}(),
-              action: {}
+  func fetchCredentials() {
+    Task {
+      do {
+        let credentials = try await interactor.fetchCredentials()
+        switch credentials {
+        case .success(let credentials):
+          setState {
+            $0.copy(
+              isLoading: false,
+              credentials: credentials.map { $0.toDomain() },
+              credentialInfos: credentials
             )
-          )
+          }
+        case .failure:
+          setErrorState()
+        }
+      } catch {
+        setErrorState()
       }
     }
   }
 
-  func setCertificate(_ certificate: String? = nil) {
+  func setCertificate(_ certificate: CertificateData? = nil) {
     Task {
-      try? await EudiRQESUi.instance().updateCertificate(with: certificate)
+      if let credential = viewState.credentialInfos.first(where: { $0.credentialID == certificate?.id}) {
+        try? await EudiRQESUi.instance().updateCertificate(with: credential)
+      } else {
+        setErrorState()
+      }
     }
   }
 
   func getDocument() {
     Task {
-      let documentName = try? await interactor.getCurrentSelection()?.document?.documentName
+      let documentName = await interactor.getCurrentSelection()?.document?.documentName
 
       if let documentName {
         setState {
           $0
             .copy(
+              isLoading: false,
               documentName: documentName
             )
         }
       } else {
-        setState {
-          $0
-            .copy(
-              error: ContentErrorView.Config(
-                title: .genericErrorMessage,
-                description: .genericErrorDocumentNotFound,
-                cancelAction: {}(),
-                action: getDocument
-              )
-            )
-        }
+        setErrorState()
       }
+    }
+  }
+
+  func openAuthorization() {
+    Task {
+      do {
+        try await interactor.openCredentialAuthrorizationURL()
+      } catch {
+        setErrorState()
+      }
+    }
+  }
+
+  private func setErrorState() {
+    setState {
+      $0
+        .copy(
+          isLoading: false,
+          error: ContentErrorView.Config(
+            title: .genericErrorMessage,
+            description: .genericErrorDocumentNotFound,
+            cancelAction: fetchCredentials,
+            action: fetchCredentials
+          )
+        )
     }
   }
 }

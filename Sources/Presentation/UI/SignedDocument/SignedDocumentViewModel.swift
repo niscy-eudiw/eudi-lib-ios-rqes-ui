@@ -17,6 +17,7 @@ import SwiftUI
 
 @Copyable
 struct SignedDocumenState: ViewState {
+  let isLoading: Bool
   let document: DocumentData?
   let qtsp: QTSPData?
   let documentName: String
@@ -37,6 +38,7 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
     super.init(
       router: router,
       initialState: SignedDocumenState(
+        isLoading: true,
         document: nil,
         qtsp: nil,
         documentName: "",
@@ -48,34 +50,33 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
 
   func initiate() {
     Task {
-      let selection = try? await interactor.getCurrentSelection()
+      do {
+        let signedDocument = try await interactor.signDocument()
+        let selection = await interactor.getCurrentSelection()
 
-      // TODO: replace from core
-      if let uri = selection?.document?.uri {
-        createPDF(sourceURL: uri)
-      }
-
-      if let documentName = selection?.document?.documentName,
-         let qtspName = selection?.qtsp?.qtspName {
-        setState {
-          $0
-            .copy(
-              documentName: documentName,
-              qtspName: qtspName
-            )
+        pdfURL = signedDocument?.fileURL
+        if let fileURL = signedDocument?.fileURL {
+          await interactor.updateDocument(fileURL)
         }
-      } else {
-        setState {
-          $0
-            .copy(
-              error: ContentErrorView.Config(
-                title: .genericErrorMessage,
-                description: .genericErrorDocumentNotFound,
-                cancelAction: {}(),
-                action: initiate
+//        if let uri = selection?.document?.uri {
+//          createPDF(sourceURL: uri)
+//        }
+
+        if let documentName = selection?.document?.documentName,
+           let qtspName = selection?.qtsp?.qtspName {
+          setState {
+            $0
+              .copy(
+                isLoading: false,
+                documentName: documentName,
+                qtspName: qtspName
               )
-            )
+          }
+        } else {
+          setErrorState()
         }
+      } catch {
+        setErrorState()
       }
     }
   }
@@ -88,45 +89,55 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
     }
   }
 
-  private func createPDF(sourceURL: URL) {
-    let inputStream = InputStream(url: sourceURL)
-    let destinationURL = FileManager.default.temporaryDirectory.appendingPathComponent("output.pdf")
-
-    do {
-      try savePDF(from: inputStream!, to: destinationURL)
-      print("PDF saved successfully at \(destinationURL)")
-      pdfURL = destinationURL // Set the pdfURL to the saved location
-    } catch {
-      print("Failed to save PDF: \(error)")
+  private func setErrorState() {
+    setState {
+      $0
+        .copy(
+          isLoading: false,
+          error: ContentErrorView.Config(
+            title: .genericErrorMessage,
+            description: .genericErrorDocumentNotFound,
+            cancelAction: initiate,
+            action: initiate
+          )
+        )
     }
   }
 
-  private func savePDF(from inputStream: InputStream, to destinationURL: URL) throws {
-    inputStream.open()
-    defer { inputStream.close() }
-
-    let bufferSize = 1024
-    var buffer = [UInt8](repeating: 0, count: bufferSize)
-
-    // Create output file at the destination URL
-    if FileManager.default.fileExists(atPath: destinationURL.path) {
-      try FileManager.default.removeItem(at: destinationURL)
-    }
-    FileManager.default.createFile(atPath: destinationURL.path, contents: nil, attributes: nil)
-
-    guard let fileHandle = try? FileHandle(forWritingTo: destinationURL) else {
-      throw NSError(domain: "FileError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Unable to create file handle"])
-    }
-    defer { fileHandle.closeFile() }
-
-    // Read the input stream in chunks and write to the file
-    while inputStream.hasBytesAvailable {
-      let read = inputStream.read(&buffer, maxLength: bufferSize)
-      if read < 0, let error = inputStream.streamError {
-        throw error
-      }
-      fileHandle.write(Data(buffer.prefix(read)))
-    }
-  }
+//  private func createPDF(sourceURL: URL) {
+//    let inputStream = InputStream(url: sourceURL)
+//    let destinationURL = FileManager.default.temporaryDirectory.appendingPathComponent("output.pdf")
+//
+//    do {
+//      try savePDF(from: inputStream!, to: destinationURL)
+//      pdfURL = destinationURL
+//    } catch {}
+//  }
+//
+//  private func savePDF(from inputStream: InputStream, to destinationURL: URL) throws {
+//    inputStream.open()
+//    defer { inputStream.close() }
+//
+//    let bufferSize = 1024
+//    var buffer = [UInt8](repeating: 0, count: bufferSize)
+//
+//    if FileManager.default.fileExists(atPath: destinationURL.path) {
+//      try FileManager.default.removeItem(at: destinationURL)
+//    }
+//    FileManager.default.createFile(atPath: destinationURL.path, contents: nil, attributes: nil)
+//
+//    guard let fileHandle = try? FileHandle(forWritingTo: destinationURL) else {
+//      throw NSError(domain: "FileError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Unable to create file handle"])
+//    }
+//    defer { fileHandle.closeFile() }
+//
+//    while inputStream.hasBytesAvailable {
+//      let read = inputStream.read(&buffer, maxLength: bufferSize)
+//      if read < 0, let error = inputStream.streamError {
+//        throw error
+//      }
+//      fileHandle.write(Data(buffer.prefix(read)))
+//    }
+//  }
 }
 

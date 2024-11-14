@@ -32,12 +32,13 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
       toolbarContent: ToolBarContent(
         trailingActions: [
           Action(
-            title: localization.get(with: .state),
+            title: localization.get(with: .proceed),
             callback: {
               viewModel.setFlowState(
                 .credentials
               )
               viewModel.onPause()
+              viewModel.openAuthorization()
             }
           )
         ]

@@ -17,6 +17,7 @@ import SwiftUI
 
 @Copyable
 struct DocumentSelectionState: ViewState {
+  let isLoading: Bool
   let document: DocumentData?
   let documentName: String
   let error: ContentErrorView.Config?
@@ -34,6 +35,7 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
     super.init(
       router: router,
       initialState: DocumentSelectionState(
+        isLoading: true,
         document: nil,
         documentName: "",
         error: nil)
@@ -42,12 +44,13 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
 
   func initiate() {
     Task {
-      let documentName = try? await interactor.getCurrentSelection()?.document?.documentName
+      let documentName = await interactor.getCurrentSelection()?.document?.documentName
 
       if let documentName {
         setState {
           $0
             .copy(
+              isLoading: false,
               documentName: documentName
             )
         }
@@ -55,10 +58,11 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
         setState {
           $0
             .copy(
+              isLoading: false,
               error: ContentErrorView.Config(
                 title: .genericErrorMessage,
                 description: .genericErrorDocumentNotFound,
-                cancelAction: {}(),
+                cancelAction: initiate,
                 action: initiate
               )
             )
@@ -74,7 +78,7 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
       )
     }
   }
-  
+
   func selectService() {
     if let router = self.router as? RouterGraphImpl {
       router.navigateTo(

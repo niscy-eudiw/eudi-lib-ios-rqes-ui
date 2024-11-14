@@ -14,27 +14,48 @@
  * governing permissions and limitations under the Licence.
  */
 import UIKit
+import RqesKit
 
 @Copyable
 struct CurrentSelection {
-  var document: DocumentData?
-  var qtsp: QTSPData?
-  var certificate: String?
+  let document: DocumentData?
+  let qtsp: QTSPData?
+  let certificate: CredentialInfo?
+  let code: String?
 
-  init(document: DocumentData? = nil, qtsp: QTSPData? = nil, certificate: String? = nil) {
+  init(
+    document: DocumentData? = nil,
+    qtsp: QTSPData? = nil,
+    certificate: CredentialInfo? = nil,
+    code: String? = nil
+  ) {
     self.document = document
     self.qtsp = qtsp
     self.certificate = certificate
+    self.code = code
   }
 }
 
 public final actor EudiRQESUi {
-  
+
+  var rqesService = RQESService(
+    clientConfig: CSCClientConfig(
+      OAuth2Client: CSCClientConfig.OAuth2Client(
+        clientId: "wallet-client-tester",
+        clientSecret: "somesecrettester2"
+      ),
+      authFlowRedirectionURI: "rQES://oauth/callback",
+      scaBaseURL: "https://walletcentric.signer.eudiw.dev"
+    ),
+    defaultHashAlgorithmOID: .SHA256,
+    defaultSigningAlgorithmOID: .RSA
+  )
+
   private static var _shared: EudiRQESUi?
   private static var _config: (any EudiRQESUiConfig)?
   private static var _state: State = .none
   private static var _viewController: UIViewController?
-  
+
   private let router: any RouterGraph
   var selection = CurrentSelection()
 
@@ -45,7 +66,7 @@ public final actor EudiRQESUi {
     Self._config = config
     Self._shared = self
   }
-  
+
   @MainActor
   public func initiate(
     on container: UIViewController,
@@ -67,7 +88,7 @@ public final actor EudiRQESUi {
     )
     try await resume(on: container, animated: animated)
   }
-  
+
   @MainActor
   public func resume(
     on container: UIViewController,
@@ -81,15 +102,19 @@ public final actor EudiRQESUi {
   }
 
   func updateSelectionDocument(with document: DocumentData? = nil) async {
-    selection.document = document
-  }
+    selection = selection.copy(document: document)
+  }  
 
   func updateQTSP(with qtsp: QTSPData? = nil) async {
-    selection.qtsp = qtsp
+    selection = selection.copy(qtsp: qtsp)
   }
 
-  func updateCertificate(with certificate: String? = nil) async {
-    selection.certificate = certificate
+  func updateCertificate(with certificate: CredentialInfo) async {
+    selection = selection.copy(certificate: certificate)
+  }
+
+  public func updateAuthorizationCode(with url: URL) async {
+    selection = selection.copy(code: url.value(for: "code"))
   }
 }
 
@@ -103,37 +128,58 @@ public extension EudiRQESUi {
 }
 
 private extension EudiRQESUi {
-  
+
+  func calculateNextState() -> State {
+    switch getState() {
+    case .none:
+      if let config = Self._config {
+        return .initial(config)
+      } else {
+        return .none
+      }
+    case .initial:
+      return .rssps
+    case .rssps:
+      return .credentials
+    case .credentials:
+      return .sign
+    case .sign:
+      return .view
+    case .view:
+      return .view
+    }
+  }
+
   func getState() -> State {
     return Self._state
   }
-  
+
   func getViewController() -> UIViewController? {
     return Self._viewController
   }
-  
+
   func setViewController(_ viewController: UIViewController) {
     Self._viewController = viewController
   }
-  
+
 }
 
 extension EudiRQESUi {
-  
+
   static func getConfig() -> any EudiRQESUiConfig {
     return Self._config!
   }
-  
+
   func setState(_ state: State) {
     Self._state = state
   }
-  
+
   @MainActor
   func cancel(animated: Bool = true) async {
     await setState(.none)
     await pause(animated: animated)
   }
-  
+
   @MainActor
   func pause(animated: Bool = true) async {
     await getViewController()?.dismiss(animated: animated)
@@ -142,14 +188,14 @@ extension EudiRQESUi {
 
 extension EudiRQESUi {
   enum State: Equatable, Sendable {
-    
+
     case none
     case initial(any EudiRQESUiConfig)
     case rssps
     case credentials
     case sign
     case view
-    
+
     var id: String {
       return switch self {
       case .none:
@@ -166,7 +212,7 @@ extension EudiRQESUi {
         "view"
       }
     }
-    
+
     public static func == (lhs: State, rhs: State) -> Bool {
       return lhs.id == rhs.id
     }

@@ -24,7 +24,8 @@ struct ContentScreenView<Content: View>: View {
   private let background: Color
   private let title: String
   private let toolbarContent: ToolBarContent?
-  let errorConfig: ContentErrorView.Config?
+  private let errorConfig: ContentErrorView.Config?
+  private let isLoading: Bool
 
   init(
     padding: CGFloat = 16,
@@ -33,6 +34,7 @@ struct ContentScreenView<Content: View>: View {
     background: Color = .white,
     title: String,
     errorConfig: ContentErrorView.Config? = nil,
+    isLoading: Bool = false,
     toolbarContent: ToolBarContent? = nil,
     @ViewBuilder content: () -> Content
   ) {
@@ -43,6 +45,7 @@ struct ContentScreenView<Content: View>: View {
     self.title = title
     self.toolbarContent = toolbarContent
     self.errorConfig = errorConfig
+    self.isLoading = isLoading
   }
 
   var body: some View {
@@ -54,6 +57,24 @@ struct ContentScreenView<Content: View>: View {
           content
         }
         .padding([.all], padding)
+
+        if isLoading {
+          ZStack {
+//            Color.black
+//              .opacity(0.1)
+//              .ignoresSafeArea()
+            VStack {
+              Spacer()
+              ProgressView()
+                .progressViewStyle(
+                  CircularProgressViewStyle(
+                    tint: Theme.shared.color.primaryMain
+                  )
+                )
+              Spacer()
+            }
+          }
+        }
       }
     }
     .if(errorConfig != nil) {

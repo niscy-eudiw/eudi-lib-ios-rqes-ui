@@ -13,16 +13,14 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Swinject
+import Foundation
 
-final class InteractorAssembly: Assembly {
-  
-  init() {}
-  
-  func assemble(container: Container) {
-    container.register(RQESInteractor.self) { r in
-      RQESInteractorImpl()
+public extension URL {
+  func value(for queryParameterName: String) -> String? {
+    guard let urlComponents = URLComponents(url: self, resolvingAgainstBaseURL: true),
+          let queryItems = urlComponents.queryItems else {
+      return nil
     }
-    .inObjectScope(ObjectScope.container)
+    return queryItems.first { $0.name == queryParameterName }?.value
   }
 }

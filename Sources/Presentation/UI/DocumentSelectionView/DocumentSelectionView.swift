@@ -30,6 +30,7 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
       spacing: SPACING_LARGE_MEDIUM,
       title: localization.get(with: .confirmSelection),
       errorConfig: viewModel.viewState.error,
+      isLoading: viewModel.viewState.isLoading,
       toolbarContent: .init(
         leadingActions: [
           Action(

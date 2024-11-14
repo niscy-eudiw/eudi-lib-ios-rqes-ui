@@ -18,7 +18,7 @@ import SwiftUI
 struct CredentialSelectionView<Router: RouterGraph>: View {
   @Environment(\.localizationController) var localization
 
-  @State private var selectedItem: String?
+  @State private var selectedItem: CertificateData?
   @State private var showSheet = false
 
   @ObservedObject private var viewModel: CredentialSelectionViewModel<Router>
@@ -50,10 +50,8 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
         }
       }
     }
-    .task {
-      await viewModel.fetchCredentials()
-    }
     .onAppear {
+      viewModel.fetchCredentials()
       viewModel.getDocument()
     }
     .confirmationDialog(
@@ -72,31 +70,22 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
   }
 
   private func toolbarAction() -> ToolBarContent? {
-    if viewModel.viewState.error != nil {
-      return ToolBarContent(
-        leadingActions: [
-          Action(image: Image(systemName: "xmark")) {
-            viewModel.viewState.error?.cancelAction()
-          }
-        ]
-      )
-    } else {
-      return ToolBarContent(
-        trailingActions: [
-          Action(title: localization.get(with: .state)) {
-            viewModel.setFlowState(
-              .sign
-            )
-            viewModel.onPause()
-          }
-        ],
-        leadingActions: [
-          Action(title: localization.get(with: .cancel)) {
-            showSheet.toggle()
-          }
-        ]
-      )
-    }
+    return ToolBarContent(
+      trailingActions: [
+        Action(title: localization.get(with: .proceed)) {
+          viewModel.setFlowState(
+            .sign
+          )
+          viewModel.onPause()
+          viewModel.openAuthorization()
+        }
+      ],
+      leadingActions: [
+        Action(title: localization.get(with: .cancel)) {
+          showSheet.toggle()
+        }
+      ]
+    )
   }
 }
 
@@ -108,7 +97,7 @@ private func content(
   certificate: String,
   confirmSigning: String,
   credentials: [CertificateData],
-  selectedItem: Binding<String?>
+  selectedItem: Binding<CertificateData?>
 ) -> some View {
   VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
     Text(title)
@@ -137,7 +126,7 @@ private func content(
         .font(Theme.shared.font.bodyMedium.font)
         .foregroundStyle(Theme.shared.color.onSurface)
       Spacer()
-      if selectedItem.wrappedValue == item.certificateURI.absoluteString {
+      if item.id == selectedItem.wrappedValue?.id {
         Image(systemName: "checkmark")
           .foregroundColor(.accentColor)
       }
@@ -145,10 +134,10 @@ private func content(
     .listRowInsets(EdgeInsets())
     .contentShape(Rectangle())
     .onTapGesture {
-      if selectedItem.wrappedValue == item.certificateURI.absoluteString {
+      if item.id == selectedItem.wrappedValue?.id {
         selectedItem.wrappedValue = nil
       } else {
-        selectedItem.wrappedValue = item.certificateURI.absoluteString
+        selectedItem.wrappedValue = item
       }
     }
   }
@@ -156,43 +145,43 @@ private func content(
 }
 
 #Preview {
-  ContentScreenView(
-    spacing: SPACING_LARGE_MEDIUM,
-    title: "Select certificate"
-  ) {
-    content(
-      title: "You have chosen to sign the following document:",
-      documentName: "Document_Title.PDF",
-      certificate: "CERTIFICATE",
-      confirmSigning: "Please confirm signing with one of the following certificates:",
-      credentials: [
-        CertificateData(name: "Certificate 1", certificateURI: URL(string: "uri 1")!),
-        CertificateData(name: "Certificate 2", certificateURI: URL(string: "uri 2")!),
-        CertificateData(name: "Certificate 3", certificateURI: URL(string: "uri 3")!)
-      ],
-      selectedItem: .constant("")
-    )
-  }
-  .lightModePreview()
+    ContentScreenView(
+      spacing: SPACING_LARGE_MEDIUM,
+      title: "Select certificate"
+    ) {
+      content(
+        title: "You have chosen to sign the following document:",
+        documentName: "Document_Title.PDF",
+        certificate: "CERTIFICATE",
+        confirmSigning: "Please confirm signing with one of the following certificates:",
+        credentials: [
+          CertificateData(id: "1", name: "Certificate 1", certificateURI: URL(string: "uri 1")!),
+          CertificateData(id: "2", name: "Certificate 2", certificateURI: URL(string: "uri 2")!),
+          CertificateData(id: "4", name: "Certificate 3", certificateURI: URL(string: "uri 3")!)
+        ],
+        selectedItem: .constant(CertificateData(id: "4", name: "Certificate 3", certificateURI: URL(string: "uri 3")!))
+      )
+    }
+    .lightModePreview()
 }
 
 #Preview("Dark Mode") {
-  ContentScreenView(
-    spacing: SPACING_LARGE_MEDIUM,
-    title: "Select certificate"
-  ) {
-    content(
-      title: "You have chosen to sign the following document:",
-      documentName: "Document_Title.PDF",
-      certificate: "CERTIFICATE",
-      confirmSigning: "Please confirm signing with one of the following certificates:",
-      credentials: [
-        CertificateData(name: "Certificate 1", certificateURI: URL(string: "uri 1")!),
-        CertificateData(name: "Certificate 2", certificateURI: URL(string: "uri 2")!),
-        CertificateData(name: "Certificate 3", certificateURI: URL(string: "uri 3")!)
-      ],
-      selectedItem: .constant("")
-    )
-  }
-  .darkModePreview()
+    ContentScreenView(
+      spacing: SPACING_LARGE_MEDIUM,
+      title: "Select certificate"
+    ) {
+      content(
+        title: "You have chosen to sign the following document:",
+        documentName: "Document_Title.PDF",
+        certificate: "CERTIFICATE",
+        confirmSigning: "Please confirm signing with one of the following certificates:",
+        credentials: [
+          CertificateData(id: "1", name: "Certificate 1", certificateURI: URL(string: "uri 1")!),
+          CertificateData(id: "2", name: "Certificate 2", certificateURI: URL(string: "uri 2")!),
+          CertificateData(id: "4", name: "Certificate 3", certificateURI: URL(string: "uri 3")!)
+        ],
+        selectedItem: .constant(CertificateData(id: "4", name: "Certificate 3", certificateURI: URL(string: "uri 3")!))
+      )
+    }
+    .darkModePreview()
 }

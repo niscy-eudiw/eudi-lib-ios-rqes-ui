@@ -17,6 +17,7 @@ import SwiftUI
 
 @Copyable
 struct ServiceSelectionState: ViewState {
+  let isLoading: Bool
   let services: [QTSPData]
   let error: ContentErrorView.Config?
 }
@@ -33,6 +34,7 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
     super.init(
       router: router,
       initialState: ServiceSelectionState(
+        isLoading: true,
         services: [],
         error: nil
       )
@@ -47,28 +49,19 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
         setState {
           $0
             .copy(
+              isLoading: false,
               services: services
             )
         }
       } else {
-        setState {
-          $0
-            .copy(
-              error: ContentErrorView.Config(
-                title: .genericErrorMessage,
-                description: .genericErrorQtspNotFound,
-                cancelAction: {}(),
-                action: initiate
-              )
-            )
-        }
+        setErrorState()
       }
     }
   }
 
   func selectQTSP(_ qtsp: QTSPData? = nil) {
     Task {
-      try? await EudiRQESUi.instance().updateQTSP(with: qtsp)
+      await interactor.updateQTSP(qtsp)
     }
   }
 
@@ -77,6 +70,31 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
       router.navigateTo(
         .credentialSelection
       )
+    }
+  }
+
+  func openAuthorization() {
+    Task {
+      do {
+        try await interactor.openAuthrorizationURL()
+      } catch {
+        setErrorState()
+      }
+    }
+  }
+
+  private func setErrorState() {
+    setState {
+      $0
+        .copy(
+          isLoading: false,
+          error: ContentErrorView.Config(
+            title: .genericErrorMessage,
+            description: .genericErrorQtspNotFound,
+            cancelAction: initiate,
+            action: initiate
+          )
+        )
     }
   }
 }

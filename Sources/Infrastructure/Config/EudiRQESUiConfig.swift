@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import RqesKit
 
 public protocol EudiRQESUiConfig: Sendable {
   
@@ -30,6 +31,8 @@ public protocol EudiRQESUiConfig: Sendable {
   
   // Logging is enabled
   var printLogs: Bool { get }
+  
+  var rQESConfig: CSCClientConfig? { get }
 }
 
 extension EudiRQESUiConfig {
@@ -48,6 +51,7 @@ public struct DefaultUIConfig: EudiRQESUiConfig {
   public let redirectUrl: URL?
   public let printLogs: Bool
   public var theme: ThemeProtocol
+  public var rQESConfig: CSCClientConfig?
   
   private init(
     rssps: [QTSPData],

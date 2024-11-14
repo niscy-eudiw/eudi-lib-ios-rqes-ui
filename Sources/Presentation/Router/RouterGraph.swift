@@ -177,9 +177,7 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
         switch state {
         case .none:
           EmptyView()
-        case .initial(
-          let config
-        ):
+        case .initial:
           DocumentSelectionView(
             with: DocumentSelectionViewModel(
               router: self,
