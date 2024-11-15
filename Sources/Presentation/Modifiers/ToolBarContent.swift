@@ -19,15 +19,18 @@ struct Action: Identifiable {
   let id = UUID()
   let title: String?
   let image: Image?
+  let disabled: Bool
   let callback: (() -> Void)?
   
   init(
     title: String? = nil,
     image: Image? = nil,
+    disabled: Bool = false,
     callback: (() -> Void)? = nil
   ) {
     self.title = title
     self.image = image
+    self.disabled = disabled
     self.callback = callback
   }
 }
@@ -49,14 +52,20 @@ struct ToolBarContent: ToolbarContent {
     if let leadingActions {
       ToolbarItemGroup(placement: .topBarLeading) {
         ForEach(leadingActions, id: \.id) { action in
-          ActionView(action: action)
+          ActionView(
+            action: action,
+            disabled: action.disabled
+          )
         }
       }
     }
     if let trailingActions {
       ToolbarItemGroup(placement: .topBarTrailing) {
         ForEach(trailingActions, id: \.id) { action in
-          ActionView(action: action)
+          ActionView(
+            action: action,
+            disabled: action.disabled
+          )
         }
       }
     }
@@ -65,6 +74,12 @@ struct ToolBarContent: ToolbarContent {
 
 private struct ActionView: View {
   let action: Action
+  let disabled: Bool
+  
+  init(action: Action, disabled: Bool) {
+    self.action = action
+    self.disabled = disabled
+  }
   
   var body: some View {
     Group {
@@ -72,6 +87,7 @@ private struct ActionView: View {
         Button(action: callback) {
           content
         }
+        .disabled(disabled)
       } else {
         content
       }
@@ -97,16 +113,19 @@ private struct ActionView: View {
           trailingActions: [
             Action(
               title: "State",
+              disabled: false,
               callback: {}
             ),
             Action(
               title: "Proceed",
+              disabled: false,
               callback: {}
             )
           ],
           leadingActions: [
             Action(
               title: "Cancel",
+              disabled: false,
               callback: {}
             )
           ]

@@ -73,7 +73,10 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
   private func toolbarAction() -> ToolBarContent? {
     return ToolBarContent(
       trailingActions: [
-        Action(title: localization.get(with: .proceed)) {
+        Action(
+          title: localization.get(with: .proceed),
+          disabled: selectedItem == nil
+        ) {
           viewModel.setFlowState(
             .sign
           )
