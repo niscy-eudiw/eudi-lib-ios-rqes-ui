@@ -18,7 +18,7 @@ import SwiftUI
 struct CredentialSelectionView<Router: RouterGraph>: View {
   @Environment(\.localizationController) var localization
 
-  @State private var selectedItem: CertificateData?
+  @State private var selectedItem: CredentialDataUIModel?
   @State private var showSheet = false
 
   @ObservedObject private var viewModel: CredentialSelectionViewModel<Router>
@@ -97,8 +97,8 @@ private func content(
   documentName: String,
   certificate: String,
   confirmSigning: String,
-  credentials: [CertificateData],
-  selectedItem: Binding<CertificateData?>
+  credentials: [CredentialDataUIModel],
+  selectedItem: Binding<CredentialDataUIModel?>
 ) -> some View {
   VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
     Text(title)
@@ -156,11 +156,11 @@ private func content(
         certificate: "CERTIFICATE",
         confirmSigning: "Please confirm signing with one of the following certificates:",
         credentials: [
-          CertificateData(id: "1", name: "Certificate 1", certificateURI: URL(string: "uri 1")!),
-          CertificateData(id: "2", name: "Certificate 2", certificateURI: URL(string: "uri 2")!),
-          CertificateData(id: "4", name: "Certificate 3", certificateURI: URL(string: "uri 3")!)
+          CredentialDataUIModel(id: "1", name: "Certificate 1"),
+          CredentialDataUIModel(id: "2", name: "Certificate 2"),
+          CredentialDataUIModel(id: "4", name: "Certificate 3")
         ],
-        selectedItem: .constant(CertificateData(id: "4", name: "Certificate 3", certificateURI: URL(string: "uri 3")!))
+        selectedItem: .constant(CredentialDataUIModel(id: "4", name: "Certificate 3"))
       )
     }
     .lightModePreview()
@@ -177,11 +177,11 @@ private func content(
         certificate: "CERTIFICATE",
         confirmSigning: "Please confirm signing with one of the following certificates:",
         credentials: [
-          CertificateData(id: "1", name: "Certificate 1", certificateURI: URL(string: "uri 1")!),
-          CertificateData(id: "2", name: "Certificate 2", certificateURI: URL(string: "uri 2")!),
-          CertificateData(id: "4", name: "Certificate 3", certificateURI: URL(string: "uri 3")!)
+          CredentialDataUIModel(id: "1", name: "Certificate 1"),
+          CredentialDataUIModel(id: "2", name: "Certificate 2"),
+          CredentialDataUIModel(id: "4", name: "Certificate 3")
         ],
-        selectedItem: .constant(CertificateData(id: "4", name: "Certificate 3", certificateURI: URL(string: "uri 3")!))
+        selectedItem: .constant(CredentialDataUIModel(id: "4", name: "Certificate 3"))
       )
     }
     .darkModePreview()

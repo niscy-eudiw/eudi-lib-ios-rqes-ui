@@ -38,19 +38,6 @@ struct CurrentSelection {
 
 public final actor EudiRQESUi {
 
-  var rqesService = RQESService(
-    clientConfig: CSCClientConfig(
-      OAuth2Client: CSCClientConfig.OAuth2Client(
-        clientId: "wallet-client-tester",
-        clientSecret: "somesecrettester2"
-      ),
-      authFlowRedirectionURI: "rQES://oauth/callback",
-      scaBaseURL: "https://walletcentric.signer.eudiw.dev"
-    ),
-    defaultHashAlgorithmOID: .SHA256,
-    defaultSigningAlgorithmOID: .RSA
-  )
-
   private static var _shared: EudiRQESUi?
   private static var _config: (any EudiRQESUiConfig)?
   private static var _state: State = .none

@@ -33,6 +33,9 @@ public protocol EudiRQESUiConfig: Sendable {
   var printLogs: Bool { get }
   
   var rQESConfig: CSCClientConfig? { get }
+  
+  var defaultHashAlgorithmOID: HashAlgorithmOID { get }
+  var defaultSigningAlgorithmOID: SigningAlgorithmOID {get }
 }
 
 extension EudiRQESUiConfig {
@@ -47,23 +50,29 @@ extension EudiRQESUiConfig {
 
 // MARK: - TODO To be removed once SDK is stable
 public struct DefaultUIConfig: EudiRQESUiConfig {
+  
   public let rssps: [QTSPData]
   public let redirectUrl: URL?
   public let printLogs: Bool
   public var theme: ThemeProtocol
   public var rQESConfig: CSCClientConfig?
+  public var defaultHashAlgorithmOID: HashAlgorithmOID
+  public var defaultSigningAlgorithmOID: SigningAlgorithmOID
   
   private init(
     rssps: [QTSPData],
     redirectUrl: URL?,
     printLogs: Bool,
-    theme: ThemeProtocol
+    theme: ThemeProtocol,
+    defaultHashAlgorithmOID: HashAlgorithmOID,
+    defaultSigningAlgorithmOID: SigningAlgorithmOID
   ) {
     self.rssps = rssps
     self.redirectUrl = redirectUrl
     self.printLogs = printLogs
     self.theme = theme
-    
+    self.defaultHashAlgorithmOID = defaultHashAlgorithmOID
+    self.defaultSigningAlgorithmOID = defaultSigningAlgorithmOID
     Theme.config(with: theme)
   }
   
@@ -76,8 +85,9 @@ public struct DefaultUIConfig: EudiRQESUiConfig {
       ],
       redirectUrl: URL(string: "openid-rqes://code"),
       printLogs: true,
-      theme: AppTheme()
+      theme: AppTheme(),
+      defaultHashAlgorithmOID: .SHA256,
+      defaultSigningAlgorithmOID: .RSA
     )
   }
-  
 }

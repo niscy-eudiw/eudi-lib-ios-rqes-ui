@@ -19,7 +19,7 @@ import RqesKit
 @Copyable
 struct CredentialSelectionState: ViewState {
   let isLoading: Bool
-  let credentials: [CertificateData]
+  let credentials: [CredentialDataUIModel]
   let documentName: String
   let error: ContentErrorView.Config?
   let credentialInfos: [CredentialInfo]
@@ -60,7 +60,7 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
           setState {
             $0.copy(
               isLoading: false,
-              credentials: credentials.map { $0.toDomain() },
+              credentials: credentials.map { $0.toUi() },
               credentialInfos: credentials
             )
           }
@@ -73,7 +73,7 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
     }
   }
 
-  func setCertificate(_ certificate: CertificateData? = nil) {
+  func setCertificate(_ certificate: CredentialDataUIModel? = nil) {
     Task {
       if let credential = viewState.credentialInfos.first(where: { $0.credentialID == certificate?.id}) {
         try? await EudiRQESUi.instance().updateCertificate(with: credential)

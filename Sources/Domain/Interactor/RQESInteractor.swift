@@ -19,22 +19,21 @@ import RqesKit
 extension Document: @unchecked @retroactive Sendable {}
 
 extension CredentialInfo {
-  func toDomain() -> CertificateData {
-    CertificateData(
+  func toUi() -> CredentialDataUIModel {
+    CredentialDataUIModel(
       id: credentialID,
-      name: description!,
-      certificateURI: URL(string: "https://www.example.com")!
+      name: description ?? "Credential"
     )
   }
 }
 
-struct CertificateData: Identifiable, Equatable {
+struct CredentialDataUIModel: Identifiable, Equatable {
   let id: String
   let name: String
-  let certificateURI: URL
 }
 
 protocol RQESInteractor: Sendable {
+  var rqesService: RQESService? { get set }
   var rQESServiceAuthorized: RQESServiceAuthorized? { get set }
 
   func signDocument() async throws -> Document?
@@ -52,7 +51,19 @@ protocol RQESInteractor: Sendable {
 final class RQESInteractorImpl: RQESInteractor {
 
   nonisolated(unsafe) internal var rQESServiceAuthorized: RQESServiceAuthorized? = nil
-
+  nonisolated(unsafe) internal var rqesService: RQESService?
+  
+  init() {
+    guard let rQESConfig = EudiRQESUi.getConfig().rQESConfig else {
+      fatalError("RQESInteractor has no configuration")
+    }
+    rqesService = .init(
+      clientConfig: rQESConfig,
+      defaultHashAlgorithmOID: EudiRQESUi.getConfig().defaultHashAlgorithmOID,
+      defaultSigningAlgorithmOID: EudiRQESUi.getConfig().defaultSigningAlgorithmOID
+    )
+  }
+  
   func signDocument() async throws -> Document? {
     let authorizationCode = try? await EudiRQESUi.instance().selection.code
     if let authorizationCode,
@@ -64,7 +75,7 @@ final class RQESInteractorImpl: RQESInteractor {
       
       return signedDocuments.first
     } else {
-      throw CustomError.unknownError
+      throw RQESError.unableToSignHashDocument
     }
   }
 
@@ -90,8 +101,11 @@ final class RQESInteractorImpl: RQESInteractor {
 
   @MainActor
   func openAuthrorizationURL() async throws {
-    let _ = try await EudiRQESUi.instance().rqesService.getRSSPMetadata()
-    let authorizationUrl = try await EudiRQESUi.instance().rqesService.getServiceAuthorizationUrl()
+    guard let rqesService = rqesService else {
+      throw RQESError.noRQESServiceProvided
+    }
+    let _ = try await rqesService.getRSSPMetadata()
+    let authorizationUrl = try await rqesService.getServiceAuthorizationUrl()
 
     await UIApplication.shared.open(authorizationUrl)
   }
@@ -115,16 +129,17 @@ final class RQESInteractorImpl: RQESInteractor {
       if let credentialAuthorizationUrl {
         await UIApplication.shared.open(credentialAuthorizationUrl)
       } else {
-        throw CustomError.unknownError
+        throw RQESError.unableToOpenURL
       }
     } else {
-      throw CustomError.unknownError
+      throw RQESError.noDocumentProvided
     }
   }
 
   func fetchCredentials() async throws -> Result<[CredentialInfo], any Error> {
-    if let authorizationCode = try? await EudiRQESUi.instance().selection.code {
-      rQESServiceAuthorized = try await EudiRQESUi.instance().rqesService.authorizeService(authorizationCode: authorizationCode)
+    if let rqesService = rqesService,
+       let authorizationCode = try? await EudiRQESUi.instance().selection.code {
+      rQESServiceAuthorized = try await rqesService.authorizeService(authorizationCode: authorizationCode)
       do {
         let credentials = try await rQESServiceAuthorized!.getCredentialsList()
         return .success(credentials)
@@ -132,11 +147,15 @@ final class RQESInteractorImpl: RQESInteractor {
         return .failure(error)
       }
     } else {
-      return .failure(CustomError.unknownError)
+      return .failure(RQESError.unableToFetchCredentials)
     }
   }
 }
 
-enum CustomError: Error {
-  case unknownError
+enum RQESError: LocalizedError {
+  case unableToFetchCredentials
+  case unableToSignHashDocument
+  case unableToOpenURL
+  case noRQESServiceProvided
+  case noDocumentProvided
 }
