@@ -33,25 +33,30 @@ struct CredentialDataUIModel: Identifiable, Equatable {
 }
 
 protocol RQESInteractor: Sendable {
-  var rqesService: RQESService? { get set }
+  var rqesService: RQESService? { get }
   var rQESServiceAuthorized: RQESServiceAuthorized? { get set }
 
   func signDocument() async throws -> Document?
   func getCurrentSelection() async -> CurrentSelection?
   func getQTSps() async throws -> [QTSPData]?
-  @MainActor
-  func openAuthrorizationURL() async throws
-  @MainActor
-  func openCredentialAuthrorizationURL() async throws
   func fetchCredentials() async throws -> Result<[CredentialInfo], any Error>
   func updateQTSP(_ qtsp: QTSPData?) async
   func updateDocument(_ url: URL) async
+  
+  @MainActor func openAuthrorizationURL() async throws
+  @MainActor func openCredentialAuthrorizationURL() async throws
 }
 
 final class RQESInteractorImpl: RQESInteractor {
 
-  nonisolated(unsafe) internal var rQESServiceAuthorized: RQESServiceAuthorized? = nil
-  nonisolated(unsafe) internal var rqesService: RQESService?
+  nonisolated(unsafe) internal static var _rQESServiceAuthorized: RQESServiceAuthorized? = nil
+  nonisolated internal var rQESServiceAuthorized: RQESServiceAuthorized?  {
+    get { Self._rQESServiceAuthorized }
+    set {
+      Self._rQESServiceAuthorized = newValue
+    }
+  }
+  internal let rqesService: RQESService?
   
   init() {
     guard let rQESConfig = EudiRQESUi.getConfig().rQESConfig else {
