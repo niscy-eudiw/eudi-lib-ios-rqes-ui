@@ -64,6 +64,7 @@ public struct DefaultUIConfig: EudiRQESUiConfig {
     redirectUrl: URL?,
     printLogs: Bool,
     theme: ThemeProtocol,
+    rQESConfig: CSCClientConfig,
     defaultHashAlgorithmOID: HashAlgorithmOID,
     defaultSigningAlgorithmOID: SigningAlgorithmOID
   ) {
@@ -71,6 +72,7 @@ public struct DefaultUIConfig: EudiRQESUiConfig {
     self.redirectUrl = redirectUrl
     self.printLogs = printLogs
     self.theme = theme
+    self.rQESConfig = rQESConfig
     self.defaultHashAlgorithmOID = defaultHashAlgorithmOID
     self.defaultSigningAlgorithmOID = defaultSigningAlgorithmOID
     Theme.config(with: theme)
@@ -79,13 +81,19 @@ public struct DefaultUIConfig: EudiRQESUiConfig {
   public static func createDefault() -> DefaultUIConfig {
     return DefaultUIConfig(
       rssps: [
-        QTSPData(qtspName: "Entrust", uri: URL(string: "https://www.entrust.com")!),
-        QTSPData(qtspName: "Docusign", uri: URL(string: "https://www.docusign.com")!),
-        QTSPData(qtspName: "Ascertia", uri: URL(string: "https://www.ascertia.com")!)
+        QTSPData(qtspName: "Wallet Centric", uri: URL(string: "https://walletcentric.signer.eudiw.dev")!)
       ],
       redirectUrl: URL(string: "openid-rqes://code"),
       printLogs: true,
       theme: AppTheme(),
+      rQESConfig: .init(
+        OAuth2Client: CSCClientConfig.OAuth2Client(
+          clientId: "wallet-client-tester",
+          clientSecret: "somesecrettester2"
+        ),
+        authFlowRedirectionURI: "rQES://oauth/callback",
+        scaBaseURL: "https://walletcentric.signer.eudiw.dev"
+      ),
       defaultHashAlgorithmOID: .SHA256,
       defaultSigningAlgorithmOID: .RSA
     )
