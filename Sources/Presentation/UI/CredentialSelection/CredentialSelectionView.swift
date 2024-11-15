@@ -32,6 +32,7 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
       spacing: SPACING_LARGE_MEDIUM,
       title: localization.get(with: .selectCertificate),
       errorConfig: viewModel.viewState.error,
+      isLoading: viewModel.viewState.isLoading,
       toolbarContent: toolbarAction()
     ) {
       content(

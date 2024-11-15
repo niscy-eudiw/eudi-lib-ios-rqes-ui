@@ -29,6 +29,7 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
       spacing: SPACING_LARGE_MEDIUM,
       title: localization.get(with: .selectService),
       errorConfig: viewModel.viewState.error,
+      isLoading: viewModel.viewState.isLoading,
       toolbarContent: ToolBarContent(
         trailingActions: [
           Action(

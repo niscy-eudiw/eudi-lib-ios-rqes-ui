@@ -29,6 +29,7 @@ struct SignedDocumentView<Router: RouterGraph>: View {
       spacing: SPACING_LARGE_MEDIUM,
       title: localization.get(with: .documentSigned),
       errorConfig: viewModel.viewState.error,
+      isLoading: viewModel.viewState.isLoading,
       toolbarContent: ToolBarContent(
         trailingActions: [
           Action(
@@ -48,9 +49,6 @@ struct SignedDocumentView<Router: RouterGraph>: View {
         viewString: localization.get(with: .view),
         view: viewModel.viewDocument
       )
-    }
-    .onAppear {
-      viewModel.initiate()
     }
     .confirmationDialog(
       localization.get(with: .sharingDocument),

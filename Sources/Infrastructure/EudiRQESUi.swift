@@ -129,27 +129,6 @@ public extension EudiRQESUi {
 
 private extension EudiRQESUi {
 
-  func calculateNextState() -> State {
-    switch getState() {
-    case .none:
-      if let config = Self._config {
-        return .initial(config)
-      } else {
-        return .none
-      }
-    case .initial:
-      return .rssps
-    case .rssps:
-      return .credentials
-    case .credentials:
-      return .sign
-    case .sign:
-      return .view
-    case .view:
-      return .view
-    }
-  }
-
   func getState() -> State {
     return Self._state
   }
@@ -187,6 +166,25 @@ extension EudiRQESUi {
 }
 
 extension EudiRQESUi {
+  func calculateNextState() -> State {
+    switch getState() {
+    case .none:
+      if let config = Self._config {
+        return .initial(config)
+      } else {
+        return .none
+      }
+    case .initial, .rssps:
+      return .credentials
+    case .credentials:
+      return .sign
+    case .sign:
+      return .view
+    case .view:
+      return .view
+    }
+  }
+
   enum State: Equatable, Sendable {
 
     case none

@@ -46,6 +46,7 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
         error: nil
       )
     )
+    initiate()
   }
 
   func initiate() {
@@ -58,9 +59,6 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
         if let fileURL = signedDocument?.fileURL {
           await interactor.updateDocument(fileURL)
         }
-//        if let uri = selection?.document?.uri {
-//          createPDF(sourceURL: uri)
-//        }
 
         if let documentName = selection?.document?.documentName,
            let qtspName = selection?.qtsp?.qtspName {
@@ -103,41 +101,5 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
         )
     }
   }
-
-//  private func createPDF(sourceURL: URL) {
-//    let inputStream = InputStream(url: sourceURL)
-//    let destinationURL = FileManager.default.temporaryDirectory.appendingPathComponent("output.pdf")
-//
-//    do {
-//      try savePDF(from: inputStream!, to: destinationURL)
-//      pdfURL = destinationURL
-//    } catch {}
-//  }
-//
-//  private func savePDF(from inputStream: InputStream, to destinationURL: URL) throws {
-//    inputStream.open()
-//    defer { inputStream.close() }
-//
-//    let bufferSize = 1024
-//    var buffer = [UInt8](repeating: 0, count: bufferSize)
-//
-//    if FileManager.default.fileExists(atPath: destinationURL.path) {
-//      try FileManager.default.removeItem(at: destinationURL)
-//    }
-//    FileManager.default.createFile(atPath: destinationURL.path, contents: nil, attributes: nil)
-//
-//    guard let fileHandle = try? FileHandle(forWritingTo: destinationURL) else {
-//      throw NSError(domain: "FileError", code: 1, userInfo: [NSLocalizedDescriptionKey: "Unable to create file handle"])
-//    }
-//    defer { fileHandle.closeFile() }
-//
-//    while inputStream.hasBytesAvailable {
-//      let read = inputStream.read(&buffer, maxLength: bufferSize)
-//      if read < 0, let error = inputStream.streamError {
-//        throw error
-//      }
-//      fileHandle.write(Data(buffer.prefix(read)))
-//    }
-//  }
 }
 

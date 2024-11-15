@@ -53,26 +53,14 @@ struct ContentScreenView<Content: View>: View {
       if let errorConfig {
         ContentErrorView(config: errorConfig)
       } else {
-        VStack(alignment: .leading, spacing: spacing) {
-          content
-        }
-        .padding([.all], padding)
+        ZStack {
+          VStack(alignment: .leading, spacing: spacing) {
+            content
+          }
+          .padding([.all], padding)
 
-        if isLoading {
-          ZStack {
-//            Color.black
-//              .opacity(0.1)
-//              .ignoresSafeArea()
-            VStack {
-              Spacer()
-              ProgressView()
-                .progressViewStyle(
-                  CircularProgressViewStyle(
-                    tint: Theme.shared.color.primaryMain
-                  )
-                )
-              Spacer()
-            }
+          if isLoading {
+            LoadingView()
           }
         }
       }
@@ -86,6 +74,7 @@ struct ContentScreenView<Content: View>: View {
       $0.toolbar {
         toolbarContent
       }
+      .disabled(isLoading)
     }
     .background(background)
     .fastenDynamicType()

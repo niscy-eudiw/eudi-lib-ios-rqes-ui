@@ -82,6 +82,7 @@ private func content(
   ContentScreenView(
     title: navigationTitle,
     errorConfig: error,
+    isLoading: viewState.isLoading,
     toolbarContent: toolbarContent
   ) {
     if let document = viewState.pdfDocument {
