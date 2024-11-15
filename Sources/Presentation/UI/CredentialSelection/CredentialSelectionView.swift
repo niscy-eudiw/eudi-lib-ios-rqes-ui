@@ -59,12 +59,12 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
       title: localization.get(with: .cancelSigningProcessTitle),
       message: localization.get(with: .cancelSigningProcessSubtitle),
       destructiveText: localization.get(with: .cancelSigning),
-      cancelText: localization.get(with: .continueSigning),
+      baseText: localization.get(with: .continueSigning),
       isPresented: $showSheet,
       destructiveAction: {
         viewModel.onCancel()
       },
-      cancelAction: {
+      baseAction: {
         showSheet.toggle()
       }
     )
@@ -77,11 +77,7 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
           title: localization.get(with: .proceed),
           disabled: selectedItem == nil
         ) {
-          viewModel.setFlowState(
-            .sign
-          )
-          viewModel.onPause()
-          viewModel.openAuthorization()
+          viewModel.nextStep()
         }
       ],
       leadingActions: [

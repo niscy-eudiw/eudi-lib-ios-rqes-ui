@@ -55,12 +55,12 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
       title: localization.get(with: .cancelSigningProcessTitle),
       message: localization.get(with: .cancelSigningProcessSubtitle),
       destructiveText: localization.get(with: .cancelSigning),
-      cancelText: localization.get(with: .continueSigning),
+      baseText: localization.get(with: .continueSigning),
       isPresented: $showSheet,
       destructiveAction: {
         viewModel.onCancel()
       },
-      cancelAction: {
+      baseAction: {
         showSheet.toggle()
       }
     )

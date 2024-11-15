@@ -47,11 +47,11 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
 
       if let services {
         setState {
-          $0
-            .copy(
-              isLoading: false,
-              services: services
-            )
+          $0.copy(
+            isLoading: false,
+            services: services
+          )
+          .copy(error: nil)
         }
       } else {
         setErrorState()
@@ -73,10 +73,20 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
     }
   }
 
+  func nextStep() {
+    setFlowState()
+    onPause()
+    openAuthorization()
+  }
+
   func openAuthorization() {
     Task {
       do {
-        try await interactor.openAuthrorizationURL()
+        let authorizationUrl = try await interactor.openAuthrorizationURL()
+
+        await UIApplication.shared.openURLIfPossible(authorizationUrl) {
+          self.setErrorState()
+        }
       } catch {
         setErrorState()
       }
@@ -85,16 +95,15 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
 
   private func setErrorState() {
     setState {
-      $0
-        .copy(
-          isLoading: false,
-          error: ContentErrorView.Config(
-            title: .genericErrorMessage,
-            description: .genericErrorQtspNotFound,
-            cancelAction: initiate,
-            action: initiate
-          )
+      $0.copy(
+        isLoading: false,
+        error: ContentErrorView.Config(
+          title: .genericErrorMessage,
+          description: .genericErrorQtspNotFound,
+          cancelAction: { self.setState { $0.copy(error: nil) } },
+          action: initiate
         )
+      )
     }
   }
 }

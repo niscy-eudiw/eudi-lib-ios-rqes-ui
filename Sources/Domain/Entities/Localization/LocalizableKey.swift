@@ -17,8 +17,6 @@
 public enum LocalizableKey: String, Sendable {
 
   case signDocument
-  case selectDocumentTitle
-  case selectDocument
   case confirmSelection
   case confirmSelectionTitle
   case selectService
@@ -34,7 +32,6 @@ public enum LocalizableKey: String, Sendable {
   case view
   case save
   case documentSigned
-  case shared
   case proceed
   case viewDocument
   case cancel
@@ -56,8 +53,6 @@ public enum LocalizableKey: String, Sendable {
   func defaultTranslation(args: [String]) -> String {
     let value = switch self {
     case .signDocument: "Sign document"
-    case .selectDocumentTitle: "Select a document from your device to sign electronically."
-    case .selectDocument: "Select document"
     case .confirmSelection: "Confirm selection"
     case .confirmSelectionTitle: "Please confirm signing of the following."
     case .selectService: "Select service"
@@ -73,7 +68,6 @@ public enum LocalizableKey: String, Sendable {
     case .view: "View"
     case .save: "Save"
     case .documentSigned: "Document signed"
-    case .shared: "Shared"
     case .proceed: "Proceed"
     case .viewDocument: "View document"
     case .cancel: "Cancel"

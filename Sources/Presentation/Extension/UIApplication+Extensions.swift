@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 public extension UIApplication {
-  
+
   func topViewController(
     controller: UIViewController? = UIApplication
       .shared
@@ -26,12 +26,12 @@ public extension UIApplication {
       .first?
       .rootViewController
   ) -> UIViewController {
-    
+
     if let navigationController = controller as? UINavigationController {
       return topViewController(
         controller: navigationController.visibleViewController
       )
-      
+
     } else if let tabController = controller as? UITabBarController {
       if let selected = tabController.selectedViewController {
         return topViewController(
@@ -43,7 +43,17 @@ public extension UIApplication {
         controller: presented
       )
     }
-    
+
     return controller ?? UIViewController()
+  }
+}
+
+extension UIApplication {
+  func openURLIfPossible(_ url: URL, onFailure: (() -> Void)? = nil) async {
+    guard canOpenURL(url) else {
+      onFailure?()
+      return
+    }
+    await open(url)
   }
 }

@@ -36,11 +36,7 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
             title: localization.get(with: .proceed),
             disabled: selectedItem == nil,
             callback: {
-              viewModel.setFlowState(
-                .credentials
-              )
-              viewModel.onPause()
-              viewModel.openAuthorization()
+              viewModel.nextStep()
             }
           )
         ]
