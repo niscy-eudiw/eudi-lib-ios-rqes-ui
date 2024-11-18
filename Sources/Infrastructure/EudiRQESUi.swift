@@ -46,6 +46,9 @@ public final actor EudiRQESUi {
   private let router: any RouterGraph
   var selection = CurrentSelection()
 
+  private static var _rqesService: RQESService?
+  private static var _rQESServiceAuthorized: RQESServiceAuthorized?
+
   @discardableResult
   public init(config: any EudiRQESUiConfig) {
     DIGraph.shared.load()
@@ -89,7 +92,7 @@ public final actor EudiRQESUi {
 
   func updateSelectionDocument(with document: DocumentData? = nil) async {
     selection = selection.copy(document: document)
-  }  
+  }
 
   func updateQTSP(with qtsp: QTSPData? = nil) async {
     selection = selection.copy(qtsp: qtsp)
@@ -110,6 +113,22 @@ public extension EudiRQESUi {
       throw EudiRQESUiError.notInitialized
     }
     return _shared
+  }
+
+  func getRQESService() -> RQESService? {
+    Self._rqesService
+  }
+
+  func setRQESService(_ service: RQESService?) {
+    Self._rqesService = service
+  }
+
+  func getRQESServiceAuthorized() -> RQESServiceAuthorized? {
+    Self._rQESServiceAuthorized
+  }
+
+  func setRQESServiceAuthorized(_ service: RQESServiceAuthorized?) {
+    Self._rQESServiceAuthorized = service
   }
 }
 

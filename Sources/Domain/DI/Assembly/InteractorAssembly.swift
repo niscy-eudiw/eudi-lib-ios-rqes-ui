@@ -23,6 +23,6 @@ final class InteractorAssembly: Assembly {
     container.register(RQESInteractor.self) { r in
       RQESInteractorImpl()
     }
-    .inObjectScope(ObjectScope.container)
+    .inObjectScope(ObjectScope.transient)
   }
 }

@@ -76,7 +76,7 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
     Task {
       do {
         if let selectedItem {
-          interactor.createRQESService(selectedItem)
+          try await interactor.createRQESService(selectedItem)
         } else {
           setErrorState()
         }
