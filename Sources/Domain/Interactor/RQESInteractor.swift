@@ -127,9 +127,9 @@ final class RQESInteractorImpl: RQESInteractor {
   func fetchCredentials() async throws -> Result<[CredentialInfo], any Error> {
     if let rqesService = try await EudiRQESUi.instance().getRQESService(),
        let authorizationCode = try? await EudiRQESUi.instance().selection.code {
-      let rQESServiceAuthorized = try await rqesService.authorizeService(authorizationCode: authorizationCode)
-      try await EudiRQESUi.instance().setRQESServiceAuthorized(rQESServiceAuthorized)
       do {
+        let rQESServiceAuthorized = try await rqesService.authorizeService(authorizationCode: authorizationCode)
+        try await EudiRQESUi.instance().setRQESServiceAuthorized(rQESServiceAuthorized)
         let credentials = try? await EudiRQESUi.instance().getRQESServiceAuthorized()?.getCredentialsList()
         if let credentials {
           return .success(credentials)
