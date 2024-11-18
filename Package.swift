@@ -17,8 +17,8 @@ let package = Package(
       from: "2.9.1"
     ),
     .package(
-      url: "https://github.com/niscy-eudiw/eudi-lib-ios-rqes-kit.git",
-      branch: "initial"
+      url: "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-kit.git",
+      from: "0.0.1"
     ),
     .package(
       url: "https://github.com/Brightify/Cuckoo.git",

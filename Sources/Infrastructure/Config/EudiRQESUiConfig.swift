@@ -81,7 +81,8 @@ public struct DefaultUIConfig: EudiRQESUiConfig {
   public static func createDefault() -> DefaultUIConfig {
     return DefaultUIConfig(
       rssps: [
-        QTSPData(qtspName: "Wallet Centric", uri: URL(string: "https://walletcentric.signer.eudiw.dev")!)
+        QTSPData(qtspName: "Wallet Centric One", uri: URL(string: "https://walletcentric.signer.eudiw.dev")!),
+        QTSPData(qtspName: "Wallet Centric Two", uri: URL(string: "https://walletcentric.signer.eudiw.dev")!)
       ],
       redirectUrl: URL(string: "openid-rqes://code"),
       printLogs: true,
