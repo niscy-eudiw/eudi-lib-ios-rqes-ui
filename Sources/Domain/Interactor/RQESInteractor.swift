@@ -26,6 +26,7 @@ protocol RQESInteractor: Sendable {
   func fetchCredentials() async throws -> Result<[CredentialInfo], any Error>
   func updateQTSP(_ qtsp: QTSPData) async
   func updateDocument(_ url: URL) async
+  func createRQESService(_ qtsp: QTSPData)
   
   @MainActor func openAuthrorizationURL() async throws -> URL
   @MainActor func openCredentialAuthrorizationURL() async throws -> URL
@@ -40,19 +41,33 @@ final class RQESInteractorImpl: RQESInteractor {
       Self._rQESServiceAuthorized = newValue
     }
   }
-  internal let rqesService: RQESService?
-  
-  init() {
+
+  nonisolated(unsafe) internal static var _rqesService: RQESService? = nil
+  nonisolated internal var rqesService: RQESService?  {
+    get { Self._rqesService }
+    set {
+      Self._rqesService = newValue
+    }
+  }
+
+  func createRQESService(_ qtsp: QTSPData) {
     guard let rQESConfig = EudiRQESUi.getConfig().rQESConfig else {
       fatalError("RQESInteractor has no configuration")
     }
     rqesService = .init(
-      clientConfig: rQESConfig,
-      defaultHashAlgorithmOID: EudiRQESUi.getConfig().defaultHashAlgorithmOID,
-      defaultSigningAlgorithmOID: EudiRQESUi.getConfig().defaultSigningAlgorithmOID
+      clientConfig:   .init(
+        OAuth2Client: CSCClientConfig.OAuth2Client(
+          clientId: rQESConfig.clientId,
+          clientSecret: rQESConfig.clientSecret
+        ),
+        authFlowRedirectionURI: rQESConfig.authFlowRedirectionURI,
+        scaBaseURL: qtsp.scaURL
+      ),
+      defaultHashAlgorithmOID: rQESConfig.hashAlgorithm,
+      defaultSigningAlgorithmOID:rQESConfig.signingAlgorithm
     )
   }
-  
+
   func signDocument() async throws -> Document? {
     let authorizationCode = try? await EudiRQESUi.instance().selection.code
     if let authorizationCode,
@@ -61,7 +76,7 @@ final class RQESInteractorImpl: RQESInteractor {
       let authorizedCredential = try await rQESServiceAuthorized.authorizeCredential(authorizationCode: authorizationCode)
       let signAlgorithm = SigningAlgorithmOID.RSA
       let signedDocuments = try await authorizedCredential.signDocuments(signAlgorithmOID: signAlgorithm)
-      
+
       return signedDocuments.first
     } else {
       throw RQESError.unableToSignHashDocument
@@ -95,7 +110,7 @@ final class RQESInteractorImpl: RQESInteractor {
     }
     let _ = try await rqesService.getRSSPMetadata()
     let authorizationUrl = try await rqesService.getServiceAuthorizationUrl()
-    return authorizationUrl    
+    return authorizationUrl
   }
 
   @MainActor

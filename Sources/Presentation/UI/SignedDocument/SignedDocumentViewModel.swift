@@ -61,7 +61,7 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
         }
 
         if let documentName = selection?.document?.documentName,
-           let qtspName = selection?.qtsp?.qtspName {
+           let qtspName = selection?.qtsp?.name {
           setState {
             $0.copy(
               isLoading: false,

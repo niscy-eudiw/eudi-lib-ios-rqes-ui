@@ -75,9 +75,9 @@ private func content(
     .font(Theme.shared.font.bodyMedium.font)
     .foregroundStyle(Theme.shared.color.onSurface)
 
-  List(services, id: \.qtspName) { item in
+  List(services, id: \.name) { item in
     HStack {
-      Text(item.qtspName)
+      Text(item.name)
         .font(Theme.shared.font.bodyMedium.font)
         .foregroundStyle(Theme.shared.color.onSurface)
       Spacer()
@@ -108,14 +108,15 @@ private func content(
       selectServiceTitle: "Select remote signing service.",
       selectServiceSubtitle: "Remote signing enables you to digitally sign documents without the need for locally installed digital identities. Cloud-hosted signing service makes remote signing possible.",
       services: [
-        QTSPData(qtspName: "Entrust", uri: URL(string: "https://www.entrust.com")!),
-        QTSPData(qtspName: "Docusign", uri: URL(string: "https://www.docusign.com")!),
-        QTSPData(qtspName: "Ascertia", uri: URL(string: "https://www.ascertia.com")!)
+        QTSPData(name: "Entrust", uri: URL(string: "https://www.entrust.com")!, scaURL: "https://www.entrust.com"),
+        QTSPData(name: "Docusign", uri: URL(string: "https://www.docusign.com")!, scaURL: "https://www.entrust.com"),
+        QTSPData(name: "Ascertia", uri: URL(string: "https://www.ascertia.com")!, scaURL: "https://www.entrust.com")
       ],
       selectedItem: .constant(
         QTSPData(
-          qtspName: "Entrust",
-          uri: URL(string: "https://www.entrust.com")!
+          name: "Entrust",
+          uri: URL(string: "https://www.entrust.com")!,
+          scaURL: "https://www.entrust.com"
         )
       )
     )
@@ -131,14 +132,15 @@ private func content(
       selectServiceTitle: "Select remote signing service.",
       selectServiceSubtitle: "Remote signing enables you to digitally sign documents without the need for locally installed digital identities. Cloud-hosted signing service makes remote signing possible.",
       services: [
-        QTSPData(qtspName: "Entrust", uri: URL(string: "https://www.entrust.com")!),
-        QTSPData(qtspName: "Docusign", uri: URL(string: "https://www.docusign.com")!),
-        QTSPData(qtspName: "Ascertia", uri: URL(string: "https://www.ascertia.com")!)
+        QTSPData(name: "Entrust", uri: URL(string: "https://www.entrust.com")!, scaURL: "https://www.entrust.com"),
+        QTSPData(name: "Docusign", uri: URL(string: "https://www.docusign.com")!, scaURL: "https://www.entrust.com"),
+        QTSPData(name: "Ascertia", uri: URL(string: "https://www.ascertia.com")!, scaURL: "https://www.entrust.com")
       ],
       selectedItem: .constant(
         QTSPData(
-          qtspName: "Entrust",
-          uri: URL(string: "https://www.entrust.com")!
+          name: "Entrust",
+          uri: URL(string: "https://www.entrust.com")!,
+          scaURL: "https://www.entrust.com"
         )
       )
     )

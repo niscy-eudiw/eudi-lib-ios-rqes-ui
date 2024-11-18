@@ -66,14 +66,6 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
     }
   }
 
-  func selectCredential() {
-    if let router = self.router as? RouterGraphImpl {
-      router.navigateTo(
-        .credentialSelection
-      )
-    }
-  }
-
   func nextStep() {
     setFlowState()
     onPause()
@@ -83,6 +75,11 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
   func openAuthorization() {
     Task {
       do {
+        if let selectedItem {
+          interactor.createRQESService(selectedItem)
+        } else {
+          setErrorState()
+        }
         let authorizationUrl = try await interactor.openAuthrorizationURL()
 
         await UIApplication.shared.openURLIfPossible(authorizationUrl) {

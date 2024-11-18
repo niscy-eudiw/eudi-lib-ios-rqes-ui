@@ -25,17 +25,14 @@ public protocol EudiRQESUiConfig: Sendable {
   var redirectUrl: URL? { get }
   
   // Transactions per locale
-  var translations: [String: [LocalizableKey: String]] { get }
-  
-  var theme: ThemeProtocol { get }
-  
+  var translations: [String: [LocalizableKey: String]]? { get }
+
+  var theme: ThemeProtocol? { get }
+
   // Logging is enabled
   var printLogs: Bool { get }
-  
-  var rQESConfig: CSCClientConfig? { get }
-  
-  var defaultHashAlgorithmOID: HashAlgorithmOID { get }
-  var defaultSigningAlgorithmOID: SigningAlgorithmOID {get }
+
+  var rQESConfig: RqesServiceConfig? { get }
 }
 
 extension EudiRQESUiConfig {
@@ -54,49 +51,44 @@ public struct DefaultUIConfig: EudiRQESUiConfig {
   public let rssps: [QTSPData]
   public let redirectUrl: URL?
   public let printLogs: Bool
-  public var theme: ThemeProtocol
-  public var rQESConfig: CSCClientConfig?
-  public var defaultHashAlgorithmOID: HashAlgorithmOID
-  public var defaultSigningAlgorithmOID: SigningAlgorithmOID
+  public var theme: ThemeProtocol?
+  public var translations: [String: [LocalizableKey: String]]?
+  public var rQESConfig: RqesServiceConfig?
   
-  private init(
+  public init(
     rssps: [QTSPData],
     redirectUrl: URL?,
     printLogs: Bool,
-    theme: ThemeProtocol,
-    rQESConfig: CSCClientConfig,
-    defaultHashAlgorithmOID: HashAlgorithmOID,
-    defaultSigningAlgorithmOID: SigningAlgorithmOID
+    theme: ThemeProtocol? = nil,
+    translations: [String: [LocalizableKey: String]]? = nil,
+    rQESConfig: RqesServiceConfig
   ) {
     self.rssps = rssps
     self.redirectUrl = redirectUrl
     self.printLogs = printLogs
     self.theme = theme
     self.rQESConfig = rQESConfig
-    self.defaultHashAlgorithmOID = defaultHashAlgorithmOID
-    self.defaultSigningAlgorithmOID = defaultSigningAlgorithmOID
-    Theme.config(with: theme)
+
+    if let theme {
+      Theme.config(with: theme)
+    }
   }
   
   public static func createDefault() -> DefaultUIConfig {
     return DefaultUIConfig(
       rssps: [
-        QTSPData(qtspName: "Wallet Centric One", uri: URL(string: "https://walletcentric.signer.eudiw.dev")!),
-        QTSPData(qtspName: "Wallet Centric Two", uri: URL(string: "https://walletcentric.signer.eudiw.dev")!)
+        QTSPData(name: "Wallet Centric One", uri: URL(string: "https://walletcentric.signer.eudiw.dev")!, scaURL: "https://walletcentric.signer.eudiw.dev")
       ],
       redirectUrl: URL(string: "openid-rqes://code"),
       printLogs: true,
       theme: AppTheme(),
-      rQESConfig: .init(
-        OAuth2Client: CSCClientConfig.OAuth2Client(
-          clientId: "wallet-client-tester",
-          clientSecret: "somesecrettester2"
-        ),
+      rQESConfig: RqesServiceConfig(
+        clientId: "wallet-client-tester",
+        clientSecret: "somesecrettester2",
         authFlowRedirectionURI: "rQES://oauth/callback",
-        scaBaseURL: "https://walletcentric.signer.eudiw.dev"
-      ),
-      defaultHashAlgorithmOID: .SHA256,
-      defaultSigningAlgorithmOID: .RSA
+        signingAlgorithm: .RSA,
+        hashAlgorithm: .SHA256
+      )
     )
   }
 }
