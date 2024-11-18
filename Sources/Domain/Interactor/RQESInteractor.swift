@@ -16,17 +16,6 @@
 import Foundation
 import RqesKit
 
-extension Document: @unchecked @retroactive Sendable {}
-
-extension CredentialInfo {
-  func toUi() -> CredentialDataUIModel {
-    CredentialDataUIModel(
-      id: credentialID,
-      name: description ?? "Credential"
-    )
-  }
-}
-
 protocol RQESInteractor: Sendable {
   var rqesService: RQESService? { get }
   var rQESServiceAuthorized: RQESServiceAuthorized? { get set }
@@ -35,7 +24,7 @@ protocol RQESInteractor: Sendable {
   func getCurrentSelection() async -> CurrentSelection?
   func getQTSps() async throws -> [QTSPData]?
   func fetchCredentials() async throws -> Result<[CredentialInfo], any Error>
-  func updateQTSP(_ qtsp: QTSPData?) async
+  func updateQTSP(_ qtsp: QTSPData) async
   func updateDocument(_ url: URL) async
   
   @MainActor func openAuthrorizationURL() async throws -> URL
@@ -83,7 +72,7 @@ final class RQESInteractorImpl: RQESInteractor {
     try? await EudiRQESUi.instance().selection
   }
 
-  func updateQTSP(_ qtsp: QTSPData? = nil) async {
+  func updateQTSP(_ qtsp: QTSPData) async {
     try? await EudiRQESUi.instance().updateQTSP(with: qtsp)
   }
 

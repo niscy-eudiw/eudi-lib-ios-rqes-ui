@@ -94,8 +94,8 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
         error: ContentErrorView.Config(
           title: .genericErrorMessage,
           description: .genericErrorDocumentNotFound,
-          cancelAction: { self.setState { $0.copy(error: nil) } },
-          action: initiate
+          cancelAction: onCancel,
+          action: onCancel
         )
       )
     }

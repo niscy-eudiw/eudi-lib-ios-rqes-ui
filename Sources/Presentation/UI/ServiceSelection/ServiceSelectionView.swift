@@ -18,7 +18,6 @@ import SwiftUI
 struct ServiceSelectionView<Router: RouterGraph>: View {
   @Environment(\.localizationController) var localization
   @ObservedObject var viewModel: ServiceSelectionViewModel<Router>
-  @State private var selectedItem: QTSPData?
 
   init(with viewModel:ServiceSelectionViewModel<Router>) {
     self.viewModel = viewModel
@@ -34,7 +33,7 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
         trailingActions: [
           Action(
             title: localization.get(with: .proceed),
-            disabled: selectedItem == nil,
+            disabled: viewModel.selectedItem == nil,
             callback: {
               viewModel.nextStep()
             }
@@ -46,13 +45,11 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
         selectServiceTitle: localization.get(with: .selectServiceTitle),
         selectServiceSubtitle: localization.get(with: .selectServiceSubtitle),
         services: viewModel.viewState.services,
-        selectedItem: $selectedItem
+        selectedItem: $viewModel.selectedItem
       )
-      .onChange(of: selectedItem) { newValue in
+      .onChange(of: viewModel.selectedItem) { newValue in
         if let newValue = newValue {
           viewModel.selectQTSP(newValue)
-        } else {
-          viewModel.selectQTSP(nil)
         }
       }
       .onAppear {

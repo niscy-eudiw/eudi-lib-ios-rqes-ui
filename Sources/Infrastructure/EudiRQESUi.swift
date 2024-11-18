@@ -73,19 +73,18 @@ public final actor EudiRQESUi {
         config
       )
     )
-    try await resume(on: container, animated: animated)
+    try await launcSDK(on: container, animated: animated)
   }
 
   @MainActor
   public func resume(
     on container: UIViewController,
+    authorizationCode: URL,
     animated: Bool = true
   ) async throws {
     self.router.clear()
-    await setViewController(try self.router.nextView(for: await getState()))
-    if let viewController = await getViewController() {
-      container.present(viewController, animated: animated)
-    }
+    await updateAuthorizationCode(with: authorizationCode)
+    try await launcSDK(on: container, animated: animated)
   }
 
   func updateSelectionDocument(with document: DocumentData? = nil) async {
@@ -126,6 +125,16 @@ private extension EudiRQESUi {
 
   func setViewController(_ viewController: UIViewController) {
     Self._viewController = viewController
+  }
+
+  func launcSDK(
+    on container: UIViewController,
+    animated: Bool
+  ) async throws {
+    await setViewController(try self.router.nextView(for: getState()))
+    if let viewController = getViewController() {
+      await container.present(viewController, animated: animated)
+    }
   }
 
 }

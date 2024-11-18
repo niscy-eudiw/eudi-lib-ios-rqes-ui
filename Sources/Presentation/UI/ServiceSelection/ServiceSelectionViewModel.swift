@@ -25,6 +25,7 @@ struct ServiceSelectionState: ViewState {
 class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceSelectionState> {
 
   private let interactor: RQESInteractor
+  @Published var selectedItem: QTSPData?
 
   init(
     router: Router,
@@ -59,7 +60,7 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
     }
   }
 
-  func selectQTSP(_ qtsp: QTSPData? = nil) {
+  func selectQTSP(_ qtsp: QTSPData) {
     Task {
       await interactor.updateQTSP(qtsp)
     }

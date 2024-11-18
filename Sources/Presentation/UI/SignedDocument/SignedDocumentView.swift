@@ -19,7 +19,6 @@ struct SignedDocumentView<Router: RouterGraph>: View {
   @ObservedObject var viewModel: SignedDocumentViewModel<Router>
   @Environment(\.localizationController) var localization
   @State private var showSheet = false
-  @State private var showShareSheet = false
 
   init(with viewModel: SignedDocumentViewModel<Router>) {
     self.viewModel = viewModel
@@ -48,35 +47,27 @@ struct SignedDocumentView<Router: RouterGraph>: View {
         documentName: viewModel.viewState.documentName,
         signedBy: localization.get(with: .signedBy, args: [viewModel.viewState.qtspName]),
         viewString: localization.get(with: .view),
+        isLoading: viewModel.viewState.isLoading,
         view: viewModel.viewDocument
       )
     }
-    .sheet(isPresented: $showShareSheet) {
-      if let pdfURL = viewModel.pdfURL {
-        ShareSheet(
-          items: [pdfURL],
-          completion: { shared in
-            if shared {
-              viewModel.onCancel()
-            }
-          }
-        )
-        .presentationDetents([.medium, .large])
-      }
-    }
     .confirmationDialog(
-      title: localization.get(with: .sharingDocument),
-      message: localization.get(with: .closeSharingDocument),
-      destructiveText: localization.get(with: .close),
-      baseText: localization.get(with: .share),
+      localization.get(with: .sharingDocument),
       isPresented: $showSheet,
-      destructiveAction: {
+      titleVisibility: .visible
+    ) {
+      Button(localization.get(with: .close), role: .destructive) {
         viewModel.onCancel()
-      },
-      baseAction: {
-        showShareSheet.toggle()
       }
-    )
+
+      if let url = viewModel.pdfURL {
+        ShareLink(item: url) {
+          Label(localization.get(with: .share), systemImage: "swift")
+        }
+      }
+    } message: {
+      Text(localization.get(with: .closeSharingDocument))
+    }
   }
 }
 
@@ -88,6 +79,7 @@ private func content(
   documentName: String,
   signedBy: String,
   viewString: String,
+  isLoading: Bool,
   view: @escaping () -> Void
 ) -> some View {
   VStack(alignment: .leading, spacing: SPACING_NONE) {
@@ -106,8 +98,8 @@ private func content(
         .font(Theme.shared.font.bodyLarge.font)
         .foregroundStyle(Theme.shared.color.onSurface)
         .fontWeight(.semibold)
-        .leftImage(image: Image(.verifiedUser))
     }
+    .gone(if: isLoading)
     .padding(.top, SPACING_SMALL)
 
     CardView(
@@ -138,6 +130,7 @@ private func content(
       documentName: "Document title",
       signedBy: "Signed by: Entrust",
       viewString: "View",
+      isLoading: false,
       view: {}
     )
   }
@@ -154,6 +147,7 @@ private func content(
       documentName: "Document title",
       signedBy: "Signed by: Entrust",
       viewString: "View",
+      isLoading: false,
       view: {}
     )
   }

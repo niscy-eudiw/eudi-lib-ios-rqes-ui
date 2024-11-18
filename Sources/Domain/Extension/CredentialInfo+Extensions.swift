@@ -13,21 +13,14 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import UIKit
+import Foundation
+import RqesKit
 
-struct ShareSheet: UIViewControllerRepresentable {
-  var items: [Any]
-  var completion: ((Bool) -> Void)?
-
-  func makeUIViewController(context: Context) -> UIActivityViewController {
-    let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
-
-    controller.completionWithItemsHandler = { _, completed, _, _ in
-      completion?(completed)
-    }
-
-    return controller
+extension CredentialInfo {
+  func toUi() -> CredentialDataUIModel {
+    CredentialDataUIModel(
+      id: credentialID,
+      name: description ?? "Credential"
+    )
   }
-
-  func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
