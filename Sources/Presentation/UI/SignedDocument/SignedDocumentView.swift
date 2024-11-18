@@ -19,6 +19,7 @@ struct SignedDocumentView<Router: RouterGraph>: View {
   @ObservedObject var viewModel: SignedDocumentViewModel<Router>
   @Environment(\.localizationController) var localization
   @State private var showSheet = false
+  @State private var showShareSheet = false
 
   init(with viewModel: SignedDocumentViewModel<Router>) {
     self.viewModel = viewModel
@@ -50,23 +51,32 @@ struct SignedDocumentView<Router: RouterGraph>: View {
         view: viewModel.viewDocument
       )
     }
-    .confirmationDialog(
-      localization.get(with: .sharingDocument),
-      isPresented: $showSheet,
-      titleVisibility: .visible
-    ) {
-      Button(localization.get(with: .close), role: .destructive) {
-        viewModel.onCancel()
-      }
-
+    .sheet(isPresented: $showShareSheet) {
       if let pdfURL = viewModel.pdfURL {
-        ShareLink(item: pdfURL) {
-          Label(localization.get(with: .share), systemImage: "")
-        }
+        ShareSheet(
+          items: [pdfURL],
+          completion: { shared in
+            if shared {
+              viewModel.onCancel()
+            }
+          }
+        )
+        .presentationDetents([.medium, .large])
       }
-    } message: {
-      Text(localization.get(with: .closeSharingDocument))
     }
+    .confirmationDialog(
+      title: localization.get(with: .sharingDocument),
+      message: localization.get(with: .closeSharingDocument),
+      destructiveText: localization.get(with: .close),
+      baseText: localization.get(with: .share),
+      isPresented: $showSheet,
+      destructiveAction: {
+        viewModel.onCancel()
+      },
+      baseAction: {
+        showShareSheet.toggle()
+      }
+    )
   }
 }
 

@@ -27,11 +27,6 @@ extension CredentialInfo {
   }
 }
 
-struct CredentialDataUIModel: Identifiable, Equatable {
-  let id: String
-  let name: String
-}
-
 protocol RQESInteractor: Sendable {
   var rqesService: RQESService? { get }
   var rQESServiceAuthorized: RQESServiceAuthorized? { get set }
@@ -43,8 +38,8 @@ protocol RQESInteractor: Sendable {
   func updateQTSP(_ qtsp: QTSPData?) async
   func updateDocument(_ url: URL) async
   
-  @MainActor func openAuthrorizationURL() async throws
-  @MainActor func openCredentialAuthrorizationURL() async throws
+  @MainActor func openAuthrorizationURL() async throws -> URL
+  @MainActor func openCredentialAuthrorizationURL() async throws -> URL
 }
 
 final class RQESInteractorImpl: RQESInteractor {
@@ -100,23 +95,22 @@ final class RQESInteractorImpl: RQESInteractor {
     }
   }
 
-  func getQTSps() async throws -> [QTSPData]? {
+  func getQTSps() -> [QTSPData]? {
     EudiRQESUi.getConfig().rssps
   }
 
   @MainActor
-  func openAuthrorizationURL() async throws {
+  func openAuthrorizationURL() async throws -> URL {
     guard let rqesService = rqesService else {
       throw RQESError.noRQESServiceProvided
     }
     let _ = try await rqesService.getRSSPMetadata()
     let authorizationUrl = try await rqesService.getServiceAuthorizationUrl()
-
-    await UIApplication.shared.open(authorizationUrl)
+    return authorizationUrl    
   }
 
   @MainActor
-  func openCredentialAuthrorizationURL() async throws {
+  func openCredentialAuthrorizationURL() async throws -> URL {
     if let uri = try? await EudiRQESUi.instance().selection.document?.uri,
        let certificate = try? await EudiRQESUi.instance().selection.certificate {
       let unsignedDocuments = [
@@ -132,7 +126,7 @@ final class RQESInteractorImpl: RQESInteractor {
       )
 
       if let credentialAuthorizationUrl {
-        await UIApplication.shared.open(credentialAuthorizationUrl)
+        return credentialAuthorizationUrl
       } else {
         throw RQESError.unableToOpenURL
       }
@@ -155,12 +149,4 @@ final class RQESInteractorImpl: RQESInteractor {
       return .failure(RQESError.unableToFetchCredentials)
     }
   }
-}
-
-enum RQESError: LocalizedError {
-  case unableToFetchCredentials
-  case unableToSignHashDocument
-  case unableToOpenURL
-  case noRQESServiceProvided
-  case noDocumentProvided
 }

@@ -13,16 +13,21 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import UIKit
 
-struct DocumentData: Equatable, Sendable {
-  let documentName: String
-  let uri: URL
+struct ShareSheet: UIViewControllerRepresentable {
+  var items: [Any]
+  var completion: ((Bool) -> Void)?
 
-  init(
-    documentName: String,
-    uri: URL
-  ) {
-    self.documentName = documentName
-    self.uri = uri
+  func makeUIViewController(context: Context) -> UIActivityViewController {
+    let controller = UIActivityViewController(activityItems: items, applicationActivities: nil)
+
+    controller.completionWithItemsHandler = { _, completed, _, _ in
+      completion?(completed)
+    }
+
+    return controller
   }
+
+  func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }

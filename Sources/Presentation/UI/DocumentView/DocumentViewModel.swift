@@ -96,9 +96,9 @@ class DocumentViewModel<Router: RouterGraph>: ViewModel<Router, DocumentState> {
       setState {
         $0.copy(
           isLoading: false,
-          pdfDocument: document,
-          error: nil
+          pdfDocument: document
         )
+        .copy(error: nil)
       }
     } else {
       setState {
@@ -108,7 +108,7 @@ class DocumentViewModel<Router: RouterGraph>: ViewModel<Router, DocumentState> {
           error: ContentErrorView.Config(
             title: .genericErrorMessage,
             description: .genericErrorDocumentNotFound,
-            cancelAction: initiate,
+            cancelAction: { self.setState { $0.copy(error: nil) } },
             action: initiate
           )
         )

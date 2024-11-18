@@ -63,6 +63,7 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
               credentials: credentials.map { $0.toUi() },
               credentialInfos: credentials
             )
+            .copy(error: nil)
           }
         case .failure:
           setErrorState()
@@ -77,8 +78,6 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
     Task {
       if let credential = viewState.credentialInfos.first(where: { $0.credentialID == certificate?.id}) {
         try? await EudiRQESUi.instance().updateCertificate(with: credential)
-      } else {
-        setErrorState()
       }
     }
   }
@@ -89,11 +88,11 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
 
       if let documentName {
         setState {
-          $0
-            .copy(
-              isLoading: false,
-              documentName: documentName
-            )
+          $0.copy(
+            isLoading: false,
+            documentName: documentName
+          )
+          .copy(error: nil)
         }
       } else {
         setErrorState()
@@ -101,10 +100,19 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
     }
   }
 
+  func nextStep() {
+    setFlowState()
+    onPause()
+    openAuthorization()
+  }
+
   func openAuthorization() {
     Task {
       do {
-        try await interactor.openCredentialAuthrorizationURL()
+        let authorizationUrl = try await interactor.openCredentialAuthrorizationURL()
+        await UIApplication.shared.openURLIfPossible(authorizationUrl) {
+          self.setErrorState()
+        }
       } catch {
         setErrorState()
       }
@@ -113,16 +121,15 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
 
   private func setErrorState() {
     setState {
-      $0
-        .copy(
-          isLoading: false,
-          error: ContentErrorView.Config(
-            title: .genericErrorMessage,
-            description: .genericErrorDocumentNotFound,
-            cancelAction: fetchCredentials,
-            action: fetchCredentials
-          )
+      $0.copy(
+        isLoading: false,
+        error: ContentErrorView.Config(
+          title: .genericErrorMessage,
+          description: .genericErrorDocumentNotFound,
+          cancelAction: { self.setState { $0.copy(error: nil) } },
+          action: fetchCredentials
         )
+      )
     }
   }
 }

@@ -48,24 +48,23 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
 
       if let documentName {
         setState {
-          $0
-            .copy(
-              isLoading: false,
-              documentName: documentName
-            )
+          $0.copy(
+            isLoading: false,
+            documentName: documentName
+          )
+          .copy(error: nil)
         }
       } else {
         setState {
-          $0
-            .copy(
-              isLoading: false,
-              error: ContentErrorView.Config(
-                title: .genericErrorMessage,
-                description: .genericErrorDocumentNotFound,
-                cancelAction: initiate,
-                action: initiate
-              )
+          $0.copy(
+            isLoading: false,
+            error: ContentErrorView.Config(
+              title: .genericErrorMessage,
+              description: .genericErrorDocumentNotFound,
+              cancelAction: { self.setState { $0.copy(error: nil) } },
+              action: initiate
             )
+          )
         }
       }
     }

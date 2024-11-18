@@ -63,12 +63,12 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
         if let documentName = selection?.document?.documentName,
            let qtspName = selection?.qtsp?.qtspName {
           setState {
-            $0
-              .copy(
-                isLoading: false,
-                documentName: documentName,
-                qtspName: qtspName
-              )
+            $0.copy(
+              isLoading: false,
+              documentName: documentName,
+              qtspName: qtspName
+            )
+            .copy(error: nil)
           }
         } else {
           setErrorState()
@@ -89,16 +89,15 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
 
   private func setErrorState() {
     setState {
-      $0
-        .copy(
-          isLoading: false,
-          error: ContentErrorView.Config(
-            title: .genericErrorMessage,
-            description: .genericErrorDocumentNotFound,
-            cancelAction: initiate,
-            action: initiate
-          )
+      $0.copy(
+        isLoading: false,
+        error: ContentErrorView.Config(
+          title: .genericErrorMessage,
+          description: .genericErrorDocumentNotFound,
+          cancelAction: { self.setState { $0.copy(error: nil) } },
+          action: initiate
         )
+      )
     }
   }
 }
