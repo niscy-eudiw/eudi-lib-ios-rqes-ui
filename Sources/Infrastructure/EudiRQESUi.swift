@@ -64,10 +64,6 @@ public final actor EudiRQESUi {
     animated: Bool = true
   ) async throws {
     
-    guard let config = Self._config else {
-      fatalError("EudiRQESUi: SDK has not been initialized properly")
-    }
-    
     await resetCache()
     await updateSelectionDocument(
       with: .init(
@@ -75,7 +71,7 @@ public final actor EudiRQESUi {
         uri: fileUrl
       )
     )
-    await setState(.initial(config))
+    await setState(.initial(Self.forceConfig()))
     
     try await launcSDK(on: container, animated: animated)
   }
@@ -149,11 +145,7 @@ private extension EudiRQESUi {
   func calculateNextState() -> State {
     switch getState() {
     case .none:
-      if let config = Self._config {
-        return .initial(config)
-      } else {
-        return .none
-      }
+      return .initial(Self.forceConfig())
     case .initial, .rssps:
       return .credentials
     case .credentials:
@@ -203,12 +195,12 @@ extension EudiRQESUi {
     Self._rQESServiceAuthorized = service
   }
   
-  func getRQESConfig() -> RqesServiceConfig? {
-    return Self._config?.rQESConfig
+  func getRQESConfig() -> RqesServiceConfig {
+    return Self.forceConfig().rQESConfig
   }
   
-  func getRssps() -> [QTSPData]? {
-    return Self._config?.rssps
+  func getRssps() -> [QTSPData] {
+    return Self.forceConfig().rssps
   }
 
   @MainActor

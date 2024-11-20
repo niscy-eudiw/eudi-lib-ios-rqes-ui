@@ -43,9 +43,10 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
   }
   
   func initiate() async {
+    
     let services = await interactor.getQTSps()
     
-    if let services {
+    if !services.isEmpty {
       setState {
         $0.copy(
           isLoading: false,
