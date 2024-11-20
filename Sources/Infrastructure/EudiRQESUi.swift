@@ -82,7 +82,7 @@ public final actor EudiRQESUi {
   @MainActor
   public func resume(
     on container: UIViewController,
-    authorizationCode: URL,
+    authorizationUrl: URL,
     animated: Bool = true
   ) async throws {
     
@@ -90,7 +90,7 @@ public final actor EudiRQESUi {
     
     await setState(calculateNextState())
     
-    await updateAuthorizationCode(with: authorizationCode)
+    await updateAuthorizationCode(with: authorizationUrl)
     try await launcSDK(on: container, animated: animated)
   }
 
