@@ -82,7 +82,7 @@ public final actor EudiRQESUi {
   @MainActor
   public func resume(
     on container: UIViewController,
-    authorizationUrl: URL,
+    authorizationCode: String,
     animated: Bool = true
   ) async throws {
     
@@ -90,7 +90,7 @@ public final actor EudiRQESUi {
     
     await setState(calculateNextState())
     
-    await updateAuthorizationCode(with: authorizationUrl)
+    await updateAuthorizationCode(with: authorizationCode)
     try await launcSDK(on: container, animated: animated)
   }
 
@@ -106,8 +106,8 @@ public final actor EudiRQESUi {
     selection = selection.copy(certificate: certificate)
   }
 
-  public func updateAuthorizationCode(with url: URL) async {
-    selection = selection.copy(code: url.value(for: "code"))
+  public func updateAuthorizationCode(with code: String) async {
+    selection = selection.copy(code: code)
   }
 }
 
