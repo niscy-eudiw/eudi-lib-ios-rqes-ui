@@ -63,19 +63,20 @@ public final actor EudiRQESUi {
     fileUrl: URL,
     animated: Bool = true
   ) async throws {
+    
     guard let config = Self._config else {
       fatalError("EudiRQESUi: SDK has not been initialized properly")
     }
-    let document = DocumentData(
-      documentName: fileUrl.lastPathComponent,
-      uri: fileUrl
-    )
-    await updateSelectionDocument(with: document)
-    await setState(
-      .initial(
-        config
+    
+    await resetCache()
+    await updateSelectionDocument(
+      with: .init(
+        documentName: fileUrl.lastPathComponent,
+        uri: fileUrl
       )
     )
+    await setState(.initial(config))
+    
     try await launcSDK(on: container, animated: animated)
   }
 
@@ -89,8 +90,8 @@ public final actor EudiRQESUi {
     self.router.clear()
     
     await setState(calculateNextState())
-    
     await updateAuthorizationCode(with: authorizationCode)
+    
     try await launcSDK(on: container, animated: animated)
   }
 
@@ -166,6 +167,12 @@ private extension EudiRQESUi {
   
   func setState(_ state: State) {
     Self._state = state
+  }
+  
+  func resetCache() async {
+    selection = CurrentSelection()
+    setRQESService(nil)
+    setRQESServiceAuthorized(nil)
   }
 
 }
