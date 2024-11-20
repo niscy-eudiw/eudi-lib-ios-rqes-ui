@@ -15,13 +15,13 @@
  */
 import SwiftUI
 
-public struct FastenedDynamicModifier: ViewModifier {
-  public func body(content: Content) -> some View {
+struct FastenedDynamicModifier: ViewModifier {
+  func body(content: Content) -> some View {
     content.dynamicTypeSize(...DynamicTypeSize.accessibility1)
   }
 }
 
-public extension View {
+extension View {
   func fastenDynamicType() -> some View {
     modifier(FastenedDynamicModifier())
   }
