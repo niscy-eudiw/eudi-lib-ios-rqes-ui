@@ -16,6 +16,7 @@
 import SwiftUI
 
 struct DocumentSelectionView<Router: RouterGraph>: View {
+  
   @Environment(\.localizationController) var localization
   @ObservedObject var viewModel: DocumentSelectionViewModel<Router>
 

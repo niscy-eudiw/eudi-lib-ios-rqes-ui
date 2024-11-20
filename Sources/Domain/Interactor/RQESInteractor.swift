@@ -17,26 +17,31 @@ import Foundation
 import RqesKit
 
 protocol RQESInteractor: Sendable {
-
   func signDocument() async throws -> Document?
   func getCurrentSelection() async -> CurrentSelection?
-  func getQTSps() async throws -> [QTSPData]?
+  func getQTSps() async -> [QTSPData]?
   func fetchCredentials() async throws -> Result<[CredentialInfo], any Error>
   func updateQTSP(_ qtsp: QTSPData) async
   func updateDocument(_ url: URL) async
   func createRQESService(_ qtsp: QTSPData) async throws
-
-  @MainActor func openAuthrorizationURL() async throws -> URL
-  @MainActor func openCredentialAuthrorizationURL() async throws -> URL
+  func saveCertificate(_ certificate: CredentialInfo) async
+  func openAuthrorizationURL() async throws -> URL
+  func openCredentialAuthrorizationURL() async throws -> URL
 }
 
 final class RQESInteractorImpl: RQESInteractor {
-
+  
+  private let rqesUi: EudiRQESUi
+  
+  init(rqesUi: EudiRQESUi) {
+    self.rqesUi = rqesUi
+  }
+  
   func createRQESService(_ qtsp: QTSPData) async throws {
-    guard let rQESConfig = EudiRQESUi.getConfig().rQESConfig else {
+    guard let rQESConfig = await rqesUi.getRQESConfig() else {
       fatalError("RQES Config has no configuration")
     }
-    try await EudiRQESUi.instance().setRQESService(
+    await self.rqesUi.setRQESService(
       .init(
         clientConfig: .init(
           OAuth2Client: CSCClientConfig.OAuth2Client(
@@ -51,96 +56,98 @@ final class RQESInteractorImpl: RQESInteractor {
       )
     )
   }
-
+  
   func signDocument() async throws -> Document? {
-    let authorizationCode = try? await EudiRQESUi.instance().selection.code
-    let rQESServiceAuthorized = try await EudiRQESUi.instance().getRQESServiceAuthorized()
+    let authorizationCode = await self.rqesUi.selection.code
+    let rQESServiceAuthorized = await self.rqesUi.getRQESServiceAuthorized()
     if let authorizationCode,
        let rQESServiceAuthorized {
-
+      
       let authorizedCredential = try await rQESServiceAuthorized.authorizeCredential(authorizationCode: authorizationCode)
       let signAlgorithm = SigningAlgorithmOID.RSA
       let signedDocuments = try await authorizedCredential.signDocuments(signAlgorithmOID: signAlgorithm)
-
+      
       return signedDocuments.first
     } else {
-      throw RQESError.unableToSignHashDocument
+      throw EudiRQESUiError.unableToSignHashDocument
     }
   }
-
+  
   func getCurrentSelection() async -> CurrentSelection? {
-    try? await EudiRQESUi.instance().selection
+    await self.rqesUi.selection
   }
-
+  
   func updateQTSP(_ qtsp: QTSPData) async {
-    try? await EudiRQESUi.instance().updateQTSP(with: qtsp)
+    await self.rqesUi.updateQTSP(with: qtsp)
   }
-
+  
   func updateDocument(_ url: URL) async {
-    let name = try? await EudiRQESUi.instance().selection.document?.documentName
+    let name = await self.rqesUi.selection.document?.documentName
     if let name {
       let document = DocumentData(documentName: name, uri: url)
-      try? await EudiRQESUi.instance().updateSelectionDocument(with: document)
+      await self.rqesUi.updateSelectionDocument(with: document)
     }
   }
-
-  func getQTSps() -> [QTSPData]? {
-    EudiRQESUi.getConfig().rssps
+  
+  func getQTSps() async -> [QTSPData]? {
+    await rqesUi.getRssps()
   }
-
-  @MainActor
+  
   func openAuthrorizationURL() async throws -> URL {
-    guard let rqesService = try await EudiRQESUi.instance().getRQESService() else {
-      throw RQESError.noRQESServiceProvided
+    guard let rqesService = await self.rqesUi.getRQESService() else {
+      throw EudiRQESUiError.noRQESServiceProvided
     }
     let _ = try await rqesService.getRSSPMetadata()
     let authorizationUrl = try await rqesService.getServiceAuthorizationUrl()
     return authorizationUrl
   }
-
-  @MainActor
+  
   func openCredentialAuthrorizationURL() async throws -> URL {
-    if let uri = try? await EudiRQESUi.instance().selection.document?.uri,
-       let certificate = try? await EudiRQESUi.instance().selection.certificate {
+    if let uri = await self.rqesUi.selection.document?.uri,
+       let certificate = await self.rqesUi.selection.certificate {
       let unsignedDocuments = [
         Document(
           id: UUID().uuidString,
           fileURL: uri
         )
       ]
-
-      let credentialAuthorizationUrl = try await EudiRQESUi.instance().getRQESServiceAuthorized()?.getCredentialAuthorizationUrl(
+      
+      let credentialAuthorizationUrl = try await self.rqesUi.getRQESServiceAuthorized()?.getCredentialAuthorizationUrl(
         credentialInfo: certificate,
         documents: unsignedDocuments
       )
-
+      
       if let credentialAuthorizationUrl {
         return credentialAuthorizationUrl
       } else {
-        throw RQESError.unableToOpenURL
+        throw EudiRQESUiError.unableToOpenURL
       }
     } else {
-      throw RQESError.noDocumentProvided
+      throw EudiRQESUiError.noDocumentProvided
     }
   }
-
+  
   func fetchCredentials() async throws -> Result<[CredentialInfo], any Error> {
-    if let rqesService = try await EudiRQESUi.instance().getRQESService(),
-       let authorizationCode = try? await EudiRQESUi.instance().selection.code {
+    if let rqesService = await self.rqesUi.getRQESService(),
+       let authorizationCode = await self.rqesUi.selection.code {
       do {
         let rQESServiceAuthorized = try await rqesService.authorizeService(authorizationCode: authorizationCode)
-        try await EudiRQESUi.instance().setRQESServiceAuthorized(rQESServiceAuthorized)
-        let credentials = try? await EudiRQESUi.instance().getRQESServiceAuthorized()?.getCredentialsList()
+        await self.rqesUi.setRQESServiceAuthorized(rQESServiceAuthorized)
+        let credentials = try? await self.rqesUi.getRQESServiceAuthorized()?.getCredentialsList()
         if let credentials {
           return .success(credentials)
         } else {
-          return .failure(RQESError.unableToFetchCredentials)
+          return .failure(EudiRQESUiError.unableToFetchCredentials)
         }
       } catch {
         return .failure(error)
       }
     } else {
-      return .failure(RQESError.unableToFetchCredentials)
+      return .failure(EudiRQESUiError.unableToFetchCredentials)
     }
+  }
+  
+  func saveCertificate(_ certificate: CredentialInfo) async {
+    await self.rqesUi.updateCertificate(with: certificate)
   }
 }

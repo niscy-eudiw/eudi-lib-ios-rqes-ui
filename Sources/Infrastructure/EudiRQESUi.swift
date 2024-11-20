@@ -85,7 +85,11 @@ public final actor EudiRQESUi {
     authorizationCode: URL,
     animated: Bool = true
   ) async throws {
+    
     self.router.clear()
+    
+    await setState(calculateNextState())
+    
     await updateAuthorizationCode(with: authorizationCode)
     try await launcSDK(on: container, animated: animated)
   }
@@ -108,27 +112,12 @@ public final actor EudiRQESUi {
 }
 
 public extension EudiRQESUi {
+  
   static func instance() throws -> EudiRQESUi {
     guard let _shared else {
       throw EudiRQESUiError.notInitialized
     }
     return _shared
-  }
-
-  func getRQESService() -> RQESService? {
-    Self._rqesService
-  }
-
-  func setRQESService(_ service: RQESService?) {
-    Self._rqesService = service
-  }
-
-  func getRQESServiceAuthorized() -> RQESServiceAuthorized? {
-    Self._rQESServiceAuthorized
-  }
-
-  func setRQESServiceAuthorized(_ service: RQESServiceAuthorized?) {
-    Self._rQESServiceAuthorized = service
   }
 }
 
@@ -155,32 +144,7 @@ private extension EudiRQESUi {
       await container.present(viewController, animated: animated)
     }
   }
-
-}
-
-extension EudiRQESUi {
-
-  static func getConfig() -> any EudiRQESUiConfig {
-    return Self._config!
-  }
-
-  func setState(_ state: State) {
-    Self._state = state
-  }
-
-  @MainActor
-  func cancel(animated: Bool = true) async {
-    await setState(.none)
-    await pause(animated: animated)
-  }
-
-  @MainActor
-  func pause(animated: Bool = true) async {
-    await getViewController()?.dismiss(animated: animated)
-  }
-}
-
-extension EudiRQESUi {
+  
   func calculateNextState() -> State {
     switch getState() {
     case .none:
@@ -199,7 +163,60 @@ extension EudiRQESUi {
       return .view
     }
   }
+  
+  func setState(_ state: State) {
+    Self._state = state
+  }
 
+}
+
+extension EudiRQESUi {
+
+  static func forceConfig() -> any EudiRQESUiConfig {
+    return Self._config!
+  }
+  
+  static func forceInstance() -> EudiRQESUi {
+    return Self._shared!
+  }
+  
+  func getRQESService() -> RQESService? {
+    Self._rqesService
+  }
+
+  func setRQESService(_ service: RQESService?) {
+    Self._rqesService = service
+  }
+
+  func getRQESServiceAuthorized() -> RQESServiceAuthorized? {
+    Self._rQESServiceAuthorized
+  }
+
+  func setRQESServiceAuthorized(_ service: RQESServiceAuthorized?) {
+    Self._rQESServiceAuthorized = service
+  }
+  
+  func getRQESConfig() -> RqesServiceConfig? {
+    return Self._config?.rQESConfig
+  }
+  
+  func getRssps() -> [QTSPData]? {
+    return Self._config?.rssps
+  }
+
+  @MainActor
+  func cancel(animated: Bool = true) async {
+    await setState(.none)
+    await pause(animated: animated)
+  }
+
+  @MainActor
+  func pause(animated: Bool = true) async {
+    await getViewController()?.dismiss(animated: animated)
+  }
+}
+
+extension EudiRQESUi {
   enum State: Equatable, Sendable {
 
     case none

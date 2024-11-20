@@ -80,11 +80,7 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
   }
 
   func viewDocument() {
-    if let router = router as? RouterGraphImpl {
-      router.navigateTo(
-        .viewDocument(true)
-      )
-    }
+    router.navigateTo(.viewDocument(true))
   }
 
   private func setErrorState() {

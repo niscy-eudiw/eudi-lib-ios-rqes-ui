@@ -18,8 +18,6 @@ import SwiftUI
 
 protocol RouterGraph: ObservableObject, Sendable {
   
-  associatedtype Route: Hashable & Identifiable
-  
   var path: NavigationPath { get set }
   
   @MainActor func navigateTo(_ appRoute: Route)
@@ -30,81 +28,11 @@ protocol RouterGraph: ObservableObject, Sendable {
   @MainActor func clear()
 }
 
-extension RouterGraph {
-  
-  func navigateTo(_ appRoute: Route) {
-    path.append(appRoute)
-  }
-  
-  func pop() {
-    path.removeLast()
-  }
-  
-  func navigateToRoot() {
-    path.removeLast(path.count)
-  }
-  
-  func clear() {
-    if !path.isEmpty{
-      path = NavigationPath()
-    }
-  }
-}
-
 final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
   
-  typealias Route = RouteTable
-  
   @Published var path: NavigationPath = NavigationPath()
-
-  init() {}
   
-  enum RouteTable: Hashable, Identifiable, Equatable {
-    case documentSelection
-    case serviceSelection
-    case credentialSelection
-    case signedDocument
-    case viewDocument(Bool)
-    case certificateSelection
-    
-    var id: String {
-      switch self {
-      case .documentSelection:
-        return "documentSelection"
-      case .serviceSelection:
-        return "serviceSelection"
-      case .credentialSelection:
-        return "credentialSelection"
-      case .signedDocument:
-        return "signedDocument"
-      case .viewDocument:
-        return "viewDocument"
-      case .certificateSelection:
-        return "certificateSelection"
-      }
-    }
-    
-    public static func == (lhs: RouteTable, rhs: RouteTable) -> Bool {
-      return lhs.id == rhs.id
-    }
-    
-    func hash(into hasher: inout Hasher) {
-      switch self {
-      case .documentSelection:
-        hasher.combine("documentSelection")
-      case .serviceSelection:
-        hasher.combine("serviceSelection")
-      case .credentialSelection:
-        hasher.combine("credentialSelection")
-      case .signedDocument:
-        hasher.combine("signedDocument")
-      case .viewDocument:
-        hasher.combine("viewDocument")
-      case .certificateSelection:
-        hasher.combine("certificateSelection")
-      }
-    }
-  }
+  init() {}
   
   func view(for route: Route) -> AnyView {
     switch route {
@@ -159,8 +87,6 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
         isSigned: isSigned
       )
       .eraseToAnyView()
-    case .certificateSelection:
-      fatalError("TODO")
     }
   }
   
@@ -225,5 +151,66 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
         }
       }
     )
+  }
+  
+  func navigateTo(_ appRoute: Route) {
+    path.append(appRoute)
+  }
+  
+  func pop() {
+    path.removeLast()
+  }
+  
+  func navigateToRoot() {
+    path.removeLast(path.count)
+  }
+  
+  func clear() {
+    if !path.isEmpty{
+      path = NavigationPath()
+    }
+  }
+}
+
+enum Route: Hashable, Identifiable, Equatable {
+  
+  case documentSelection
+  case serviceSelection
+  case credentialSelection
+  case signedDocument
+  case viewDocument(Bool)
+  
+  var id: String {
+    switch self {
+    case .documentSelection:
+      return "documentSelection"
+    case .serviceSelection:
+      return "serviceSelection"
+    case .credentialSelection:
+      return "credentialSelection"
+    case .signedDocument:
+      return "signedDocument"
+    case .viewDocument:
+      return "viewDocument"
+    }
+  }
+  
+  public static func == (lhs: Route, rhs: Route) -> Bool {
+    return lhs.id == rhs.id
+  }
+  
+  func hash(into hasher: inout Hasher) {
+    switch self {
+    case .documentSelection:
+      hasher.combine("documentSelection")
+    case .serviceSelection:
+      hasher.combine("serviceSelection")
+    case .credentialSelection:
+      hasher.combine("credentialSelection")
+    case .signedDocument:
+      hasher.combine("signedDocument")
+    case .viewDocument:
+      hasher.combine("viewDocument")
+    }
   }
 }

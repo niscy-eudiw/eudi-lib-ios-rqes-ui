@@ -27,15 +27,18 @@ public protocol EudiRQESUiConfig: Sendable {
   // Transactions per locale
   var translations: [String: [LocalizableKey: String]]? { get }
 
+  // Set SDK Theme
   var theme: ThemeProtocol? { get }
 
-  // Logging is enabled
+  // Can print logs
   var printLogs: Bool { get }
 
+  // Set RQES Service Config
   var rQESConfig: RqesServiceConfig? { get }
 }
 
 extension EudiRQESUiConfig {
+  
   public var translations: [String: [LocalizableKey: String]] {
     [:]
   }

@@ -29,6 +29,7 @@ struct CredentialSelectionState: ViewState {
 final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router, CredentialSelectionState> {
 
   private let interactor: RQESInteractor
+  
   @Published var document: DocumentData?
   @Published var qtspName: String?
 
@@ -77,7 +78,7 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
   func setCertificate(_ certificate: CredentialDataUIModel? = nil) {
     Task {
       if let credential = viewState.credentialInfos.first(where: { $0.credentialID == certificate?.id}) {
-        try? await EudiRQESUi.instance().updateCertificate(with: credential)
+        await interactor.saveCertificate(credential)
       }
     }
   }
@@ -101,7 +102,6 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
   }
 
   func nextStep() {
-    setFlowState()
     onPause()
     openAuthorization()
   }

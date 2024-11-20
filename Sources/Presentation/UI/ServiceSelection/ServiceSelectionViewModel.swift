@@ -44,7 +44,7 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
 
   func initiate() {
     Task {
-      let services = try? await interactor.getQTSps()
+      let services = await interactor.getQTSps()
 
       if let services {
         setState {
@@ -67,7 +67,6 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
   }
 
   func nextStep() {
-    setFlowState()
     onPause()
     openAuthorization()
   }

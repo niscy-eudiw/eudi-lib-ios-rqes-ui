@@ -16,13 +16,7 @@
 
 typealias Theme = ThemeManager
 
-protocol ThemeManagerProtocol: Sendable {
-  static var shared: ThemeProtocol { get }
-
-  static func config(with theme: ThemeProtocol)
-}
-
-final class ThemeManager: ThemeManagerProtocol {
+final class ThemeManager: Sendable {
 
   nonisolated(unsafe) static var shared: ThemeProtocol = AppTheme()
 

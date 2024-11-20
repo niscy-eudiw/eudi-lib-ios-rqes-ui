@@ -16,6 +16,7 @@
 import SwiftUI
 
 struct ContainerView<Router: RouterGraph, Content: View>: View {
+  
   @ObservedObject var router: Router
   public let content: Content
   
@@ -27,7 +28,7 @@ struct ContainerView<Router: RouterGraph, Content: View>: View {
   public var body: some View {
     NavigationStack(path: $router.path) {
       content
-        .navigationDestination(for: Router.Route.self) { route in
+        .navigationDestination(for: Route.self) { route in
           router.view(for: route)
         }
     }

@@ -38,7 +38,8 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
         isLoading: true,
         document: nil,
         documentName: "",
-        error: nil)
+        error: nil
+      )
     )
   }
 
@@ -71,18 +72,10 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
   }
 
   func viewDocument() {
-    if let router = self.router as? RouterGraphImpl {
-      router.navigateTo(
-        .viewDocument(false)
-      )
-    }
+    router.navigateTo(.viewDocument(false))
   }
 
   func selectService() {
-    if let router = self.router as? RouterGraphImpl {
-      router.navigateTo(
-        .serviceSelection
-      )
-    }
+    router.navigateTo(.serviceSelection)
   }
 }

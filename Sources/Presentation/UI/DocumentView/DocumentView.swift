@@ -38,6 +38,7 @@ private struct PDFViewRepresented: UIViewRepresentable {
 }
 
 struct DocumentViewer<Router: RouterGraph>: View {
+  
   @ObservedObject var viewModel: DocumentViewModel<Router>
   @Environment(\.localizationController) var localization
 

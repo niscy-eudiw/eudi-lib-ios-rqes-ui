@@ -13,8 +13,18 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import RqesKit
 
 struct CredentialDataUIModel: Identifiable, Equatable {
   let id: String
   let name: String
+}
+
+extension CredentialInfo {
+  func toUi() -> CredentialDataUIModel {
+    CredentialDataUIModel(
+      id: credentialID,
+      name: description ?? "Credential"
+    )
+  }
 }

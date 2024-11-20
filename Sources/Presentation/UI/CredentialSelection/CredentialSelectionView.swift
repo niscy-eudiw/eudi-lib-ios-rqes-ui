@@ -16,12 +16,12 @@
 import SwiftUI
 
 struct CredentialSelectionView<Router: RouterGraph>: View {
+  
   @Environment(\.localizationController) var localization
-
+  @ObservedObject private var viewModel: CredentialSelectionViewModel<Router>
+  
   @State private var selectedItem: CredentialDataUIModel?
   @State private var showSheet = false
-
-  @ObservedObject private var viewModel: CredentialSelectionViewModel<Router>
 
   init(with viewModel:CredentialSelectionViewModel<Router>) {
     self.viewModel = viewModel
