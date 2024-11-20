@@ -18,16 +18,17 @@ import SwiftUI
 protocol LocalizationController: Sendable {
   func get(with key: LocalizableKey, args: [String]) -> String
   func get(with key: LocalizableKey, args: [String]) -> LocalizedStringKey
+  func get(with key: LocalizableKey) -> String
 }
 
 final class LocalizationControllerImpl: LocalizationController {
   
   private let config: any EudiRQESUiConfig
-  
+
   init(config: any EudiRQESUiConfig) {
     self.config = config
   }
-  
+
   func get(with key: LocalizableKey, args: [String]) -> String {
     guard
       !config.translations.isEmpty,
@@ -38,8 +39,25 @@ final class LocalizationControllerImpl: LocalizationController {
     }
     return translation.format(arguments: args)
   }
-  
+
   func get(with key: LocalizableKey, args: [String]) -> LocalizedStringKey {
     return self.get(with: key, args: args).toLocalizedStringKey
+  }
+
+  func get(with key: LocalizableKey) -> String {
+    get(with: key, args: [])
+  }
+}
+
+private struct LocalizationControllerKey: EnvironmentKey {
+  static let defaultValue: LocalizationController = DIGraph.resolver.force(
+    LocalizationController.self
+  )
+}
+
+extension EnvironmentValues {
+  var localizationController: LocalizationController {
+    get { self[LocalizationControllerKey.self] }
+    set { self[LocalizationControllerKey.self] = newValue }
   }
 }

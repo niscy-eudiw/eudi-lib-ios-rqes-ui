@@ -16,68 +16,172 @@
 import SwiftUI
 
 struct CredentialSelectionView<Router: RouterGraph>: View {
-  @State private var selectedItem: String?
-  @StateObject var viewModel: CredentialSelectionViewModel<Router>
   
-  init(
-    router: Router
-  ) {
-    _viewModel = .init(
-      wrappedValue: .init(
-        router: router
-      )
-    )
+  @Environment(\.localizationController) var localization
+  @ObservedObject private var viewModel: CredentialSelectionViewModel<Router>
+  
+  @State private var selectedItem: CredentialDataUIModel?
+  @State private var showSheet = false
+
+  init(with viewModel:CredentialSelectionViewModel<Router>) {
+    self.viewModel = viewModel
   }
-  
+
   var body: some View {
-    NavigationView {
-      List(viewModel.viewState.credentials, id: \.self) { item in
-        HStack {
-          Text(item)
-          Spacer()
-          if selectedItem == item {
-            Image(systemName: "checkmark")
-              .foregroundColor(.blue)
-          }
-        }
-        .contentShape(Rectangle())
-        .onTapGesture {
-          if selectedItem == item {
-            selectedItem = nil
-          } else {
-            selectedItem = item
-          }
+    ContentScreenView(
+      spacing: SPACING_LARGE_MEDIUM,
+      title: localization.get(with: .selectCertificate),
+      errorConfig: viewModel.viewState.error,
+      isLoading: viewModel.viewState.isLoading,
+      toolbarContent: toolbarAction()
+    ) {
+      content(
+        title: localization.get(with: .selectCertificateTitle),
+        documentName: viewModel.viewState.documentName,
+        certificate: localization.get(with: .certificate),
+        confirmSigning: localization.get(with: .selectCertificateSubtitle),
+        credentials: viewModel.viewState.credentials,
+        selectedItem: $selectedItem
+      )
+      .onChange(of: selectedItem) { newValue in
+        if let newValue {
+          viewModel.setCertificate(newValue)
+        } else {
+          viewModel.setCertificate(nil)
         }
       }
     }
     .onAppear {
       viewModel.fetchCredentials()
+      viewModel.getDocument()
     }
-    .navigationTitle("Select service")
-    .navigationBarTitleDisplayMode(.inline)
-    .toolbar {
-      ToolbarItem(placement: .navigationBarTrailing) {
-        if selectedItem != nil {
-          Button("Proceed") {
-            viewModel.signDocument()
-          }
+    .confirmationDialog(
+      title: localization.get(with: .cancelSigningProcessTitle),
+      message: localization.get(with: .cancelSigningProcessSubtitle),
+      destructiveText: localization.get(with: .cancelSigning),
+      baseText: localization.get(with: .continueSigning),
+      isPresented: $showSheet,
+      destructiveAction: {
+        viewModel.onCancel()
+      },
+      baseAction: {
+        showSheet.toggle()
+      }
+    )
+  }
+
+  private func toolbarAction() -> ToolBarContent? {
+    return ToolBarContent(
+      trailingActions: [
+        Action(
+          title: localization.get(with: .proceed),
+          disabled: selectedItem == nil
+        ) {
+          viewModel.nextStep()
         }
+      ],
+      leadingActions: [
+        Action(title: localization.get(with: .cancel)) {
+          showSheet.toggle()
+        }
+      ]
+    )
+  }
+}
+
+@MainActor
+@ViewBuilder
+private func content(
+  title: String,
+  documentName: String,
+  certificate: String,
+  confirmSigning: String,
+  credentials: [CredentialDataUIModel],
+  selectedItem: Binding<CredentialDataUIModel?>
+) -> some View {
+  VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
+    Text(title)
+      .font(Theme.shared.font.bodyMedium.font)
+      .foregroundStyle(Theme.shared.color.onSurface)
+
+    CardView(
+      title: documentName,
+      trailingView: {}
+    )
+  }
+
+  VStack(alignment: .leading, spacing: SPACING_SMALL) {
+    Text(certificate)
+      .font(Theme.shared.font.labelMedium.font)
+      .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+
+    Text(confirmSigning)
+      .font(Theme.shared.font.bodyMedium.font)
+      .foregroundStyle(Theme.shared.color.onSurface)
+  }
+
+  List(credentials) { item in
+    HStack {
+      Text(item.name)
+        .font(Theme.shared.font.bodyMedium.font)
+        .foregroundStyle(Theme.shared.color.onSurface)
+      Spacer()
+      if item.id == selectedItem.wrappedValue?.id {
+        Image(systemName: "checkmark")
+          .foregroundColor(.accentColor)
       }
     }
-    .toolbar {
-      ToolbarItem(placement: .navigationBarTrailing) {
-        if selectedItem != nil {
-          Button("State") {
-            viewModel.setFlowState(
-              .sign(
-                "Document_title.PDF",
-                "JVBERi0xLjEKJcKlwrHDqwoKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCgoyIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2VzCiAgICAgL0tpZHMgWzMgMCBSXQogICAgIC9Db3VudCAxCiAgICAgL01lZGlhQm94IFswIDAgMzAwIDE0NF0KICA+PgplbmRvYmoKCjMgMCBvYmoKICA8PCAgL1R5cGUgL1BhZ2UKICAgICAgL1BhcmVudCAyIDAgUgogICAgICAvUmVzb3VyY2VzCiAgICAgICA8PCAvRm9udAogICAgICAgICAgIDw8IC9GMQogICAgICAgICAgICAgICA8PCAvVHlwZSAvRm9udAogICAgICAgICAgICAgICAgICAvU3VidHlwZSAvVHlwZTEKICAgICAgICAgICAgICAgICAgL0Jhc2VGb250IC9UaW1lcy1Sb21hbgogICAgICAgICAgICAgICA+PgogICAgICAgICAgID4+CiAgICAgICA+PgogICAgICAvQ29udGVudHMgNCAwIFIKICA+PgplbmRvYmoKCjQgMCBvYmoKICA8PCAvTGVuZ3RoIDU1ID4+CnN0cmVhbQogIEJUCiAgICAvRjEgMTggVGYKICAgIDAgMCBUZAogICAgKEhlbGxvIFdvcmxkKSBUagogIEVUCmVuZHN0cmVhbQplbmRvYmoKCnhyZWYKMCA1CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxOCAwMDAwMCBuIAowMDAwMDAwMDc3IDAwMDAwIG4gCjAwMDAwMDAxNzggMDAwMDAgbiAKMDAwMDAwMDQ1NyAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgIC9Sb290IDEgMCBSCiAgICAgIC9TaXplIDUKICA+PgpzdGFydHhyZWYKNTY1CiUlRU9GCg=="
-              )
-            )
-            viewModel.onPause()
-          }
-        }
+    .listRowInsets(EdgeInsets())
+    .contentShape(Rectangle())
+    .onTapGesture {
+      if item.id == selectedItem.wrappedValue?.id {
+        selectedItem.wrappedValue = nil
+      } else {
+        selectedItem.wrappedValue = item
       }
     }
   }
+  .listStyle(.plain)
+}
+
+#Preview {
+    ContentScreenView(
+      spacing: SPACING_LARGE_MEDIUM,
+      title: "Select certificate"
+    ) {
+      content(
+        title: "You have chosen to sign the following document:",
+        documentName: "Document_Title.PDF",
+        certificate: "CERTIFICATE",
+        confirmSigning: "Please confirm signing with one of the following certificates:",
+        credentials: [
+          CredentialDataUIModel(id: "1", name: "Certificate 1"),
+          CredentialDataUIModel(id: "2", name: "Certificate 2"),
+          CredentialDataUIModel(id: "4", name: "Certificate 3")
+        ],
+        selectedItem: .constant(CredentialDataUIModel(id: "4", name: "Certificate 3"))
+      )
+    }
+    .lightModePreview()
+}
+
+#Preview("Dark Mode") {
+    ContentScreenView(
+      spacing: SPACING_LARGE_MEDIUM,
+      title: "Select certificate"
+    ) {
+      content(
+        title: "You have chosen to sign the following document:",
+        documentName: "Document_Title.PDF",
+        certificate: "CERTIFICATE",
+        confirmSigning: "Please confirm signing with one of the following certificates:",
+        credentials: [
+          CredentialDataUIModel(id: "1", name: "Certificate 1"),
+          CredentialDataUIModel(id: "2", name: "Certificate 2"),
+          CredentialDataUIModel(id: "4", name: "Certificate 3")
+        ],
+        selectedItem: .constant(CredentialDataUIModel(id: "4", name: "Certificate 3"))
+      )
+    }
+    .darkModePreview()
 }

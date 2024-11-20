@@ -25,7 +25,7 @@ class ViewModel<Router: RouterGraph, UiState: ViewState>: ObservableObject {
   lazy var cancellables = Set<AnyCancellable>()
   
   @Published private(set) var viewState: UiState
-  
+
   let router: Router
   
   init(router: Router, initialState: UiState) {
@@ -37,21 +37,15 @@ class ViewModel<Router: RouterGraph, UiState: ViewState>: ObservableObject {
     self.viewState = reducer(viewState)
   }
   
-  func setFlowState(_ state: EudiRQESUi.State) {
-    Task {
-      try? await EudiRQESUi.instance().setState(state)
-    }
-  }
-  
   func onPause() {
     Task {
-      try? await EudiRQESUi.instance().pause()
+      await EudiRQESUi.forceInstance().pause()
     }
   }
   
   func onCancel() {
     Task {
-      try? await EudiRQESUi.instance().cancel()
+      await EudiRQESUi.forceInstance().cancel()
     }
   }
 }

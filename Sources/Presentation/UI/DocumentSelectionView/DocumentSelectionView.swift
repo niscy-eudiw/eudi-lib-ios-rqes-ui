@@ -16,69 +16,116 @@
 import SwiftUI
 
 struct DocumentSelectionView<Router: RouterGraph>: View {
-  @StateObject var viewModel: DocumentSelectionViewModel<Router>
   
-  init(
-    router: Router,
-    document: URL,
-    services: [URL]
-  ) {
-    _viewModel = .init(
-      wrappedValue: .init(
-        router: router,
-        initialState: .init(
-          document: document,
-          services: services
-        )
-      )
-    )
+  @Environment(\.localizationController) var localization
+  @ObservedObject var viewModel: DocumentSelectionViewModel<Router>
+
+  @State private var showSheet = false
+
+  init(with viewModel:DocumentSelectionViewModel<Router>) {
+    self.viewModel = viewModel
   }
-  
+
   var body: some View {
-    content(
-      view: viewModel.viewDocument,
-      select: viewModel.selectService,
-      dismiss: viewModel.onCancel
+    ContentScreenView(
+      spacing: SPACING_LARGE_MEDIUM,
+      title: localization.get(with: .confirmSelection),
+      errorConfig: viewModel.viewState.error,
+      isLoading: viewModel.viewState.isLoading,
+      toolbarContent: .init(
+        leadingActions: [
+          Action(
+            title: localization.get(with: .cancel),
+            callback: { showSheet.toggle() }
+          )
+        ]
+      )
+    ) {
+      content(
+        confirmSelectionTitle: localization.get(with: .confirmSelectionTitle),
+        documentName: viewModel.viewState.documentName,
+        viewString: localization.get(with: .view),
+        view: viewModel.viewDocument,
+        select: viewModel.selectService
+      )
+    }
+    .onAppear {
+      viewModel.initiate()
+    }
+    .confirmationDialog(
+      title: localization.get(with: .cancelSigningProcessTitle),
+      message: localization.get(with: .cancelSigningProcessSubtitle),
+      destructiveText: localization.get(with: .cancelSigning),
+      baseText: localization.get(with: .continueSigning),
+      isPresented: $showSheet,
+      destructiveAction: {
+        viewModel.onCancel()
+      },
+      baseAction: {
+        showSheet.toggle()
+      }
     )
+    .eraseToAnyView()
   }
 }
 
 @MainActor
 @ViewBuilder
 private func content(
+  confirmSelectionTitle: String,
+  documentName: String,
+  viewString: String,
   view: @escaping () -> Void,
-  select: @escaping () -> Void,
-  dismiss: @escaping () -> Void
+  select: @escaping () -> Void
 ) -> some View {
-  NavigationView {
-    VStack(alignment: .center, spacing: 10.0) {
-      Button(action: {
-        view()
-      }) {
-        Text("View PDF")
-          .foregroundColor(.blue)
-      }
-      
-      Button(action: {
-        select()
-      }) {
-        Text("Select RSSP")
-          .foregroundColor(.blue)
-      }
-      
-      Spacer()
+  Text(confirmSelectionTitle)
+    .font(Theme.shared.font.bodyLarge.font)
+    .foregroundStyle(Theme.shared.color.onSurface)
+
+  CardView(
+    title: documentName,
+    trailingView: {
+      Text(viewString)
+        .font(Theme.shared.font.bodyLarge.font)
+    },
+    action: {
+      select()
+    },
+    trailingAction: {
+      view()
     }
-    .navigationTitle("Confirm Selection")
-    .navigationBarTitleDisplayMode(.inline)
-    .toolbar {
-      ToolbarItem(placement: .topBarLeading) {
-        Button(action: {
-          dismiss()
-        }) {
-          Text("Close")
-        }
-      }
-    }
+  )
+
+  Spacer()
+}
+
+#Preview {
+  ContentScreenView(
+    spacing: SPACING_LARGE_MEDIUM,
+    title: "title"
+  ) {
+    content(
+      confirmSelectionTitle: "confirmSelectionTitle",
+      documentName: "documentName",
+      viewString: "View",
+      view: {},
+      select: {}
+    )
   }
-  .eraseToAnyView()
+}
+
+#Preview("Dark Mode") {
+  ContentScreenView(
+    spacing: SPACING_LARGE_MEDIUM,
+    title: "title"
+  ) {
+    content(
+      confirmSelectionTitle: "confirmSelectionTitle",
+      documentName: "documentName",
+      viewString: "View",
+      view: {},
+      select: {}
+    )
+  }
+  .darkModePreview()
 }

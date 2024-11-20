@@ -13,3 +13,25 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import SwiftUI
+
+struct LoadingView: View {
+  var body: some View {
+    ZStack {
+      Color.black
+        .opacity(0)
+        .ignoresSafeArea()
+      
+      VStack {
+        Spacer()
+        ProgressView()
+          .progressViewStyle(
+            CircularProgressViewStyle(
+              tint: .blue
+            )
+          )
+        Spacer()
+      }
+    }
+  }
+}

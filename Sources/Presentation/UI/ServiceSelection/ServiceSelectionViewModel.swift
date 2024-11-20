@@ -17,25 +17,89 @@ import SwiftUI
 
 @Copyable
 struct ServiceSelectionState: ViewState {
-  let services: [URL]
+  let isLoading: Bool
+  let services: [QTSPData]
+  let error: ContentErrorView.Config?
 }
 
 class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceSelectionState> {
-  
-  override init(
+
+  private let interactor: RQESInteractor
+  @Published var selectedItem: QTSPData?
+
+  init(
     router: Router,
-    initialState: ServiceSelectionState
+    interactor: RQESInteractor
   ) {
+    self.interactor = interactor
     super.init(
       router: router,
-      initialState: initialState
+      initialState: ServiceSelectionState(
+        isLoading: true,
+        services: [],
+        error: nil
+      )
     )
   }
-  
-  func selectCredential() {
-    if let router = self.router as? RouterGraphImpl {
-      router.navigateTo(
-        .credentialSelection
+
+  func initiate() {
+    Task {
+      let services = await interactor.getQTSps()
+
+      if let services {
+        setState {
+          $0.copy(
+            isLoading: false,
+            services: services
+          )
+          .copy(error: nil)
+        }
+      } else {
+        setErrorState()
+      }
+    }
+  }
+
+  func selectQTSP(_ qtsp: QTSPData) {
+    Task {
+      await interactor.updateQTSP(qtsp)
+    }
+  }
+
+  func nextStep() {
+    onPause()
+    openAuthorization()
+  }
+
+  func openAuthorization() {
+    Task {
+      do {
+        if let selectedItem {
+          try await interactor.createRQESService(selectedItem)
+        } else {
+          setErrorState()
+        }
+        let authorizationUrl = try await interactor.openAuthrorizationURL()
+
+        await UIApplication.shared.openURLIfPossible(authorizationUrl) {
+          self.setErrorState()
+        }
+      } catch {
+        setErrorState()
+      }
+    }
+  }
+
+  private func setErrorState() {
+    setState {
+      $0.copy(
+        isLoading: false,
+        error: ContentErrorView.Config(
+          title: .genericErrorMessage,
+          description: .genericErrorQtspNotFound,
+          cancelAction: { self.setState { $0.copy(error: nil) } },
+          action: initiate
+        )
       )
     }
   }

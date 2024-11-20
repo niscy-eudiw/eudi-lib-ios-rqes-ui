@@ -18,8 +18,6 @@ import SwiftUI
 
 protocol RouterGraph: ObservableObject, Sendable {
   
-  associatedtype Route: Hashable & Identifiable
-  
   var path: NavigationPath { get set }
   
   @MainActor func navigateTo(_ appRoute: Route)
@@ -30,7 +28,130 @@ protocol RouterGraph: ObservableObject, Sendable {
   @MainActor func clear()
 }
 
-extension RouterGraph {
+final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
+  
+  @Published var path: NavigationPath = NavigationPath()
+  
+  init() {}
+  
+  func view(for route: Route) -> AnyView {
+    switch route {
+    case .documentSelection:
+      DocumentSelectionView(
+        with: DocumentSelectionViewModel(
+          router: self,
+          interactor: DIGraph.resolver.force(
+            RQESInteractor.self
+          )
+        )
+      )
+      .eraseToAnyView()
+    case .serviceSelection:
+      ServiceSelectionView(
+        with: ServiceSelectionViewModel(
+          router: self,
+          interactor: DIGraph.resolver.force(
+            RQESInteractor.self
+          )
+        )
+      )
+      .eraseToAnyView()
+    case .credentialSelection:
+      CredentialSelectionView(
+        with: CredentialSelectionViewModel(
+          router: self,
+          interactor: DIGraph.resolver.force(
+            RQESInteractor.self
+          )
+        )
+      )
+      .eraseToAnyView()
+    case .signedDocument:
+      SignedDocumentView(
+        with: SignedDocumentViewModel(
+          router: self,
+          interactor: DIGraph.resolver.force(
+            RQESInteractor.self
+          )
+        )
+      )
+      .eraseToAnyView()
+    case .viewDocument(let isSigned):
+      DocumentViewer(
+        with: DocumentViewModel(
+          router: self,
+          interactor: DIGraph.resolver.force(
+            RQESInteractor.self
+          )
+        ),
+        isSigned: isSigned
+      )
+      .eraseToAnyView()
+    }
+  }
+  
+  func nextView(for state: EudiRQESUi.State) throws -> UIViewController {
+    
+    guard state != .none else {
+      throw EudiRQESUiError.invalidState(state.id)
+    }
+    
+    return ContainerViewController(
+      rootView: ContainerView(
+        router: self
+      ) { _ in
+        switch state {
+        case .none:
+          EmptyView()
+        case .initial:
+          DocumentSelectionView(
+            with: DocumentSelectionViewModel(
+              router: self,
+              interactor: DIGraph.resolver.force(
+                RQESInteractor.self
+              )
+            )
+          )
+        case .rssps:
+          ServiceSelectionView(
+            with: ServiceSelectionViewModel(
+              router: self,
+              interactor: DIGraph.resolver.force(
+                RQESInteractor.self
+              )
+            )
+          )
+        case .credentials:
+          CredentialSelectionView(
+            with: CredentialSelectionViewModel(
+              router: self,
+              interactor: DIGraph.resolver.force(
+                RQESInteractor.self
+              )
+            )
+          )
+        case .sign:
+          SignedDocumentView(
+            with: SignedDocumentViewModel(
+              router: self,
+              interactor: DIGraph.resolver.force(
+                RQESInteractor.self
+              )
+            )
+          )
+        case .view:
+          DocumentViewer(
+            with: DocumentViewModel(
+              router: self,
+              interactor: DIGraph.resolver.force(
+                RQESInteractor.self
+              )
+            )
+          )
+        }
+      }
+    )
+  }
   
   func navigateTo(_ appRoute: Route) {
     path.append(appRoute)
@@ -51,147 +172,45 @@ extension RouterGraph {
   }
 }
 
-final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
+enum Route: Hashable, Identifiable, Equatable {
   
-  typealias Route = RouteTable
+  case documentSelection
+  case serviceSelection
+  case credentialSelection
+  case signedDocument
+  case viewDocument(Bool)
   
-  @Published var path: NavigationPath = NavigationPath()
-  
-  init() {}
-  
-  enum RouteTable: Hashable, Identifiable, Equatable {
-    case documentSelection(document: URL, services: [URL])
-    case serviceSelection(services: [URL])
-    case credentialSelection
-    case signedDocument(title: String, contents: String)
-    case viewDocument(DocumentSource)
-    case certificateSelection(any EudiRQESUiConfig)
-    
-    var id: String {
-      switch self {
-      case .documentSelection:
-        return "documentSelection"
-      case .serviceSelection:
-        return "serviceSelection"
-      case .credentialSelection:
-        return "credentialSelection"
-      case .signedDocument:
-        return "signedDocument"
-      case .viewDocument:
-        return "viewDocument"
-      case .certificateSelection:
-        return "certificateSelection"
-      }
-    }
-    
-    public static func == (lhs: RouteTable, rhs: RouteTable) -> Bool {
-      return lhs.id == rhs.id
-    }
-    
-    func hash(into hasher: inout Hasher) {
-      switch self {
-      case .documentSelection:
-        hasher.combine("documentSelection")
-      case .serviceSelection:
-        hasher.combine("serviceSelection")
-      case .credentialSelection:
-        hasher.combine("credentialSelection")
-      case .signedDocument:
-        hasher.combine("signedDocument")
-      case .viewDocument:
-        hasher.combine("viewDocument")
-      case .certificateSelection:
-        hasher.combine("certificateSelection")
-      }
-    }
-  }
-  
-  func view(for route: Route) -> AnyView {
-    switch route {
-    case .documentSelection(let document, let services):
-      DocumentSelectionView(
-        router: self,
-        document: document,
-        services: services
-      )
-      .eraseToAnyView()
-    case .serviceSelection(let services):
-      ServiceSelectionView(
-        router: self,
-        services: services
-      )
-      .eraseToAnyView()
+  var id: String {
+    switch self {
+    case .documentSelection:
+      return "documentSelection"
+    case .serviceSelection:
+      return "serviceSelection"
     case .credentialSelection:
-      CredentialSelectionView(
-        router: self
-      )
-      .eraseToAnyView()
-    case .signedDocument(let name, let contents):
-      SignedDocumentView(
-        router: self,
-        initialState: .init(
-          name: name,
-          contents: contents
-        )
-      )
-      .eraseToAnyView()
-    case .viewDocument(let source):
-      DocumentViewer(
-        router: self,
-        source: source
-      )
-      .eraseToAnyView()
-    case .certificateSelection:
-      fatalError("TODO")
+      return "credentialSelection"
+    case .signedDocument:
+      return "signedDocument"
+    case .viewDocument:
+      return "viewDocument"
     }
   }
   
-  func nextView(for state: EudiRQESUi.State) throws -> UIViewController {
-    
-    guard state != .none else {
-      throw EudiRQESUiError.invalidState(state.id)
+  public static func == (lhs: Route, rhs: Route) -> Bool {
+    return lhs.id == rhs.id
+  }
+  
+  func hash(into hasher: inout Hasher) {
+    switch self {
+    case .documentSelection:
+      hasher.combine("documentSelection")
+    case .serviceSelection:
+      hasher.combine("serviceSelection")
+    case .credentialSelection:
+      hasher.combine("credentialSelection")
+    case .signedDocument:
+      hasher.combine("signedDocument")
+    case .viewDocument:
+      hasher.combine("viewDocument")
     }
-    
-    return ContainerViewController(
-      rootView: ContainerView(
-        router: self
-      ) { _ in
-        switch state {
-        case .none:
-          EmptyView()
-        case .initial(
-          let document,
-          let config
-        ):
-          DocumentSelectionView(
-            router: self,
-            document: document,
-            services: config.rssps
-          )
-        case .rssps(let services):
-          ServiceSelectionView(
-            router: self,
-            services: services
-          )
-        case .credentials:
-          CredentialSelectionView(
-            router: self
-          )
-        case .sign(let name, let contents):
-          SignedDocumentView(
-            router: self,
-            initialState: .init(
-              name: name,
-              contents: contents
-            )
-          )
-        case .view(let source):
-          DocumentViewer(
-            router: self,
-            source: source
-          )
-        }
-      }
-    )
   }
 }

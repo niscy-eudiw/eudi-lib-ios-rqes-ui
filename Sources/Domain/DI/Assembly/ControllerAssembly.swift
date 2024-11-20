@@ -22,12 +22,12 @@ final class ControllerAssembly: Assembly {
   func assemble(container: Container) {
     
     container.register(LocalizationController.self) { r in
-      LocalizationControllerImpl(config: EudiRQESUi.getConfig())
+      LocalizationControllerImpl(config: EudiRQESUi.forceConfig())
     }
     .inObjectScope(ObjectScope.container)
     
     container.register(LogController.self) { r in
-      LogControllerImpl(config: EudiRQESUi.getConfig())
+      LogControllerImpl(config: EudiRQESUi.forceConfig())
     }
     .inObjectScope(ObjectScope.transient)
     

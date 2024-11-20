@@ -14,40 +14,120 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
+import RqesKit
 
 @Copyable
 struct CredentialSelectionState: ViewState {
-  let credentials: [String]
+  let isLoading: Bool
+  let credentials: [CredentialDataUIModel]
+  let documentName: String
+  let error: ContentErrorView.Config?
+  let credentialInfos: [CredentialInfo]
+  let selectedCredential: CredentialInfo?
 }
 
-class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router, CredentialSelectionState> {
+final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router, CredentialSelectionState> {
+
+  private let interactor: RQESInteractor
   
-  override init(
+  @Published var document: DocumentData?
+  @Published var qtspName: String?
+
+  init(
     router: Router,
-    initialState: CredentialSelectionState = .init(credentials: [])
+    interactor: RQESInteractor
   ) {
+    self.interactor = interactor
     super.init(
       router: router,
-      initialState: initialState
+      initialState: CredentialSelectionState(
+        isLoading: true,
+        credentials: [],
+        documentName: "",
+        error: nil,
+        credentialInfos: [],
+        selectedCredential: nil
+      )
     )
   }
-  
+
+  @MainActor
   func fetchCredentials() {
-    setState {
-      $0.copy(credentials: [
-        "Certificate 1",
-        "Certificate 2",
-        "Certificate 3"
-      ])
+    Task {
+      do {
+        let credentials = try await interactor.fetchCredentials()
+        switch credentials {
+        case .success(let credentials):
+          setState {
+            $0.copy(
+              isLoading: false,
+              credentials: credentials.map { $0.toUi() },
+              credentialInfos: credentials
+            )
+            .copy(error: nil)
+          }
+        case .failure:
+          setErrorState()
+        }
+      } catch {
+        setErrorState()
+      }
     }
   }
-  
-  func signDocument() {
-    if let router = self.router as? RouterGraphImpl {
-      router.navigateTo(
-        .signedDocument(
-          title: "Document_Title.PDF",
-          contents: ""
+
+  func setCertificate(_ certificate: CredentialDataUIModel? = nil) {
+    Task {
+      if let credential = viewState.credentialInfos.first(where: { $0.credentialID == certificate?.id}) {
+        await interactor.saveCertificate(credential)
+      }
+    }
+  }
+
+  func getDocument() {
+    Task {
+      let documentName = await interactor.getCurrentSelection()?.document?.documentName
+
+      if let documentName {
+        setState {
+          $0.copy(
+            isLoading: false,
+            documentName: documentName
+          )
+          .copy(error: nil)
+        }
+      } else {
+        setErrorState()
+      }
+    }
+  }
+
+  func nextStep() {
+    onPause()
+    openAuthorization()
+  }
+
+  func openAuthorization() {
+    Task {
+      do {
+        let authorizationUrl = try await interactor.openCredentialAuthrorizationURL()
+        await UIApplication.shared.openURLIfPossible(authorizationUrl) {
+          self.setErrorState()
+        }
+      } catch {
+        setErrorState()
+      }
+    }
+  }
+
+  private func setErrorState() {
+    setState {
+      $0.copy(
+        isLoading: false,
+        error: ContentErrorView.Config(
+          title: .genericErrorMessage,
+          description: .genericErrorDocumentNotFound,
+          cancelAction: { self.setState { $0.copy(error: nil) } },
+          action: fetchCredentials
         )
       )
     }

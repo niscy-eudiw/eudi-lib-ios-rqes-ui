@@ -17,41 +17,65 @@ import SwiftUI
 
 @Copyable
 struct DocumentSelectionState: ViewState {
-  let document: URL
-  let services: [URL]
+  let isLoading: Bool
+  let document: DocumentData?
+  let documentName: String
+  let error: ContentErrorView.Config?
 }
 
 class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, DocumentSelectionState> {
-  
-  override init(
+
+  private let interactor: RQESInteractor
+
+  init(
     router: Router,
-    initialState: DocumentSelectionState
+    interactor: RQESInteractor
   ) {
+    self.interactor = interactor
     super.init(
       router: router,
-      initialState: initialState
+      initialState: DocumentSelectionState(
+        isLoading: true,
+        document: nil,
+        documentName: "",
+        error: nil
+      )
     )
   }
-  
-  func viewDocument() {
-    if let router = self.router as? RouterGraphImpl {
-      router.navigateTo(
-        .viewDocument(
-          .pdfUrl(
-            viewState.document
+
+  func initiate() {
+    Task {
+      let documentName = await interactor.getCurrentSelection()?.document?.documentName
+
+      if let documentName {
+        setState {
+          $0.copy(
+            isLoading: false,
+            documentName: documentName
           )
-        )
-      )
+          .copy(error: nil)
+        }
+      } else {
+        setState {
+          $0.copy(
+            isLoading: false,
+            error: ContentErrorView.Config(
+              title: .genericErrorMessage,
+              description: .genericErrorDocumentNotFound,
+              cancelAction: { self.setState { $0.copy(error: nil) } },
+              action: initiate
+            )
+          )
+        }
+      }
     }
   }
-  
+
+  func viewDocument() {
+    router.navigateTo(.viewDocument(false))
+  }
+
   func selectService() {
-    if let router = self.router as? RouterGraphImpl {
-      router.navigateTo(
-        .serviceSelection(
-          services: viewState.services
-        )
-      )
-    }
+    router.navigateTo(.serviceSelection)
   }
 }

@@ -17,27 +17,81 @@ import SwiftUI
 
 @Copyable
 struct SignedDocumenState: ViewState {
-  let name: String
-  let contents: String
+  let isLoading: Bool
+  let document: DocumentData?
+  let qtsp: QTSPData?
+  let documentName: String
+  let qtspName: String
+  let error: ContentErrorView.Config?
 }
 
 class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocumenState> {
-  
-  override init(
+
+  private let interactor: RQESInteractor
+  @Published var pdfURL: URL?
+
+  init(
     router: Router,
-    initialState: SignedDocumenState
+    interactor: RQESInteractor
   ) {
+    self.interactor = interactor
     super.init(
       router: router,
-      initialState: initialState
+      initialState: SignedDocumenState(
+        isLoading: true,
+        document: nil,
+        qtsp: nil,
+        documentName: "",
+        qtspName: "",
+        error: nil
+      )
     )
+    initiate()
   }
-  
+
+  func initiate() {
+    Task {
+      do {
+        let signedDocument = try await interactor.signDocument()
+        let selection = await interactor.getCurrentSelection()
+
+        pdfURL = signedDocument?.fileURL
+        if let fileURL = signedDocument?.fileURL {
+          await interactor.updateDocument(fileURL)
+        }
+
+        if let documentName = selection?.document?.documentName,
+           let qtspName = selection?.qtsp?.name {
+          setState {
+            $0.copy(
+              isLoading: false,
+              documentName: documentName,
+              qtspName: qtspName
+            )
+            .copy(error: nil)
+          }
+        } else {
+          setErrorState()
+        }
+      } catch {
+        setErrorState()
+      }
+    }
+  }
+
   func viewDocument() {
-    if let router = router as? RouterGraphImpl {
-      router.navigateTo(
-        .viewDocument(
-          .pdfBase64("JVBERi0xLjEKJcKlwrHDqwoKMSAwIG9iagogIDw8IC9UeXBlIC9DYXRhbG9nCiAgICAgL1BhZ2VzIDIgMCBSCiAgPj4KZW5kb2JqCgoyIDAgb2JqCiAgPDwgL1R5cGUgL1BhZ2VzCiAgICAgL0tpZHMgWzMgMCBSXQogICAgIC9Db3VudCAxCiAgICAgL01lZGlhQm94IFswIDAgMzAwIDE0NF0KICA+PgplbmRvYmoKCjMgMCBvYmoKICA8PCAgL1R5cGUgL1BhZ2UKICAgICAgL1BhcmVudCAyIDAgUgogICAgICAvUmVzb3VyY2VzCiAgICAgICA8PCAvRm9udAogICAgICAgICAgIDw8IC9GMQogICAgICAgICAgICAgICA8PCAvVHlwZSAvRm9udAogICAgICAgICAgICAgICAgICAvU3VidHlwZSAvVHlwZTEKICAgICAgICAgICAgICAgICAgL0Jhc2VGb250IC9UaW1lcy1Sb21hbgogICAgICAgICAgICAgICA+PgogICAgICAgICAgID4+CiAgICAgICA+PgogICAgICAvQ29udGVudHMgNCAwIFIKICA+PgplbmRvYmoKCjQgMCBvYmoKICA8PCAvTGVuZ3RoIDU1ID4+CnN0cmVhbQogIEJUCiAgICAvRjEgMTggVGYKICAgIDAgMCBUZAogICAgKEhlbGxvIFdvcmxkKSBUagogIEVUCmVuZHN0cmVhbQplbmRvYmoKCnhyZWYKMCA1CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxOCAwMDAwMCBuIAowMDAwMDAwMDc3IDAwMDAwIG4gCjAwMDAwMDAxNzggMDAwMDAgbiAKMDAwMDAwMDQ1NyAwMDAwMCBuIAp0cmFpbGVyCiAgPDwgIC9Sb290IDEgMCBSCiAgICAgIC9TaXplIDUKICA+PgpzdGFydHhyZWYKNTY1CiUlRU9GCg==")
+    router.navigateTo(.viewDocument(true))
+  }
+
+  private func setErrorState() {
+    setState {
+      $0.copy(
+        isLoading: false,
+        error: ContentErrorView.Config(
+          title: .genericErrorMessage,
+          description: .genericErrorDocumentNotFound,
+          cancelAction: onCancel,
+          action: onCancel
         )
       )
     }

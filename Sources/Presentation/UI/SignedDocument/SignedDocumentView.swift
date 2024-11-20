@@ -16,55 +16,142 @@
 import SwiftUI
 
 struct SignedDocumentView<Router: RouterGraph>: View {
-  @StateObject var viewModel: SignedDocumentViewModel<Router>
   
-  init(
-    router: Router,
-    initialState: SignedDocumenState
-  ) {
-    _viewModel = .init(
-      wrappedValue: .init(
-        router: router,
-        initialState: initialState
+  @ObservedObject var viewModel: SignedDocumentViewModel<Router>
+  @Environment(\.localizationController) var localization
+  
+  @State private var showSheet = false
+
+  init(with viewModel: SignedDocumentViewModel<Router>) {
+    self.viewModel = viewModel
+  }
+
+  var body: some View {
+    ContentScreenView(
+      spacing: SPACING_LARGE_MEDIUM,
+      title: localization.get(with: .documentSigned),
+      errorConfig: viewModel.viewState.error,
+      isLoading: viewModel.viewState.isLoading,
+      toolbarContent: ToolBarContent(
+        trailingActions: [
+          Action(
+            title: localization.get(with: .save),
+            callback: {
+              showSheet = true
+            }
+          )
+        ]
       )
+    ) {
+      content(
+        success: localization.get(with: .success),
+        successfullySigned: localization.get(with: .successfullySignedDocument),
+        documentName: viewModel.viewState.documentName,
+        signedBy: localization.get(with: .signedBy, args: [viewModel.viewState.qtspName]),
+        viewString: localization.get(with: .view),
+        isLoading: viewModel.viewState.isLoading,
+        view: viewModel.viewDocument
+      )
+    }
+    .confirmationDialog(
+      localization.get(with: .sharingDocument),
+      isPresented: $showSheet,
+      titleVisibility: .visible
+    ) {
+      Button(localization.get(with: .close), role: .destructive) {
+        viewModel.onCancel()
+      }
+
+      if let url = viewModel.pdfURL {
+        ShareLink(item: url) {
+          Label(localization.get(with: .share), systemImage: "swift")
+        }
+      }
+    } message: {
+      Text(localization.get(with: .closeSharingDocument))
+    }
+  }
+}
+
+@MainActor
+@ViewBuilder
+private func content(
+  success: String,
+  successfullySigned: String,
+  documentName: String,
+  signedBy: String,
+  viewString: String,
+  isLoading: Bool,
+  view: @escaping () -> Void
+) -> some View {
+  VStack(alignment: .leading, spacing: SPACING_NONE) {
+    Text(success)
+      .font(Theme.shared.font.headlineMedium.font)
+      .fontWeight(.bold)
+      .foregroundStyle(Theme.shared.color.success)
+      .padding(.top, SPACING_LARGE_MEDIUM)
+
+    VStack(alignment: .leading, spacing: SPACING_NONE) {
+      Text(successfullySigned)
+        .font(Theme.shared.font.bodyLarge.font)
+        .foregroundStyle(Theme.shared.color.onSurface)
+
+      Text(documentName)
+        .font(Theme.shared.font.bodyLarge.font)
+        .foregroundStyle(Theme.shared.color.onSurface)
+        .fontWeight(.semibold)
+    }
+    .gone(if: isLoading)
+    .padding(.top, SPACING_SMALL)
+
+    CardView(
+      type: .success,
+      title: documentName,
+      subtitle: signedBy,
+      trailingView: {
+        Text(viewString)
+          .font(Theme.shared.font.bodyLarge.font)
+      },
+      action: { view() },
+      trailingAction: { view() }
+    )
+    .padding(.top, SPACING_MEDIUM)
+
+    Spacer()
+  }
+}
+
+#Preview {
+  ContentScreenView(
+    spacing: SPACING_LARGE_MEDIUM,
+    title: "Navigation title"
+  ) {
+    content(
+      success: "Success",
+      successfullySigned: "You successfully signed your document",
+      documentName: "Document title",
+      signedBy: "Signed by: Entrust",
+      viewString: "View",
+      isLoading: false,
+      view: {}
     )
   }
-  
-  var body: some View {
-    NavigationView {
-      VStack(spacing: 20) {
-        Text("Success")
-          .font(.largeTitle)
-          .foregroundColor(.green)
-        
-        Button(action: {
-          viewModel.viewDocument()
-        }) {
-          HStack {
-            Image(systemName: "eye")
-              .font(.system(size: 24))
-              .foregroundColor(.blue)
-            
-            Text("View")
-              .font(.headline)
-              .foregroundColor(.black)
-          }
-          .padding()
-          .background(Color.white)
-          .cornerRadius(8)
-          .shadow(radius: 4)
-        }
-      }
-      .padding()
-    }
-    .navigationTitle("Status")
-    .navigationBarTitleDisplayMode(.inline)
-    .toolbar {
-      ToolbarItem(placement: .navigationBarTrailing) {
-        Button("Done") {
-          viewModel.onPause()
-        }
-      }
-    }
+}
+
+#Preview("Dark Mode") {
+  ContentScreenView(
+    spacing: SPACING_LARGE_MEDIUM,
+    title: "Navigation title"
+  ) {
+    content(
+      success: "Success",
+      successfullySigned: "You successfully signed your document",
+      documentName: "Document title",
+      signedBy: "Signed by: Entrust",
+      viewString: "View",
+      isLoading: false,
+      view: {}
+    )
   }
+  .darkModePreview()
 }

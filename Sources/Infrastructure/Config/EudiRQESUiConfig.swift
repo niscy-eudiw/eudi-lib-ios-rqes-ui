@@ -14,58 +14,36 @@
  * governing permissions and limitations under the Licence.
  */
 import Foundation
+import RqesKit
 
-public protocol EudiRQESUiConfig: Sendable, Equatable {
-  
+public protocol EudiRQESUiConfig: Sendable {
+
   // Remote signing service provider list
-  var rssps : [URL] { get }
-  
+  var rssps : [QTSPData] { get }
+
   // OAuth redirect url
   var redirectUrl: URL? { get }
-  
+
   // Transactions per locale
-  var translations: [String: [LocalizableKey: String]] { get }
-  
-  // Logging is enabled
+  var translations: [String: [LocalizableKey: String]]? { get }
+
+  // Set SDK Theme
+  var theme: ThemeProtocol? { get }
+
+  // Can print logs
   var printLogs: Bool { get }
+
+  // Set RQES Service Config
+  var rQESConfig: RqesServiceConfig? { get }
 }
 
-// MARK: - TODO To be removed once SDK is stable
-public struct DefaultUIConfig: EudiRQESUiConfig {
+extension EudiRQESUiConfig {
   
-  public let rssps: [URL]
-  public let redirectUrl: URL?
-  public let translations: [String : [LocalizableKey : String]]
-  public let printLogs: Bool
-  
-  private init(
-    rssps: [URL],
-    redirectUrl: URL?,
-    translations: [String: [LocalizableKey: String]],
-    printLogs: Bool
-  ) {
-    self.rssps = rssps
-    self.redirectUrl = redirectUrl
-    self.translations = translations
-    self.printLogs = printLogs
+  public var translations: [String: [LocalizableKey: String]] {
+    [:]
   }
-  
-  public static func createDefault() -> DefaultUIConfig {
-    return DefaultUIConfig(
-      rssps: [
-        URL(string: "https://www.entrust.com")!,
-        URL(string: "https://www.docusign.com")!,
-        URL(string: "https://www.ascertia.com")!
-      ],
-      redirectUrl: URL(string: "openid-rqes://code"),
-      translations: [
-        "en_US": [
-          .mock: "mock",
-          .mockWithValues: "mock %@, %@"
-        ]
-      ],
-      printLogs: true
-    )
+
+  public var theme: ThemeProtocol {
+    AppTheme()
   }
-  
 }

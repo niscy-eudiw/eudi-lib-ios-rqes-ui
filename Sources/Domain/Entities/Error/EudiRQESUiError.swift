@@ -19,6 +19,11 @@ public enum EudiRQESUiError: LocalizedError {
   
   case notInitialized
   case invalidState(String)
+  case unableToFetchCredentials
+  case unableToSignHashDocument
+  case unableToOpenURL
+  case noRQESServiceProvided
+  case noDocumentProvided
   
   public var errorDescription: String? {
     return switch self {
@@ -26,6 +31,16 @@ public enum EudiRQESUiError: LocalizedError {
       "You need to initialize the EudiRQESUi SDK first with an EudiRQESUiConfig Impl"
     case .invalidState(let stateName):
       "State is Invalid - \(stateName)"
+    case .unableToFetchCredentials:
+      "unableToFetchCredentials"
+    case .unableToSignHashDocument:
+      "unableToSignHashDocument"
+    case .unableToOpenURL:
+      "unableToOpenURL"
+    case .noRQESServiceProvided:
+      "noRQESServiceProvided"
+    case .noDocumentProvided:
+      "noDocumentProvided"
     }
   }
 }

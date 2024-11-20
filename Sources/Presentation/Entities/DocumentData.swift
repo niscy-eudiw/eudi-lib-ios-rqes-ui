@@ -13,3 +13,16 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+
+struct DocumentData: Equatable, Sendable {
+  let documentName: String
+  let uri: URL
+
+  init(
+    documentName: String,
+    uri: URL
+  ) {
+    self.documentName = documentName
+    self.uri = uri
+  }
+}

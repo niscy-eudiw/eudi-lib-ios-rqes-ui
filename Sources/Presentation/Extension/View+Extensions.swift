@@ -15,8 +15,39 @@
  */
 import SwiftUI
 
-public extension View {
+extension View {
   func eraseToAnyView() -> AnyView {
     return AnyView(self)
+  }
+}
+
+extension View {
+  @ViewBuilder func `if`<Content: View>(
+    _ condition: Bool,
+    transform: (Self) -> Content
+  ) -> some View {
+    if condition {
+      transform(self)
+    } else {
+      self
+    }
+  }
+
+  func gone(if shouldHide: Bool) -> some View {
+    shouldHide ? AnyView(EmptyView()) : AnyView(self)
+  }
+}
+
+extension View {
+  func lightModePreview() -> some View {
+    return self.background(Color.white)
+      .environment(\.colorScheme, .light)
+      .previewDisplayName("Light Mode")
+  }
+
+  func darkModePreview() -> some View {
+    return self.background(Color.black)
+      .environment(\.colorScheme, .dark)
+      .previewDisplayName("Dark Mode")
   }
 }

@@ -16,66 +16,135 @@
 import SwiftUI
 
 struct ServiceSelectionView<Router: RouterGraph>: View {
-  @StateObject var viewModel: ServiceSelectionViewModel<Router>
-  @State private var selectedItem: String?
   
-  init(
-    router: Router,
-    services: [URL]
+  @Environment(\.localizationController) var localization
+  @ObservedObject var viewModel: ServiceSelectionViewModel<Router>
+
+  init(with viewModel:ServiceSelectionViewModel<Router>) {
+    self.viewModel = viewModel
+  }
+
+  var body: some View {
+    ContentScreenView(
+      spacing: SPACING_LARGE_MEDIUM,
+      title: localization.get(with: .selectService),
+      errorConfig: viewModel.viewState.error,
+      isLoading: viewModel.viewState.isLoading,
+      toolbarContent: ToolBarContent(
+        trailingActions: [
+          Action(
+            title: localization.get(with: .proceed),
+            disabled: viewModel.selectedItem == nil,
+            callback: {
+              viewModel.nextStep()
+            }
+          )
+        ]
+      )
+    ) {
+      content(
+        selectServiceTitle: localization.get(with: .selectServiceTitle),
+        selectServiceSubtitle: localization.get(with: .selectServiceSubtitle),
+        services: viewModel.viewState.services,
+        selectedItem: $viewModel.selectedItem
+      )
+      .onChange(of: viewModel.selectedItem) { newValue in
+        if let newValue = newValue {
+          viewModel.selectQTSP(newValue)
+        }
+      }
+      .onAppear {
+        viewModel.initiate()
+      }
+    }
+  }
+}
+
+@MainActor
+@ViewBuilder
+private func content(
+  selectServiceTitle: String,
+  selectServiceSubtitle: String,
+  services: [QTSPData],
+  selectedItem: Binding<QTSPData?>
+) -> some View {
+  Text(selectServiceTitle)
+    .font(Theme.shared.font.bodyLarge.font)
+    .foregroundStyle(Theme.shared.color.onSurface)
+
+  Text(selectServiceSubtitle)
+    .font(Theme.shared.font.bodyMedium.font)
+    .foregroundStyle(Theme.shared.color.onSurface)
+
+  List(services, id: \.name) { item in
+    HStack {
+      Text(item.name)
+        .font(Theme.shared.font.bodyMedium.font)
+        .foregroundStyle(Theme.shared.color.onSurface)
+      Spacer()
+      if selectedItem.wrappedValue?.uri == item.uri {
+        Image(systemName: "checkmark")
+          .foregroundColor(.accentColor)
+      }
+    }
+    .listRowInsets(EdgeInsets())
+    .contentShape(Rectangle())
+    .onTapGesture {
+      if selectedItem.wrappedValue?.uri == item.uri {
+        selectedItem.wrappedValue = nil
+      } else {
+        selectedItem.wrappedValue = item
+      }
+    }
+  }
+  .listStyle(.plain)
+}
+
+#Preview {
+  ContentScreenView(
+    spacing: SPACING_LARGE_MEDIUM,
+    title: "Navigation Title"
   ) {
-    _viewModel = .init(
-      wrappedValue: .init(
-        router: router,
-        initialState: .init(
-          services: services
+    content(
+      selectServiceTitle: "Select remote signing service.",
+      selectServiceSubtitle: "Remote signing enables you to digitally sign documents without the need for locally installed digital identities. Cloud-hosted signing service makes remote signing possible.",
+      services: [
+        QTSPData(name: "Entrust", uri: URL(string: "https://www.entrust.com")!, scaURL: "https://www.entrust.com"),
+        QTSPData(name: "Docusign", uri: URL(string: "https://www.docusign.com")!, scaURL: "https://www.entrust.com"),
+        QTSPData(name: "Ascertia", uri: URL(string: "https://www.ascertia.com")!, scaURL: "https://www.entrust.com")
+      ],
+      selectedItem: .constant(
+        QTSPData(
+          name: "Entrust",
+          uri: URL(string: "https://www.entrust.com")!,
+          scaURL: "https://www.entrust.com"
         )
       )
     )
   }
-  
-  var body: some View {
-    NavigationView {
-      List(viewModel.viewState.services, id: \.self) { item in
-        HStack {
-          Text(item.absoluteString)
-          Spacer()
-          if selectedItem == item.absoluteString {
-            Image(systemName: "checkmark")
-              .foregroundColor(.blue)
-          }
-        }
-        .contentShape(Rectangle())
-        .onTapGesture {
-          if selectedItem == item.absoluteString {
-            selectedItem = nil
-          } else {
-            selectedItem = item.absoluteString
-          }
-        }
-      }
-    }
-    .navigationTitle("Select service")
-    .navigationBarTitleDisplayMode(.inline)
-    .toolbar {
-      ToolbarItem(placement: .navigationBarTrailing) {
-        if selectedItem != nil {
-          Button("Proceed") {
-            viewModel.selectCredential()
-          }
-        }
-      }
-    }
-    .toolbar {
-      ToolbarItem(placement: .navigationBarTrailing) {
-        if selectedItem != nil {
-          Button("State") {
-            viewModel.setFlowState(
-              .credentials
-            )
-            viewModel.onPause()
-          }
-        }
-      }
-    }
+}
+
+#Preview("Dark Mode") {
+  ContentScreenView(
+    spacing: SPACING_LARGE_MEDIUM,
+    title: "Navigation Title"
+  ) {
+    content(
+      selectServiceTitle: "Select remote signing service.",
+      selectServiceSubtitle: "Remote signing enables you to digitally sign documents without the need for locally installed digital identities. Cloud-hosted signing service makes remote signing possible.",
+      services: [
+        QTSPData(name: "Entrust", uri: URL(string: "https://www.entrust.com")!, scaURL: "https://www.entrust.com"),
+        QTSPData(name: "Docusign", uri: URL(string: "https://www.docusign.com")!, scaURL: "https://www.entrust.com"),
+        QTSPData(name: "Ascertia", uri: URL(string: "https://www.ascertia.com")!, scaURL: "https://www.entrust.com")
+      ],
+      selectedItem: .constant(
+        QTSPData(
+          name: "Entrust",
+          uri: URL(string: "https://www.entrust.com")!,
+          scaURL: "https://www.entrust.com"
+        )
+      )
+    )
   }
+  .darkModePreview()
 }
