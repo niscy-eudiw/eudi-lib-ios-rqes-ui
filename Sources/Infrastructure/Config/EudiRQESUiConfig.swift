@@ -22,10 +22,10 @@ public protocol EudiRQESUiConfig: Sendable {
   var rssps : [QTSPData] { get }
 
   // Transactions per locale
-  var translations: [String: [LocalizableKey: String]]? { get }
+  var translations: [String: [LocalizableKey: String]] { get }
 
   // Set SDK Theme
-  var theme: ThemeProtocol? { get }
+  var theme: ThemeProtocol { get }
 
   // Can print logs
   var printLogs: Bool { get }
