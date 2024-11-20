@@ -103,7 +103,7 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
         error: ContentErrorView.Config(
           title: .genericErrorMessage,
           description: .genericErrorQtspNotFound,
-          cancelAction: { cancelAction() },
+          cancelAction: cancelAction,
           action: { Task { await self.initiate() } }
         )
       )

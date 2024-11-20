@@ -136,7 +136,7 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
         error: ContentErrorView.Config(
           title: .genericErrorMessage,
           description: .genericErrorDocumentNotFound,
-          cancelAction: { cancelAction() },
+          cancelAction: cancelAction,
           action: { Task { await self.initiate() } }
         )
       )

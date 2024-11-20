@@ -61,7 +61,7 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
           error: ContentErrorView.Config(
             title: .genericErrorMessage,
             description: .genericErrorDocumentNotFound,
-            cancelAction: { self.onCancel() },
+            cancelAction: onCancel,
             action: { Task { await self.initiate() } }
           )
         )

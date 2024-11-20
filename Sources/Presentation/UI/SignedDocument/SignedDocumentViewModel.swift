@@ -23,6 +23,7 @@ struct SignedDocumenState: ViewState {
   let documentName: String
   let qtspName: String
   let error: ContentErrorView.Config?
+  let isInitialized: Bool
 }
 
 class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocumenState> {
@@ -43,12 +44,16 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
         qtsp: nil,
         documentName: "",
         qtspName: "",
-        error: nil
+        error: nil,
+        isInitialized: false
       )
     )
   }
   
   func initiate() async {
+    
+    guard !viewState.isInitialized else { return }
+    
     do {
       let signedDocument = try await interactor.signDocument()
       let selection = await interactor.getCurrentSelection()
@@ -64,15 +69,20 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
           $0.copy(
             isLoading: false,
             documentName: documentName,
-            qtspName: qtspName
+            qtspName: qtspName,
+            isInitialized: true
           )
           .copy(error: nil)
         }
       } else {
-        setErrorState()
+        setErrorState {
+          self.onCancel()
+        }
       }
     } catch {
-      setErrorState()
+      setErrorState {
+        Task { await self.initiate() }
+      }
     }
   }
   
@@ -80,7 +90,7 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
     router.navigateTo(.viewDocument(true))
   }
   
-  private func setErrorState() {
+  private func setErrorState(retryAction: @escaping () -> ()) {
     setState {
       $0.copy(
         isLoading: false,
@@ -88,7 +98,7 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
           title: .genericErrorMessage,
           description: .genericErrorDocumentNotFound,
           cancelAction: onCancel,
-          action: onCancel
+          action: retryAction
         )
       )
     }
