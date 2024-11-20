@@ -26,10 +26,10 @@ struct SignedDocumenState: ViewState {
 }
 
 class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocumenState> {
-
+  
   private let interactor: RQESInteractor
   @Published var pdfURL: URL?
-
+  
   init(
     router: Router,
     interactor: RQESInteractor
@@ -46,43 +46,40 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
         error: nil
       )
     )
-    initiate()
   }
-
-  func initiate() {
-    Task {
-      do {
-        let signedDocument = try await interactor.signDocument()
-        let selection = await interactor.getCurrentSelection()
-
-        pdfURL = signedDocument?.fileURL
-        if let fileURL = signedDocument?.fileURL {
-          await interactor.updateDocument(fileURL)
+  
+  func initiate() async {
+    do {
+      let signedDocument = try await interactor.signDocument()
+      let selection = await interactor.getCurrentSelection()
+      
+      pdfURL = signedDocument?.fileURL
+      if let fileURL = signedDocument?.fileURL {
+        await interactor.updateDocument(fileURL)
+      }
+      
+      if let documentName = selection?.document?.documentName,
+         let qtspName = selection?.qtsp?.name {
+        setState {
+          $0.copy(
+            isLoading: false,
+            documentName: documentName,
+            qtspName: qtspName
+          )
+          .copy(error: nil)
         }
-
-        if let documentName = selection?.document?.documentName,
-           let qtspName = selection?.qtsp?.name {
-          setState {
-            $0.copy(
-              isLoading: false,
-              documentName: documentName,
-              qtspName: qtspName
-            )
-            .copy(error: nil)
-          }
-        } else {
-          setErrorState()
-        }
-      } catch {
+      } else {
         setErrorState()
       }
+    } catch {
+      setErrorState()
     }
   }
-
+  
   func viewDocument() {
     router.navigateTo(.viewDocument(true))
   }
-
+  
   private func setErrorState() {
     setState {
       $0.copy(

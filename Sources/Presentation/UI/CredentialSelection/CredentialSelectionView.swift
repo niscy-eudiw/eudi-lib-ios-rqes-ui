@@ -52,8 +52,8 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
         }
       }
     }
-    .onAppear {
-      viewModel.performDataLoading()
+    .task {
+      await viewModel.initiate()
     }
     .confirmationDialog(
       title: localization.get(with: .cancelSigningProcessTitle),

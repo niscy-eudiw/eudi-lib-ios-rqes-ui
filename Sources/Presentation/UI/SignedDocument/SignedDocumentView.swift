@@ -70,6 +70,9 @@ struct SignedDocumentView<Router: RouterGraph>: View {
     } message: {
       Text(localization.get(with: .closeSharingDocument))
     }
+    .task {
+      await viewModel.initiate()
+    }
   }
 }
 

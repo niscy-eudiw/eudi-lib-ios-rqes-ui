@@ -1170,7 +1170,7 @@ public class MockEudiRQESUiConfig: EudiRQESUiConfig, Cuckoo.ProtocolMock, @unche
         }
     }
     
-    public var translations: [String: [LocalizableKey: String]]? {
+    public var translations: [String: [LocalizableKey: String]] {
         get {
             return cuckoo_manager.getter(
                 "translations",
@@ -1180,7 +1180,7 @@ public class MockEudiRQESUiConfig: EudiRQESUiConfig, Cuckoo.ProtocolMock, @unche
         }
     }
     
-    public var theme: ThemeProtocol? {
+    public var theme: ThemeProtocol {
         get {
             return cuckoo_manager.getter(
                 "theme",
@@ -1222,11 +1222,11 @@ public class MockEudiRQESUiConfig: EudiRQESUiConfig, Cuckoo.ProtocolMock, @unche
             return .init(manager: cuckoo_manager, name: "rssps")
         }
         
-        var translations: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockEudiRQESUiConfig,[String: [LocalizableKey: String]]?> {
+        var translations: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockEudiRQESUiConfig,[String: [LocalizableKey: String]]> {
             return .init(manager: cuckoo_manager, name: "translations")
         }
         
-        var theme: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockEudiRQESUiConfig,ThemeProtocol?> {
+        var theme: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockEudiRQESUiConfig,ThemeProtocol> {
             return .init(manager: cuckoo_manager, name: "theme")
         }
         
@@ -1254,11 +1254,11 @@ public class MockEudiRQESUiConfig: EudiRQESUiConfig, Cuckoo.ProtocolMock, @unche
             return .init(manager: cuckoo_manager, name: "rssps", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
-        var translations: Cuckoo.VerifyReadOnlyProperty<[String: [LocalizableKey: String]]?> {
+        var translations: Cuckoo.VerifyReadOnlyProperty<[String: [LocalizableKey: String]]> {
             return .init(manager: cuckoo_manager, name: "translations", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
-        var theme: Cuckoo.VerifyReadOnlyProperty<ThemeProtocol?> {
+        var theme: Cuckoo.VerifyReadOnlyProperty<ThemeProtocol> {
             return .init(manager: cuckoo_manager, name: "theme", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
@@ -1280,15 +1280,15 @@ public class EudiRQESUiConfigStub:EudiRQESUiConfig, @unchecked Sendable {
         }
     }
     
-    public var translations: [String: [LocalizableKey: String]]? {
+    public var translations: [String: [LocalizableKey: String]] {
         get {
-            return DefaultValueRegistry.defaultValue(for: ([String: [LocalizableKey: String]]?).self)
+            return DefaultValueRegistry.defaultValue(for: ([String: [LocalizableKey: String]]).self)
         }
     }
     
-    public var theme: ThemeProtocol? {
+    public var theme: ThemeProtocol {
         get {
-            return DefaultValueRegistry.defaultValue(for: (ThemeProtocol?).self)
+            return DefaultValueRegistry.defaultValue(for: (ThemeProtocol).self)
         }
     }
     
@@ -2235,14 +2235,6 @@ import Cuckoo
 // MARK: - Mocks generated from file: 'Sources/Presentation/Extension/UIApplication+Extensions.swift'
 
 import Cuckoo
-@testable import EudiRQESUi
-
-
-
-// MARK: - Mocks generated from file: 'Sources/Presentation/Extension/URL+Extensions.swift'
-
-import Cuckoo
-import Foundation
 @testable import EudiRQESUi
 
 

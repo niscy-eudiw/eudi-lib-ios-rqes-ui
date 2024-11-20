@@ -27,12 +27,12 @@ struct CredentialSelectionState: ViewState {
 }
 
 final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router, CredentialSelectionState> {
-
+  
   private let interactor: RQESInteractor
-
+  
   @Published var document: DocumentData?
   @Published var qtspName: String?
-
+  
   init(
     router: Router,
     interactor: RQESInteractor
@@ -50,8 +50,49 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
       )
     )
   }
-
-  func fetchCredentials() async throws {
+  
+  func initiate() async {
+    do {
+      try await fetchCredentials()
+      try await getDocument()
+    } catch {
+      setErrorState {
+        self.onCancel()
+      }
+    }
+  }
+  
+  func setCertificate(_ certificate: CredentialDataUIModel? = nil) {
+    Task {
+      if let credential = viewState.credentialInfos.first(where: { $0.credentialID == certificate?.id}) {
+        await interactor.saveCertificate(credential)
+      }
+    }
+  }
+  
+  func nextStep() {
+    onPause()
+    openAuthorization()
+  }
+  
+  func openAuthorization() {
+    Task {
+      do {
+        let authorizationUrl = try await interactor.openCredentialAuthrorizationURL()
+        await UIApplication.shared.openURLIfPossible(authorizationUrl) {
+          self.setErrorState {
+            self.setState { $0.copy(error: nil) }
+          }
+        }
+      } catch {
+        self.setErrorState {
+          self.setState { $0.copy(error: nil) }
+        }
+      }
+    }
+  }
+  
+  private func fetchCredentials() async throws {
     do {
       let credentials = try await interactor.fetchCredentials()
       switch credentials {
@@ -68,35 +109,13 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
         throw EudiRQESUiError.unableToFetchCredentials
       }
     } catch {
-      setErrorState()
+      throw EudiRQESUiError.unableToFetchCredentials
     }
   }
-
-  func performDataLoading() {
-    Task {
-      do {
-        async let fetchCredentialsResult: () = fetchCredentials()
-        async let getDocumentResult: () = getDocument()
-
-        try await fetchCredentialsResult
-        await getDocumentResult
-      } catch {
-        setErrorState()
-      }
-    }
-  }
-
-  func setCertificate(_ certificate: CredentialDataUIModel? = nil) {
-    Task {
-      if let credential = viewState.credentialInfos.first(where: { $0.credentialID == certificate?.id}) {
-        await interactor.saveCertificate(credential)
-      }
-    }
-  }
-
-  func getDocument() async {
+  
+  private func getDocument() async throws {
     let documentName = await interactor.getCurrentSelection()?.document?.documentName
-
+    
     if let documentName {
       setState {
         $0.copy(
@@ -106,37 +125,19 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
         .copy(error: nil)
       }
     } else {
-      setErrorState()
+      throw EudiRQESUiError.noDocumentProvided
     }
   }
-
-  func nextStep() {
-    onPause()
-    openAuthorization()
-  }
-
-  func openAuthorization() {
-    Task {
-      do {
-        let authorizationUrl = try await interactor.openCredentialAuthrorizationURL()
-        await UIApplication.shared.openURLIfPossible(authorizationUrl) {
-          self.setErrorState()
-        }
-      } catch {
-        setErrorState()
-      }
-    }
-  }
-
-  private func setErrorState() {
+  
+  private func setErrorState(cancelAction: @escaping () -> ()) {
     setState {
       $0.copy(
         isLoading: false,
         error: ContentErrorView.Config(
           title: .genericErrorMessage,
           description: .genericErrorDocumentNotFound,
-          cancelAction: { self.setState { $0.copy(error: nil) } },
-          action: { Task { try await self.fetchCredentials() } }
+          cancelAction: { cancelAction() },
+          action: { Task { await self.initiate() } }
         )
       )
     }
