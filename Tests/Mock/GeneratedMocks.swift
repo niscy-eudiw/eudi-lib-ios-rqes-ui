@@ -788,9 +788,9 @@ class MockRQESInteractor: RQESInteractor, Cuckoo.ProtocolMock, @unchecked Sendab
         )
     }
     
-    func getQTSps() async -> [QTSPData]? {
+    func getQTSps() async -> [QTSPData] {
         return await cuckoo_manager.call(
-            "getQTSps() async -> [QTSPData]?",
+            "getQTSps() async -> [QTSPData]",
             parameters: (),
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -891,10 +891,10 @@ class MockRQESInteractor: RQESInteractor, Cuckoo.ProtocolMock, @unchecked Sendab
             ))
         }
         
-        func getQTSps() -> Cuckoo.ProtocolStubFunction<(), [QTSPData]?> {
+        func getQTSps() -> Cuckoo.ProtocolStubFunction<(), [QTSPData]> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockRQESInteractor.self,
-                method: "getQTSps() async -> [QTSPData]?",
+                method: "getQTSps() async -> [QTSPData]",
                 parameterMatchers: matchers
             ))
         }
@@ -993,10 +993,10 @@ class MockRQESInteractor: RQESInteractor, Cuckoo.ProtocolMock, @unchecked Sendab
         
         
         @discardableResult
-        func getQTSps() -> Cuckoo.__DoNotUse<(), [QTSPData]?> {
+        func getQTSps() -> Cuckoo.__DoNotUse<(), [QTSPData]> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "getQTSps() async -> [QTSPData]?",
+                "getQTSps() async -> [QTSPData]",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -1101,8 +1101,8 @@ class RQESInteractorStub:RQESInteractor, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (CurrentSelection?).self)
     }
     
-    func getQTSps() async -> [QTSPData]? {
-        return DefaultValueRegistry.defaultValue(for: ([QTSPData]?).self)
+    func getQTSps() async -> [QTSPData] {
+        return DefaultValueRegistry.defaultValue(for: ([QTSPData]).self)
     }
     
     func fetchCredentials() async throws -> Result<[CredentialInfo], any Error> {
@@ -1200,7 +1200,7 @@ public class MockEudiRQESUiConfig: EudiRQESUiConfig, Cuckoo.ProtocolMock, @unche
         }
     }
     
-    public var rQESConfig: RqesServiceConfig? {
+    public var rQESConfig: RqesServiceConfig {
         get {
             return cuckoo_manager.getter(
                 "rQESConfig",
@@ -1234,7 +1234,7 @@ public class MockEudiRQESUiConfig: EudiRQESUiConfig, Cuckoo.ProtocolMock, @unche
             return .init(manager: cuckoo_manager, name: "printLogs")
         }
         
-        var rQESConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockEudiRQESUiConfig,RqesServiceConfig?> {
+        var rQESConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockEudiRQESUiConfig,RqesServiceConfig> {
             return .init(manager: cuckoo_manager, name: "rQESConfig")
         }
     }
@@ -1266,7 +1266,7 @@ public class MockEudiRQESUiConfig: EudiRQESUiConfig, Cuckoo.ProtocolMock, @unche
             return .init(manager: cuckoo_manager, name: "printLogs", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
-        var rQESConfig: Cuckoo.VerifyReadOnlyProperty<RqesServiceConfig?> {
+        var rQESConfig: Cuckoo.VerifyReadOnlyProperty<RqesServiceConfig> {
             return .init(manager: cuckoo_manager, name: "rQESConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
     }
@@ -1298,9 +1298,9 @@ public class EudiRQESUiConfigStub:EudiRQESUiConfig, @unchecked Sendable {
         }
     }
     
-    public var rQESConfig: RqesServiceConfig? {
+    public var rQESConfig: RqesServiceConfig {
         get {
-            return DefaultValueRegistry.defaultValue(for: (RqesServiceConfig?).self)
+            return DefaultValueRegistry.defaultValue(for: (RqesServiceConfig).self)
         }
     }
 

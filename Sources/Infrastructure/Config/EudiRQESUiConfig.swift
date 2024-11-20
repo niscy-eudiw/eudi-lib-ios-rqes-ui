@@ -31,7 +31,7 @@ public protocol EudiRQESUiConfig: Sendable {
   var printLogs: Bool { get }
 
   // Set RQES Service Config
-  var rQESConfig: RqesServiceConfig? { get }
+  var rQESConfig: RqesServiceConfig { get }
 }
 
 extension EudiRQESUiConfig {
