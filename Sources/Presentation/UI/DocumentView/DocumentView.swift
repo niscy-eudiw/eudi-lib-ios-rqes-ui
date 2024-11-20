@@ -56,8 +56,8 @@ struct DocumentViewer<Router: RouterGraph>: View {
       viewState: viewModel.viewState,
       error: viewModel.viewState.error
     )
-    .onAppear {
-      viewModel.initiate()
+    .task {
+      await viewModel.initiate()
     }
   }
 
@@ -81,6 +81,7 @@ private func content(
   error: ContentErrorView.Config?
 ) -> some View {
   ContentScreenView(
+    canScroll: true,
     title: navigationTitle,
     errorConfig: error,
     isLoading: viewState.isLoading,

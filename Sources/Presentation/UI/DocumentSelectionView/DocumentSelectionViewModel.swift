@@ -43,8 +43,7 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
     )
   }
 
-  func initiate() {
-    Task {
+  func initiate() async {
       let documentName = await interactor.getCurrentSelection()?.document?.documentName
 
       if let documentName {
@@ -63,12 +62,11 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
               title: .genericErrorMessage,
               description: .genericErrorDocumentNotFound,
               cancelAction: { self.setState { $0.copy(error: nil) } },
-              action: initiate
+              action: { Task { await self.initiate() } }
             )
           )
         }
       }
-    }
   }
 
   func viewDocument() {

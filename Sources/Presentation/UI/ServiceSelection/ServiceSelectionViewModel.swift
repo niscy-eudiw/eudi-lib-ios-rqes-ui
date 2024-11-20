@@ -23,10 +23,10 @@ struct ServiceSelectionState: ViewState {
 }
 
 class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceSelectionState> {
-
+  
   private let interactor: RQESInteractor
   @Published var selectedItem: QTSPData?
-
+  
   init(
     router: Router,
     interactor: RQESInteractor
@@ -41,36 +41,34 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
       )
     )
   }
-
-  func initiate() {
-    Task {
-      let services = await interactor.getQTSps()
-
-      if let services {
-        setState {
-          $0.copy(
-            isLoading: false,
-            services: services
-          )
-          .copy(error: nil)
-        }
-      } else {
-        setErrorState()
+  
+  func initiate() async {
+    let services = await interactor.getQTSps()
+    
+    if let services {
+      setState {
+        $0.copy(
+          isLoading: false,
+          services: services
+        )
+        .copy(error: nil)
       }
+    } else {
+      setErrorState()
     }
   }
-
+  
   func selectQTSP(_ qtsp: QTSPData) {
     Task {
       await interactor.updateQTSP(qtsp)
     }
   }
-
+  
   func nextStep() {
     onPause()
     openAuthorization()
   }
-
+  
   func openAuthorization() {
     Task {
       do {
@@ -80,7 +78,7 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
           setErrorState()
         }
         let authorizationUrl = try await interactor.openAuthrorizationURL()
-
+        
         await UIApplication.shared.openURLIfPossible(authorizationUrl) {
           self.setErrorState()
         }
@@ -89,7 +87,7 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
       }
     }
   }
-
+  
   private func setErrorState() {
     setState {
       $0.copy(
@@ -98,7 +96,7 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
           title: .genericErrorMessage,
           description: .genericErrorQtspNotFound,
           cancelAction: { self.setState { $0.copy(error: nil) } },
-          action: initiate
+          action: { Task { await self.initiate() } }
         )
       )
     }

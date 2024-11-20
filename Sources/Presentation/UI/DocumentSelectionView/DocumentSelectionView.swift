@@ -33,6 +33,14 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
       errorConfig: viewModel.viewState.error,
       isLoading: viewModel.viewState.isLoading,
       toolbarContent: .init(
+        trailingActions: [
+          Action(
+            title: localization.get(with: .proceed),
+            callback: {
+              viewModel.selectService()
+            }
+          )
+        ],
         leadingActions: [
           Action(
             title: localization.get(with: .cancel),
@@ -45,12 +53,11 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
         confirmSelectionTitle: localization.get(with: .confirmSelectionTitle),
         documentName: viewModel.viewState.documentName,
         viewString: localization.get(with: .view),
-        view: viewModel.viewDocument,
-        select: viewModel.selectService
+        view: viewModel.viewDocument
       )
     }
-    .onAppear {
-      viewModel.initiate()
+    .task {
+      await viewModel.initiate()
     }
     .confirmationDialog(
       title: localization.get(with: .cancelSigningProcessTitle),
@@ -75,9 +82,9 @@ private func content(
   confirmSelectionTitle: String,
   documentName: String,
   viewString: String,
-  view: @escaping () -> Void,
-  select: @escaping () -> Void
+  view: @escaping () -> Void
 ) -> some View {
+  
   Text(confirmSelectionTitle)
     .font(Theme.shared.font.bodyLarge.font)
     .foregroundStyle(Theme.shared.color.onSurface)
@@ -89,7 +96,7 @@ private func content(
         .font(Theme.shared.font.bodyLarge.font)
     },
     action: {
-      select()
+      view()
     },
     trailingAction: {
       view()
@@ -108,8 +115,7 @@ private func content(
       confirmSelectionTitle: "confirmSelectionTitle",
       documentName: "documentName",
       viewString: "View",
-      view: {},
-      select: {}
+      view: {}
     )
   }
 }
@@ -123,8 +129,7 @@ private func content(
       confirmSelectionTitle: "confirmSelectionTitle",
       documentName: "documentName",
       viewString: "View",
-      view: {},
-      select: {}
+      view: {}
     )
   }
   .darkModePreview()

@@ -26,6 +26,7 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
 
   var body: some View {
     ContentScreenView(
+      canScroll: true,
       spacing: SPACING_LARGE_MEDIUM,
       title: localization.get(with: .selectService),
       errorConfig: viewModel.viewState.error,
@@ -53,8 +54,8 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
           viewModel.selectQTSP(newValue)
         }
       }
-      .onAppear {
-        viewModel.initiate()
+      .task {
+        await viewModel.initiate()
       }
     }
   }

@@ -30,9 +30,9 @@ struct DocumentState: ViewState {
 }
 
 class DocumentViewModel<Router: RouterGraph>: ViewModel<Router, DocumentState> {
-
+  
   private let interactor: RQESInteractor
-
+  
   init(
     router: Router,
     interactor: RQESInteractor
@@ -48,29 +48,27 @@ class DocumentViewModel<Router: RouterGraph>: ViewModel<Router, DocumentState> {
       )
     )
   }
-
-  func initiate() {
-    Task {
-      let uri = await interactor.getCurrentSelection()?.document?.uri
-      if let uri {
-        let source = DocumentSource.pdfUrl(uri)
-        loadDocument(from: source)
-      } else {
-        setState {
-          $0.copy(
-            isLoading: false,
-            error: ContentErrorView.Config(
-              title: .genericErrorMessage,
-              description: .genericErrorDocumentNotFound,
-              cancelAction: initiate,
-              action: initiate
-            )
+  
+  func initiate() async {
+    let uri = await interactor.getCurrentSelection()?.document?.uri
+    if let uri {
+      let source = DocumentSource.pdfUrl(uri)
+      loadDocument(from: source)
+    } else {
+      setState {
+        $0.copy(
+          isLoading: false,
+          error: ContentErrorView.Config(
+            title: .genericErrorMessage,
+            description: .genericErrorDocumentNotFound,
+            cancelAction: { Task { await self.initiate() } },
+            action: { Task { await self.initiate() } }
           )
-        }
+        )
       }
     }
   }
-
+  
   private func loadDocument(from source: DocumentSource) {
     setState {
       $0.copy(
@@ -90,7 +88,6 @@ class DocumentViewModel<Router: RouterGraph>: ViewModel<Router, DocumentState> {
     }
   }
   
-  @MainActor
   private func loadPDF(fromURL url: URL) {
     if let document = PDFDocument(url: url) {
       setState {
@@ -109,14 +106,13 @@ class DocumentViewModel<Router: RouterGraph>: ViewModel<Router, DocumentState> {
             title: .genericErrorMessage,
             description: .genericErrorDocumentNotFound,
             cancelAction: { self.setState { $0.copy(error: nil) } },
-            action: initiate
+            action: { Task { await self.initiate() } }
           )
         )
       }
     }
   }
   
-  @MainActor
   private func loadPDF(fromBase64 base64String: String) {
     if let data = Data(base64Encoded: base64String),
        let document = PDFDocument(data: data) {
@@ -135,8 +131,8 @@ class DocumentViewModel<Router: RouterGraph>: ViewModel<Router, DocumentState> {
           error: ContentErrorView.Config(
             title: .genericErrorMessage,
             description: .genericErrorDocumentNotFound,
-            cancelAction: initiate,
-            action: initiate
+            cancelAction: { Task { await self.initiate() } },
+            action: { Task { await self.initiate() } }
           )
         )
       }

@@ -35,7 +35,7 @@ struct SignedDocumentView<Router: RouterGraph>: View {
       toolbarContent: ToolBarContent(
         trailingActions: [
           Action(
-            title: localization.get(with: .save),
+            title: localization.get(with: .close),
             callback: {
               showSheet = true
             }
@@ -84,14 +84,16 @@ private func content(
   isLoading: Bool,
   view: @escaping () -> Void
 ) -> some View {
-  VStack(alignment: .leading, spacing: SPACING_NONE) {
+  VStack(alignment: .leading, spacing: .zero) {
+    
     Text(success)
       .font(Theme.shared.font.headlineMedium.font)
       .fontWeight(.bold)
       .foregroundStyle(Theme.shared.color.success)
       .padding(.top, SPACING_LARGE_MEDIUM)
 
-    VStack(alignment: .leading, spacing: SPACING_NONE) {
+    VStack(alignment: .leading, spacing: .zero) {
+      
       Text(successfullySigned)
         .font(Theme.shared.font.bodyLarge.font)
         .foregroundStyle(Theme.shared.color.onSurface)
@@ -101,7 +103,6 @@ private func content(
         .foregroundStyle(Theme.shared.color.onSurface)
         .fontWeight(.semibold)
     }
-    .gone(if: isLoading)
     .padding(.top, SPACING_SMALL)
 
     CardView(
@@ -119,6 +120,7 @@ private func content(
 
     Spacer()
   }
+  .gone(if: isLoading)
 }
 
 #Preview {

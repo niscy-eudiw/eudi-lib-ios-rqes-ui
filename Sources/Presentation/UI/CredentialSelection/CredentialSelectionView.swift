@@ -29,6 +29,7 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
 
   var body: some View {
     ContentScreenView(
+      canScroll: true,
       spacing: SPACING_LARGE_MEDIUM,
       title: localization.get(with: .selectCertificate),
       errorConfig: viewModel.viewState.error,
@@ -51,9 +52,9 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
         }
       }
     }
-    .onAppear {
-      viewModel.fetchCredentials()
-      viewModel.getDocument()
+    .task {
+      await viewModel.fetchCredentials()
+      await viewModel.getDocument()
     }
     .confirmationDialog(
       title: localization.get(with: .cancelSigningProcessTitle),

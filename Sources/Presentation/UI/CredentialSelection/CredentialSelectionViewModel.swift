@@ -27,12 +27,12 @@ struct CredentialSelectionState: ViewState {
 }
 
 final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router, CredentialSelectionState> {
-
+  
   private let interactor: RQESInteractor
   
   @Published var document: DocumentData?
   @Published var qtspName: String?
-
+  
   init(
     router: Router,
     interactor: RQESInteractor
@@ -50,31 +50,28 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
       )
     )
   }
-
-  @MainActor
-  func fetchCredentials() {
-    Task {
-      do {
-        let credentials = try await interactor.fetchCredentials()
-        switch credentials {
-        case .success(let credentials):
-          setState {
-            $0.copy(
-              isLoading: false,
-              credentials: credentials.map { $0.toUi() },
-              credentialInfos: credentials
-            )
-            .copy(error: nil)
-          }
-        case .failure:
-          setErrorState()
+  
+  func fetchCredentials() async {
+    do {
+      let credentials = try await interactor.fetchCredentials()
+      switch credentials {
+      case .success(let credentials):
+        setState {
+          $0.copy(
+            isLoading: false,
+            credentials: credentials.map { $0.toUi() },
+            credentialInfos: credentials
+          )
+          .copy(error: nil)
         }
-      } catch {
+      case .failure:
         setErrorState()
       }
+    } catch {
+      setErrorState()
     }
   }
-
+  
   func setCertificate(_ certificate: CredentialDataUIModel? = nil) {
     Task {
       if let credential = viewState.credentialInfos.first(where: { $0.credentialID == certificate?.id}) {
@@ -82,30 +79,28 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
       }
     }
   }
-
-  func getDocument() {
-    Task {
-      let documentName = await interactor.getCurrentSelection()?.document?.documentName
-
-      if let documentName {
-        setState {
-          $0.copy(
-            isLoading: false,
-            documentName: documentName
-          )
-          .copy(error: nil)
-        }
-      } else {
-        setErrorState()
+  
+  func getDocument() async {
+    let documentName = await interactor.getCurrentSelection()?.document?.documentName
+    
+    if let documentName {
+      setState {
+        $0.copy(
+          isLoading: false,
+          documentName: documentName
+        )
+        .copy(error: nil)
       }
+    } else {
+      setErrorState()
     }
   }
-
+  
   func nextStep() {
     onPause()
     openAuthorization()
   }
-
+  
   func openAuthorization() {
     Task {
       do {
@@ -118,7 +113,7 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
       }
     }
   }
-
+  
   private func setErrorState() {
     setState {
       $0.copy(
@@ -127,7 +122,7 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
           title: .genericErrorMessage,
           description: .genericErrorDocumentNotFound,
           cancelAction: { self.setState { $0.copy(error: nil) } },
-          action: fetchCredentials
+          action: { Task { await self.fetchCredentials() } }
         )
       )
     }

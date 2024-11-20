@@ -25,7 +25,7 @@ public extension UIApplication {
       .filter({ $0.isKeyWindow })
       .first?
       .rootViewController
-  ) -> UIViewController {
+  ) -> UIViewController? {
 
     if let navigationController = controller as? UINavigationController {
       return topViewController(
@@ -44,7 +44,7 @@ public extension UIApplication {
       )
     }
 
-    return controller ?? UIViewController()
+    return controller
   }
 }
 

@@ -26,9 +26,10 @@ struct ContentScreenView<Content: View>: View {
   private let toolbarContent: ToolBarContent?
   private let errorConfig: ContentErrorView.Config?
   private let isLoading: Bool
+  private let canScroll: Bool
 
   init(
-    padding: CGFloat = 16,
+    padding: CGFloat = SPACING_MEDIUM,
     canScroll: Bool = false,
     spacing: CGFloat = 0,
     background: Color = .white,
@@ -46,6 +47,7 @@ struct ContentScreenView<Content: View>: View {
     self.toolbarContent = toolbarContent
     self.errorConfig = errorConfig
     self.isLoading = isLoading
+    self.canScroll = canScroll
   }
 
   var body: some View {
@@ -57,7 +59,10 @@ struct ContentScreenView<Content: View>: View {
           VStack(alignment: .leading, spacing: spacing) {
             content
           }
-          .padding([.all], padding)
+          .padding(canScroll ? [.horizontal, .top] : [.all], padding)
+          .if(canScroll == true) {
+            $0.ignoresSafeArea(edges: .bottom)
+          }
 
           if isLoading {
             LoadingView()
