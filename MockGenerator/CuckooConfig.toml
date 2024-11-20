@@ -1,0 +1,13 @@
+[modules.RqesLibrary]
+output = "../Tests/Mock/GeneratedMocks.swift"
+testableImports = ["EudiRQESUi"]
+sources = [
+    "../Sources/**/*.swift"
+]
+
+[modules.RqesLibrary.options]
+glob = true
+keepDocumentation = false
+enableInheritance = true
+protocolsOnly = true
+omitHeaders = false
