@@ -21,9 +21,6 @@ public protocol EudiRQESUiConfig: Sendable {
   // Remote signing service provider list
   var rssps : [QTSPData] { get }
 
-  // OAuth redirect url
-  var redirectUrl: URL? { get }
-
   // Transactions per locale
   var translations: [String: [LocalizableKey: String]]? { get }
 
