@@ -105,6 +105,7 @@ private func content(
         .font(Theme.shared.font.bodyLarge.font)
         .foregroundStyle(Theme.shared.color.onSurface)
         .fontWeight(.semibold)
+        .leftImage(image: Image(.verifiedUser))
     }
     .padding(.top, SPACING_SMALL)
 
