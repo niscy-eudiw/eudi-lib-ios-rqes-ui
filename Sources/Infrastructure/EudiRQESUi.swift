@@ -64,6 +64,8 @@ public final actor EudiRQESUi {
     animated: Bool = true
   ) async throws {
     
+    self.router.clear()
+    
     await resetCache()
     await updateSelectionDocument(
       with: .init(

@@ -53,9 +53,12 @@ struct CardView<Label: View>: View {
   var body: some View {
     HStack(alignment: .center, spacing: SPACING_MEDIUM) {
       VStack(alignment: .leading, spacing: SPACING_NONE) {
+        
         Text(title)
           .font(Theme.shared.font.bodyLarge.font)
           .foregroundStyle(Theme.shared.color.onSurface)
+          .lineLimit(2)
+          .truncationMode(.tail)
           .if(subtitle != nil) {
             $0.fontWeight(.semibold)
           }
@@ -64,6 +67,8 @@ struct CardView<Label: View>: View {
           Text(subtitle)
             .font(Theme.shared.font.bodySmall.font)
             .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+            .lineLimit(2)
+            .truncationMode(.tail)
         }
       }
       Spacer()
@@ -78,7 +83,7 @@ struct CardView<Label: View>: View {
       action?()
     }
     .padding(SPACING_MEDIUM)
-    .frame(height: 80, alignment: .leading)
+    .frame(minHeight: 80, alignment: .leading)
     .background(type.backgroundColor())
     .cornerRadius(13)
   }
