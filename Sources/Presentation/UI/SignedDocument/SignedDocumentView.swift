@@ -64,7 +64,7 @@ struct SignedDocumentView<Router: RouterGraph>: View {
 
       if let url = viewModel.pdfURL {
         ShareLink(item: url) {
-          Label(localization.get(with: .share), systemImage: "swift")
+          Text(localization.get(with: .share))
         }
       }
     } message: {
