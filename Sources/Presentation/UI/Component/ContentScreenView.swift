@@ -32,7 +32,7 @@ struct ContentScreenView<Content: View>: View {
     padding: CGFloat = SPACING_MEDIUM,
     canScroll: Bool = false,
     spacing: CGFloat = 0,
-    background: Color = .white,
+    background: Color = Theme.shared.color.background,
     title: String,
     errorConfig: ContentErrorView.Config? = nil,
     isLoading: Bool = false,

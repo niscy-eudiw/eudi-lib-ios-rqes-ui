@@ -33,7 +33,7 @@ struct WrapButtonView: View {
     isLoading: Bool = false,
     isEnabled: Bool = true,
     borderWidth: CGFloat = 0,
-    cornerRadius: CGFloat = 100,
+    cornerRadius: CGFloat = SPACING_SMALL,
     onAction: @autoclosure @escaping () -> Void
   ) {
     self.title = title

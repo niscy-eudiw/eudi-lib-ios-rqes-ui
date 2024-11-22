@@ -23,6 +23,7 @@ private struct PDFViewRepresented: UIViewRepresentable {
   func makeUIView(context: Context) -> PDFView {
     let pdfView = PDFView()
     pdfView.autoScales = true
+    pdfView.backgroundColor = UIColor(Theme.shared.color.background)
 
     if let document = pdfDocument {
       pdfView.document = document
