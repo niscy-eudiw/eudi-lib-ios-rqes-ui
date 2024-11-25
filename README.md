@@ -30,7 +30,7 @@ Open `Xcode`, go to `File -> Swift Packages -> Add Package Dependency`, and ente
 You can also add `EudiRQESUi` as a dependency to your `Package.swift`:
 ```swift
 dependencies: [
-  .package(url: "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-ui.git", from: "0.1.0")
+  .package(url: "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-ui.git", from: "LATEST_RELEASE")
 ]
 ```
 
