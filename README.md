@@ -15,7 +15,7 @@ the [EUDI Wallet Reference Implementation project description](https://github.co
 ## Overview
 
 This package provides the core and UI functionality for the EUDI Wallet, focusing on the Remote Qualified Electronic Signature (RQES) service. 
-The `EudiRQESUi` object defines methods for setting up and using the SDK. The SDK offers compile-time configuration capabilities through the `EudiRQESUiConfig` protocol.
+The `EudiRQESUi` actor defines methods for setting up and using the SDK. The SDK offers compile-time configuration capabilities through the `EudiRQESUiConfig` protocol.
 
 ## Requirements
 
