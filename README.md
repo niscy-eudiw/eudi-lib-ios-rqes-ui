@@ -34,6 +34,18 @@ dependencies: [
 ]
 ```
 
+```swift
+ targets: [
+    .target(
+      dependencies: [
+        .product(
+          name: "EudiRQESUi",
+          package: "eudi-lib-ios-rqes-ui"
+        )
+      ]
+    )
+```
+
 ## How to use
 
 TBD
