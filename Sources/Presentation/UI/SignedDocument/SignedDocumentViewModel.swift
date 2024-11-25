@@ -23,13 +23,14 @@ struct SignedDocumenState: ViewState {
   let documentName: String
   let qtspName: String
   let error: ContentErrorView.Config?
+  let isInitialized: Bool
 }
 
 class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocumenState> {
-
+  
   private let interactor: RQESInteractor
   @Published var pdfURL: URL?
-
+  
   init(
     router: Router,
     interactor: RQESInteractor
@@ -43,47 +44,53 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
         qtsp: nil,
         documentName: "",
         qtspName: "",
-        error: nil
+        error: nil,
+        isInitialized: false
       )
     )
-    initiate()
   }
-
-  func initiate() {
-    Task {
-      do {
-        let signedDocument = try await interactor.signDocument()
-        let selection = await interactor.getCurrentSelection()
-
-        pdfURL = signedDocument?.fileURL
-        if let fileURL = signedDocument?.fileURL {
-          await interactor.updateDocument(fileURL)
+  
+  func initiate() async {
+    
+    guard !viewState.isInitialized else { return }
+    
+    do {
+      let signedDocument = try await interactor.signDocument()
+      let selection = await interactor.getCurrentSelection()
+      
+      pdfURL = signedDocument?.fileURL
+      if let fileURL = signedDocument?.fileURL {
+        await interactor.updateDocument(fileURL)
+      }
+      
+      if let documentName = selection?.document?.documentName,
+         let qtspName = selection?.qtsp?.name {
+        setState {
+          $0.copy(
+            isLoading: false,
+            documentName: documentName,
+            qtspName: qtspName,
+            isInitialized: true
+          )
+          .copy(error: nil)
         }
-
-        if let documentName = selection?.document?.documentName,
-           let qtspName = selection?.qtsp?.name {
-          setState {
-            $0.copy(
-              isLoading: false,
-              documentName: documentName,
-              qtspName: qtspName
-            )
-            .copy(error: nil)
-          }
-        } else {
-          setErrorState()
+      } else {
+        setErrorState {
+          self.onCancel()
         }
-      } catch {
-        setErrorState()
+      }
+    } catch {
+      setErrorState {
+        Task { await self.initiate() }
       }
     }
   }
-
+  
   func viewDocument() {
     router.navigateTo(.viewDocument(true))
   }
-
-  private func setErrorState() {
+  
+  private func setErrorState(retryAction: @escaping () -> ()) {
     setState {
       $0.copy(
         isLoading: false,
@@ -91,7 +98,7 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
           title: .genericErrorMessage,
           description: .genericErrorDocumentNotFound,
           cancelAction: onCancel,
-          action: onCancel
+          action: retryAction
         )
       )
     }

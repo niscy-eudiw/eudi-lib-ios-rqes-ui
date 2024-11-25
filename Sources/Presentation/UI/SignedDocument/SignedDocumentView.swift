@@ -64,11 +64,14 @@ struct SignedDocumentView<Router: RouterGraph>: View {
 
       if let url = viewModel.pdfURL {
         ShareLink(item: url) {
-          Label(localization.get(with: .share), systemImage: "swift")
+          Text(localization.get(with: .share))
         }
       }
     } message: {
       Text(localization.get(with: .closeSharingDocument))
+    }
+    .task {
+      await viewModel.initiate()
     }
   }
 }
@@ -102,6 +105,7 @@ private func content(
         .font(Theme.shared.font.bodyLarge.font)
         .foregroundStyle(Theme.shared.color.onSurface)
         .fontWeight(.semibold)
+        .leftImage(image: Image(.verifiedUser))
     }
     .padding(.top, SPACING_SMALL)
 

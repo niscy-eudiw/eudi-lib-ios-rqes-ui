@@ -17,11 +17,14 @@ import SwiftUI
 import PDFKit
 
 private struct PDFViewRepresented: UIViewRepresentable {
+  
   let pdfDocument: PDFDocument?
 
   func makeUIView(context: Context) -> PDFView {
+    
     let pdfView = PDFView()
     pdfView.autoScales = true
+    pdfView.backgroundColor = UIColor(Theme.shared.color.background)
 
     if let document = pdfDocument {
       pdfView.document = document
@@ -81,6 +84,7 @@ private func content(
   error: ContentErrorView.Config?
 ) -> some View {
   ContentScreenView(
+    padding: .zero,
     canScroll: true,
     title: navigationTitle,
     errorConfig: error,

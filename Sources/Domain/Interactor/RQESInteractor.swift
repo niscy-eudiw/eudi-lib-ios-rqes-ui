@@ -19,7 +19,7 @@ import RqesKit
 protocol RQESInteractor: Sendable {
   func signDocument() async throws -> Document?
   func getCurrentSelection() async -> CurrentSelection?
-  func getQTSps() async -> [QTSPData]?
+  func getQTSps() async -> [QTSPData]
   func fetchCredentials() async throws -> Result<[CredentialInfo], any Error>
   func updateQTSP(_ qtsp: QTSPData) async
   func updateDocument(_ url: URL) async
@@ -38,9 +38,7 @@ final class RQESInteractorImpl: RQESInteractor {
   }
   
   func createRQESService(_ qtsp: QTSPData) async throws {
-    guard let rQESConfig = await rqesUi.getRQESConfig() else {
-      fatalError("RQES Config has no configuration")
-    }
+    let rQESConfig = await rqesUi.getRQESConfig()
     await self.rqesUi.setRQESService(
       .init(
         clientConfig: .init(
@@ -90,7 +88,7 @@ final class RQESInteractorImpl: RQESInteractor {
     }
   }
   
-  func getQTSps() async -> [QTSPData]? {
+  func getQTSps() async -> [QTSPData] {
     await rqesUi.getRssps()
   }
   

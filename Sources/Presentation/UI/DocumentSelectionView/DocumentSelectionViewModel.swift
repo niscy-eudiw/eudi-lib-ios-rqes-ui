@@ -24,9 +24,9 @@ struct DocumentSelectionState: ViewState {
 }
 
 class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, DocumentSelectionState> {
-
+  
   private let interactor: RQESInteractor
-
+  
   init(
     router: Router,
     interactor: RQESInteractor
@@ -42,37 +42,37 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
       )
     )
   }
-
+  
   func initiate() async {
-      let documentName = await interactor.getCurrentSelection()?.document?.documentName
-
-      if let documentName {
-        setState {
-          $0.copy(
-            isLoading: false,
-            documentName: documentName
-          )
-          .copy(error: nil)
-        }
-      } else {
-        setState {
-          $0.copy(
-            isLoading: false,
-            error: ContentErrorView.Config(
-              title: .genericErrorMessage,
-              description: .genericErrorDocumentNotFound,
-              cancelAction: { self.setState { $0.copy(error: nil) } },
-              action: { Task { await self.initiate() } }
-            )
-          )
-        }
+    let documentName = await interactor.getCurrentSelection()?.document?.documentName
+    
+    if let documentName {
+      setState {
+        $0.copy(
+          isLoading: false,
+          documentName: documentName
+        )
+        .copy(error: nil)
       }
+    } else {
+      setState {
+        $0.copy(
+          isLoading: false,
+          error: ContentErrorView.Config(
+            title: .genericErrorMessage,
+            description: .genericErrorDocumentNotFound,
+            cancelAction: onCancel,
+            action: { Task { await self.initiate() } }
+          )
+        )
+      }
+    }
   }
-
+  
   func viewDocument() {
     router.navigateTo(.viewDocument(false))
   }
-
+  
   func selectService() {
     router.navigateTo(.serviceSelection)
   }

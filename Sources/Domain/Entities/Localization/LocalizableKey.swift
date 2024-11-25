@@ -57,7 +57,7 @@ public enum LocalizableKey: String, Sendable {
     case .confirmSelectionTitle: "Please confirm signing of the following."
     case .selectService: "Select service"
     case .selectServiceTitle: "Select remote signing service."
-    case .selectServiceSubtitle: "Remote signing enables you to digitally sign documents without the need for locally installed digital identities. Cloud-hosted signing service makes remote signing possible."
+    case .selectServiceSubtitle: "Remote Signing Service enables secure online document signing."
     case .selectCertificate: "Select certificate"
     case .selectCertificateTitle: "You have chosen to sign the following document:"
     case .certificate: "CERTIFICATE"

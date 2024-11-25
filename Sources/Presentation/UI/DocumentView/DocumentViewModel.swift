@@ -55,16 +55,8 @@ class DocumentViewModel<Router: RouterGraph>: ViewModel<Router, DocumentState> {
       let source = DocumentSource.pdfUrl(uri)
       loadDocument(from: source)
     } else {
-      setState {
-        $0.copy(
-          isLoading: false,
-          error: ContentErrorView.Config(
-            title: .genericErrorMessage,
-            description: .genericErrorDocumentNotFound,
-            cancelAction: { Task { await self.initiate() } },
-            action: { Task { await self.initiate() } }
-          )
-        )
+      setErrorState {
+        self.router.pop()
       }
     }
   }
@@ -98,17 +90,8 @@ class DocumentViewModel<Router: RouterGraph>: ViewModel<Router, DocumentState> {
         .copy(error: nil)
       }
     } else {
-      setState {
-        $0.copy(
-          isLoading: false,
-          pdfDocument: nil,
-          error: ContentErrorView.Config(
-            title: .genericErrorMessage,
-            description: .genericErrorDocumentNotFound,
-            cancelAction: { self.setState { $0.copy(error: nil) } },
-            action: { Task { await self.initiate() } }
-          )
-        )
+      setErrorState {
+        self.router.pop()
       }
     }
   }
@@ -124,18 +107,23 @@ class DocumentViewModel<Router: RouterGraph>: ViewModel<Router, DocumentState> {
         )
       }
     } else {
-      setState {
-        $0.copy(
-          isLoading: false,
-          pdfDocument: nil,
-          error: ContentErrorView.Config(
-            title: .genericErrorMessage,
-            description: .genericErrorDocumentNotFound,
-            cancelAction: { Task { await self.initiate() } },
-            action: { Task { await self.initiate() } }
-          )
-        )
+      setErrorState {
+        self.router.pop()
       }
+    }
+  }
+  
+  private func setErrorState(cancelAction: @escaping () -> ()) {
+    setState {
+      $0.copy(
+        isLoading: false,
+        error: ContentErrorView.Config(
+          title: .genericErrorMessage,
+          description: .genericErrorDocumentNotFound,
+          cancelAction: cancelAction,
+          action: { Task { await self.initiate() } }
+        )
+      )
     }
   }
 }
