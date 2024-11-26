@@ -49,8 +49,7 @@ final class RQESInteractorImpl: RQESInteractor {
           authFlowRedirectionURI: rQESConfig.authFlowRedirectionURI,
           scaBaseURL: qtsp.scaURL
         ),
-        defaultHashAlgorithmOID: rQESConfig.hashAlgorithm,
-        defaultSigningAlgorithmOID:rQESConfig.signingAlgorithm
+        defaultHashAlgorithmOID: rQESConfig.hashAlgorithm
       )
     )
   }
