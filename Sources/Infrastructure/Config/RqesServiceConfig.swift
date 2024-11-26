@@ -20,20 +20,17 @@ public struct RqesServiceConfig: Sendable {
   public let clientId: String
   public let clientSecret: String
   public let authFlowRedirectionURI: String
-  public let signingAlgorithm: SigningAlgorithmOID
   public let hashAlgorithm: HashAlgorithmOID
 
   public init(
     clientId: String,
     clientSecret: String,
     authFlowRedirectionURI: String,
-    signingAlgorithm: SigningAlgorithmOID,
     hashAlgorithm: HashAlgorithmOID
   ) {
     self.clientId = clientId
     self.clientSecret = clientSecret
     self.authFlowRedirectionURI = authFlowRedirectionURI
-    self.signingAlgorithm = signingAlgorithm
     self.hashAlgorithm = hashAlgorithm
   }
 }

@@ -61,9 +61,7 @@ final class RQESInteractorImpl: RQESInteractor {
        let rQESServiceAuthorized {
       
       let authorizedCredential = try await rQESServiceAuthorized.authorizeCredential(authorizationCode: authorizationCode)
-      let signedDocuments = try await authorizedCredential.signDocuments(
-        signAlgorithmOID: self.rqesUi.getRQESConfig().signingAlgorithm
-      )
+      let signedDocuments = try await authorizedCredential.signDocuments()
       
       return signedDocuments.first
     } else {
