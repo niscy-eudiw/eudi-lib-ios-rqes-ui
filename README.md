@@ -48,7 +48,130 @@ dependencies: [
 
 ## How to use
 
-TBD
+### Configuration
+
+Implement the `EudiRQESUiConfig` protocol and supply all the necessary options for the SDK.
+
+```swift
+final class RQESConfigImpl: EudiRQESUiConfig {
+
+  var rssps: [QTSPData]
+
+  // Optional. Default is false.
+  var printLogs: Bool
+
+  var rQESConfig: RqesServiceConfig
+
+  // Optional. Default English translations will be used if not set.
+  var translations: [String : [LocalizableKey : String]]
+
+  // Optional. Default theme will be used if not set.
+  var theme: ThemeProtocol
+}
+```
+
+Example:
+
+```swift
+final class RQESConfigImpl: EudiRQESUiConfig {
+
+  var rssps: [QTSPData] {
+    return .init(
+            name: "your_dev_name",
+            uri: URL(string: "your_dev_uri")!,
+            scaURL: "your_dev_sca"
+        )
+  }
+
+  var printLogs: Bool {
+    true
+  }
+
+  var rQESConfig: RqesServiceConfig {
+    return .init(
+            clientId: "your_dev_clientid",
+            clientSecret: "your_dev_secret",
+            authFlowRedirectionURI: "your_registered_deeplink",
+            hashAlgorithm: .SHA256
+        )
+    }
+}
+```
+
+### Setup
+
+Register the `authFlowRedirectionURI` in your application's plist to ensure the RQES Service can trigger your application.
+It is the application's responsibility to retrieve the `code` query parameter from the deep link and pass it to the SDK to continue the flow.
+
+```Xml
+<array>
+	<dict>
+		<key>CFBundleTypeRole</key>
+		<string>Editor</string>
+		<key>CFBundleURLName</key>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+		<key>CFBundleURLSchemes</key>
+		<array>
+			<string>rqes</string>
+		</array>
+	</dict>
+</array>
+```
+
+Initialize the SDK in your AppDelegate by providing your configuration.
+
+```swift
+func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
+  ) -> Bool {
+
+    // RQES SDK Setup
+    EudiRQESUi.init(config: rqes_config)
+
+    return true
+  }
+```
+
+Alternatively, you can initialize the SDK wherever needed, avoiding initialization in the AppDelegate. 
+However, you must first ensure instance availability before performing any actions.
+
+```swift
+let eudiRQESUi: EudiRQESUi
+do {
+  eudiRQESUi = try EudiRQESUi.instance()
+} catch {
+  eudiRQESUi = EudiRQESUi.init(config: rqes_config)
+}
+```
+
+### Initialization
+
+Start the signing process by providing your TopViewController and the URL of the selected file.
+
+```swift
+try await EudiRQESUi.instance().initiate(
+  on: view_controller,
+  fileUrl: file_url
+)
+```
+
+Resume the signing process once the `authFlowRedirectionURI` triggers your application following the PID presentation process. 
+Provide your TopViewController and the extracted code from the `authFlowRedirectionURI` deep link.
+
+```swift
+try await EudiRQESUi.instance().resume(
+  on: view_controller,
+  authorizationCode: code
+)
+```
+
+If you are using SwiftUI, you can retrieve the TopViewController using the bundled SDK's UIApplication extension function.
+Please note that if the application is transitioning from the background to the foreground, this function may return nil for the first ~500 milliseconds.
+
+```swift
+let controller = await UIApplication.shared.topViewController()
+```
 
 ## How to contribute
 
