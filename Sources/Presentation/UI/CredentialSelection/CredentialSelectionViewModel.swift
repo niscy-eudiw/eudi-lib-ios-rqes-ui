@@ -53,8 +53,8 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
   
   func initiate() async {
     do {
-      try await fetchCredentials()
       try await getDocument()
+      try await fetchCredentials()
     } catch {
       setErrorState {
         self.onCancel()
