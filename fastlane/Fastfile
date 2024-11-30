@@ -27,8 +27,7 @@ lane :test do
   }
 
   if ENV['CI'] 
-    params[:xcargs] = "-skipPackagePluginValidation"
-    params[:xcargs] = "-skipMacroValidation"
+    params[:xcargs] = "-skipPackagePluginValidation -skipMacroValidation"
   end
 
   run_tests(params)
