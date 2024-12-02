@@ -19,9 +19,12 @@ platform :ios do
 
 desc "Run package tests with coverage"
 lane :test do
+
+  FileUtils.remove_dir "../xcov_output", true
+
   params = {
     package_path: '.',
-    scheme: 'EudiRQESUi',
+    scheme: ENV['SCHEME'],
     devices: ['iPhone 16 Pro Max'], 
     result_bundle: true
   }
@@ -31,6 +34,17 @@ lane :test do
   end
 
   run_tests(params)
+
+  xcov(
+    scheme: ENV['SCHEME'],
+    output_directory: "xcov_output",
+    is_swift_package: true
+  )
+
+  if ENV['CI'] != 'true'
+    sh 'open ../xcov_output/index.html'
+  end
+
 end
 
 desc "Deploy tags"
