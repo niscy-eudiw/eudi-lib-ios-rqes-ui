@@ -32,15 +32,18 @@ protocol RQESInteractor: Sendable {
 final class RQESInteractorImpl: RQESInteractor {
   
   private let rqesUi: EudiRQESUi
+  private let rqesController: RQESController
   
-  init(rqesUi: EudiRQESUi) {
+  init(rqesUi: EudiRQESUi, rqesController: RQESController) {
     self.rqesUi = rqesUi
+    self.rqesController = rqesController
   }
   
   func createRQESService(_ qtsp: QTSPData) async throws {
     let rQESConfig = await rqesUi.getRQESConfig()
     guard
-      let fileExtension = await getSession()?.document?.uri.pathExtension
+      let fileExtension = await getSession()?.document?.uri.pathExtension,
+      fileExtension.isEmpty == false
     else {
       throw EudiRQESUiError.noDocumentProvided
     }
@@ -62,10 +65,8 @@ final class RQESInteractorImpl: RQESInteractor {
   
   func signDocument() async throws -> Document? {
     let authorizationCode = await self.getSession()?.code
-    let rQESServiceAuthorized = await self.rqesUi.getRQESServiceAuthorized()
-    if let authorizationCode, let rQESServiceAuthorized {
-      let authorizedCredential = try await rQESServiceAuthorized.authorizeCredential(authorizationCode: authorizationCode)
-      let signedDocuments = try await authorizedCredential.signDocuments()
+    if let authorizationCode {
+      let signedDocuments = try await rqesController.signDocuments(authorizationCode)
       return signedDocuments.first
     } else {
       throw EudiRQESUiError.unableToSignHashDocument
@@ -93,17 +94,15 @@ final class RQESInteractorImpl: RQESInteractor {
   }
   
   func openAuthrorizationURL() async throws -> URL {
-    guard let rqesService = await self.rqesUi.getRQESService() else {
-      throw EudiRQESUiError.noRQESServiceProvided
-    }
-    let _ = try await rqesService.getRSSPMetadata()
-    let authorizationUrl = try await rqesService.getServiceAuthorizationUrl()
+    let _ = try await rqesController.getRSSPMetadata()
+    let authorizationUrl = try await rqesController.getServiceAuthorizationUrl()
     return authorizationUrl
   }
   
   func openCredentialAuthrorizationURL() async throws -> URL {
     if let uri = await self.getSession()?.document?.uri,
        let certificate = await self.getSession()?.certificate {
+      
       let unsignedDocuments = [
         Document(
           id: UUID().uuidString,
@@ -111,33 +110,24 @@ final class RQESInteractorImpl: RQESInteractor {
         )
       ]
       
-      let credentialAuthorizationUrl = try await self.rqesUi.getRQESServiceAuthorized()?.getCredentialAuthorizationUrl(
+      let credentialAuthorizationUrl = try await rqesController.getCredentialAuthorizationUrl(
         credentialInfo: certificate,
         documents: unsignedDocuments
       )
+      return credentialAuthorizationUrl
       
-      if let credentialAuthorizationUrl {
-        return credentialAuthorizationUrl
-      } else {
-        throw EudiRQESUiError.unableToOpenURL
-      }
     } else {
       throw EudiRQESUiError.noDocumentProvided
     }
   }
   
   func fetchCredentials() async throws -> Result<[CredentialInfo], any Error> {
-    if let rqesService = await self.rqesUi.getRQESService(),
-       let authorizationCode = await self.getSession()?.code {
+    if let authorizationCode = await self.getSession()?.code {
       do {
-        let rQESServiceAuthorized = try await rqesService.authorizeService(authorizationCode: authorizationCode)
+        let rQESServiceAuthorized = try await rqesController.authorizeService(authorizationCode)
         await self.rqesUi.setRQESServiceAuthorized(rQESServiceAuthorized)
-        let credentials = try? await self.rqesUi.getRQESServiceAuthorized()?.getCredentialsList()
-        if let credentials {
-          return .success(credentials)
-        } else {
-          return .failure(EudiRQESUiError.unableToFetchCredentials)
-        }
+        let credentials = try await rqesController.getCredentialsList()
+        return .success(credentials)
       } catch {
         return .failure(error)
       }

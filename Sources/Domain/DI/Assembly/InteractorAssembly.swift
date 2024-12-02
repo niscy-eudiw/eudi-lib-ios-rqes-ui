@@ -21,7 +21,10 @@ final class InteractorAssembly: Assembly {
   
   func assemble(container: Container) {
     container.register(RQESInteractor.self) { r in
-      RQESInteractorImpl(rqesUi: EudiRQESUi.forceInstance())
+      RQESInteractorImpl(
+        rqesUi: EudiRQESUi.forceInstance(),
+        rqesController: r.force(RQESController.self)
+      )
     }
     .inObjectScope(ObjectScope.transient)
   }

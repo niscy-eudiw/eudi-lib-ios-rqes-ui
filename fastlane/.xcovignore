@@ -23,6 +23,7 @@
 # Controller
 - LogController.swift
 - PreferencesController.swift
+- RQESController.swift
 
 # Extensions
 - .*Extensions.swift
