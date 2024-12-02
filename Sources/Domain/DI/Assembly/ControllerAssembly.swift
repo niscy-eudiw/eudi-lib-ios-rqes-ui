@@ -22,7 +22,10 @@ final class ControllerAssembly: Assembly {
   func assemble(container: Container) {
     
     container.register(LocalizationController.self) { r in
-      LocalizationControllerImpl(config: EudiRQESUi.forceConfig())
+      LocalizationControllerImpl(
+        config: EudiRQESUi.forceConfig(),
+        locale: Locale.current
+      )
     }
     .inObjectScope(ObjectScope.container)
     

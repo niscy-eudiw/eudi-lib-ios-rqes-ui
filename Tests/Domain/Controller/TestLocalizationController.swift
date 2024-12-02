@@ -14,14 +14,75 @@
  * governing permissions and limitations under the Licence.
  */
 import XCTest
+import Cuckoo
 @testable import EudiRQESUi
 
 final class TestLocalizationController: XCTestCase {
   
+  var config: MockEudiRQESUiConfig!
+  var controller: LocalizationController!
+  
   override func setUp() {
+    self.config = MockEudiRQESUiConfig()
+    self.controller = LocalizationControllerImpl(
+      config: config,
+      locale: .init(identifier: "en_US")
+    )
   }
   
   override func tearDown() {
+    self.config = nil
+    self.controller = nil
+  }
+  
+  func testGet_WhenTranslationIsAvailableWithoutArgs_ReturnsStringTranslation() {
+    // Given
+    let customGenericErrorTranslation = "CustomGenericError"
+    stub(config) { mock in
+      when(mock.translations.get).thenReturn(
+        ["en_US": [.genericErrorMessage: customGenericErrorTranslation]]
+      )
+    }
+    
+    let result = self.controller.get(with: .genericErrorMessage)
+    
+    XCTAssertEqual(result, customGenericErrorTranslation)
+  }
+  
+  func testGet_WhenTranslationIsAvailableWithoutArgs_ReturnsLocalizedStringKeyTranslation() {
+    // Given
+    let customGenericErrorTranslation = "CustomGenericError"
+    stub(config) { mock in
+      when(mock.translations.get).thenReturn(
+        ["en_US": [.genericErrorMessage: customGenericErrorTranslation]]
+      )
+    }
+    
+    let result: LocalizedStringKey = self.controller.get(with: .genericErrorMessage, args: [])
+    
+    XCTAssertEqual(result, customGenericErrorTranslation.toLocalizedStringKey)
+  }
+  
+  func testGet_WhenTranslationIsNotAvailableWithoutArgs_ReturnsDefaultStringTranslation() {
+    // Given
+    stub(config) { mock in
+      when(mock.translations.get).thenReturn([:])
+    }
+    
+    let result = self.controller.get(with: .genericErrorMessage)
+    
+    XCTAssertEqual(result, LocalizableKey.genericErrorMessage.defaultTranslation(args: []))
+  }
+  
+  func testGet_WhenTranslationIsNotAvailableWithArgs_ReturnsDefaultStringTranslation() {
+    // Given
+    stub(config) { mock in
+      when(mock.translations.get).thenReturn([:])
+    }
+    
+    let result: String = self.controller.get(with: .signedBy, args: ["NISCY"])
+    
+    XCTAssertEqual(result, LocalizableKey.signedBy.defaultTranslation(args: ["NISCY"]))
   }
   
 }
