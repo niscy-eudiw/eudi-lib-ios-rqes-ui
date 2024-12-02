@@ -50,7 +50,7 @@ class DocumentViewModel<Router: RouterGraph>: ViewModel<Router, DocumentState> {
   }
   
   func initiate() async {
-    let uri = await interactor.getCurrentSelection()?.document?.uri
+    let uri = await interactor.getSession()?.document?.uri
     if let uri {
       let source = DocumentSource.pdfUrl(uri)
       loadDocument(from: source)

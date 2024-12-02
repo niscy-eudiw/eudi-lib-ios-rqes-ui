@@ -11,9 +11,6 @@
 - .*View.swift
 - .*ViewController.swift
 - .*ViewModel.swift
-- .*Shape.swift
-- .*Style.swift
-- .*Styles.swift
 - .*Modifier.swift
 - .*Content.swift
 - .*UIModel.swift
@@ -25,9 +22,7 @@
 
 # Controller
 - LogController.swift
-
-# Entry
-- EudiRQESUi.swift
+- PreferencesController.swift
 
 # Extensions
 - .*Extensions.swift

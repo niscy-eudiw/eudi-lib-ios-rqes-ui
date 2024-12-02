@@ -733,6 +733,14 @@ import Cuckoo
 
 
 
+// MARK: - Mocks generated from file: 'Sources/Domain/Entities/SessionData.swift'
+
+import Cuckoo
+import RqesKit
+@testable import EudiRQESUi
+
+
+
 // MARK: - Mocks generated from file: 'Sources/Domain/Extension/Document+Extensions.swift'
 
 import Cuckoo
@@ -792,13 +800,13 @@ class MockRQESInteractor: RQESInteractor, Cuckoo.ProtocolMock, @unchecked Sendab
         )
     }
     
-    func getCurrentSelection() async -> CurrentSelection? {
+    func getSession() async -> SessionData? {
         return await cuckoo_manager.call(
-            "getCurrentSelection() async -> CurrentSelection?",
+            "getSession() async -> SessionData?",
             parameters: (),
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.getCurrentSelection()
+            defaultCall: await __defaultImplStub!.getSession()
         )
     }
     
@@ -897,10 +905,10 @@ class MockRQESInteractor: RQESInteractor, Cuckoo.ProtocolMock, @unchecked Sendab
             ))
         }
         
-        func getCurrentSelection() -> Cuckoo.ProtocolStubFunction<(), CurrentSelection?> {
+        func getSession() -> Cuckoo.ProtocolStubFunction<(), SessionData?> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockRQESInteractor.self,
-                method: "getCurrentSelection() async -> CurrentSelection?",
+                method: "getSession() async -> SessionData?",
                 parameterMatchers: matchers
             ))
         }
@@ -995,10 +1003,10 @@ class MockRQESInteractor: RQESInteractor, Cuckoo.ProtocolMock, @unchecked Sendab
         
         
         @discardableResult
-        func getCurrentSelection() -> Cuckoo.__DoNotUse<(), CurrentSelection?> {
+        func getSession() -> Cuckoo.__DoNotUse<(), SessionData?> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "getCurrentSelection() async -> CurrentSelection?",
+                "getSession() async -> SessionData?",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -1111,8 +1119,8 @@ class RQESInteractorStub:RQESInteractor, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (Document?).self)
     }
     
-    func getCurrentSelection() async -> CurrentSelection? {
-        return DefaultValueRegistry.defaultValue(for: (CurrentSelection?).self)
+    func getSession() async -> SessionData? {
+        return DefaultValueRegistry.defaultValue(for: (SessionData?).self)
     }
     
     func getQTSps() async -> [QTSPData] {

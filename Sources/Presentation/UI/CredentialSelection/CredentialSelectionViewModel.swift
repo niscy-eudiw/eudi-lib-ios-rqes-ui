@@ -114,7 +114,7 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
   }
   
   private func getDocument() async throws {
-    let documentName = await interactor.getCurrentSelection()?.document?.documentName
+    let documentName = await interactor.getSession()?.document?.documentName
     
     if let documentName {
       setState {
