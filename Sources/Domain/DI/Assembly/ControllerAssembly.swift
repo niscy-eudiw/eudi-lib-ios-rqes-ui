@@ -38,5 +38,10 @@ final class ControllerAssembly: Assembly {
       PreferencesControllerImpl()
     }
     .inObjectScope(ObjectScope.transient)
+    
+    container.register(RQESController.self) { r in
+      RQESControllerImpl(rqesUi: EudiRQESUi.forceInstance())
+    }
+    .inObjectScope(ObjectScope.transient)
   }
 }

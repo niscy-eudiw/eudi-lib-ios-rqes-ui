@@ -27,7 +27,7 @@ public final actor EudiRQESUi {
   private var session = SessionData()
 
   private static var _rqesService: RQESService?
-  private static var _rQESServiceAuthorized: RQESServiceAuthorized?
+  private static var _rqesServiceAuthorized: RQESServiceAuthorized?
 
   @discardableResult
   public init(config: any EudiRQESUiConfig) {
@@ -41,18 +41,18 @@ public final actor EudiRQESUi {
     config: any EudiRQESUiConfig,
     router: any RouterGraph,
     state: State = .none,
-    selection: SessionData = .init(),
+    session: SessionData = .init(),
     rqesService: RQESService? = nil,
-    rQESServiceAuthorized: RQESServiceAuthorized? = nil
+    rqesServiceAuthorized: RQESServiceAuthorized? = nil
   ) {
     DIGraph.shared.load()
     self.router = router
-    self.session = selection
+    self.session = session
     Self._config = config
     Self._state = state
     Self._shared = self
     Self._rqesService = rqesService
-    Self._rQESServiceAuthorized = rQESServiceAuthorized
+    Self._rqesServiceAuthorized = rqesServiceAuthorized
   }
 
   @MainActor
@@ -191,11 +191,11 @@ extension EudiRQESUi {
   }
 
   func getRQESServiceAuthorized() -> RQESServiceAuthorized? {
-    Self._rQESServiceAuthorized
+    Self._rqesServiceAuthorized
   }
 
   func setRQESServiceAuthorized(_ service: RQESServiceAuthorized?) {
-    Self._rQESServiceAuthorized = service
+    Self._rqesServiceAuthorized = service
   }
   
   func getRQESConfig() -> RqesServiceConfig {
