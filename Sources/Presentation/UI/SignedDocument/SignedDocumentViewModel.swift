@@ -56,7 +56,7 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
     
     do {
       let signedDocument = try await interactor.signDocument()
-      let selection = await interactor.getCurrentSelection()
+      let selection = await interactor.getSession()
       
       pdfURL = signedDocument?.fileURL
       if let fileURL = signedDocument?.fileURL {
