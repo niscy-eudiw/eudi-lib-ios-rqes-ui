@@ -704,6 +704,13 @@ class DIGraphTypeStub:DIGraphType, @unchecked Sendable {
 
 
 
+// MARK: - Mocks generated from file: 'Sources/Domain/Entities/DocumentData.swift'
+
+import Cuckoo
+@testable import EudiRQESUi
+
+
+
 // MARK: - Mocks generated from file: 'Sources/Domain/Entities/Error/EudiRQESUiError.swift'
 
 import Cuckoo
@@ -713,6 +720,13 @@ import Foundation
 
 
 // MARK: - Mocks generated from file: 'Sources/Domain/Entities/Localization/LocalizableKey.swift'
+
+import Cuckoo
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: 'Sources/Domain/Entities/QTSPData.swift'
 
 import Cuckoo
 @testable import EudiRQESUi
@@ -2214,20 +2228,6 @@ class ViewStateStub:ViewState, @unchecked Sendable {
 
 import Cuckoo
 import RqesKit
-@testable import EudiRQESUi
-
-
-
-// MARK: - Mocks generated from file: 'Sources/Presentation/Entities/DocumentData.swift'
-
-import Cuckoo
-@testable import EudiRQESUi
-
-
-
-// MARK: - Mocks generated from file: 'Sources/Presentation/Entities/QTSPData.swift'
-
-import Cuckoo
 @testable import EudiRQESUi
 
 
