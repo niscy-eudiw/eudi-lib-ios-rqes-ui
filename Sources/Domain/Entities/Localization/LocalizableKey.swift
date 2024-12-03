@@ -42,6 +42,7 @@ public enum LocalizableKey: String, Sendable {
   case cancelSigningProcessSubtitle
   case genericErrorButtonRetry
   case genericErrorMessage
+  case genericServiceErrorMessage
   case genericErrorDescription
   case genericErrorDocumentNotFound
   case genericErrorQtspNotFound
@@ -49,6 +50,7 @@ public enum LocalizableKey: String, Sendable {
   case closeSharingDocument
   case close
   case share
+  case unableToOpenBrowser
 
   func defaultTranslation(args: [String]) -> String {
     let value = switch self {
@@ -78,6 +80,7 @@ public enum LocalizableKey: String, Sendable {
     case .cancelSigningProcessSubtitle: "Cancel  will will redirect you back to the document list without signing your document."
     case .genericErrorButtonRetry: "TRY AGAIN"
     case .genericErrorMessage: "Oups! Something went wrong"
+    case .genericServiceErrorMessage: "Oups! Something went wrong with the RQES Signing Service"
     case .genericErrorDescription: "If the issue persists, please contact customer support"
     case .genericErrorDocumentNotFound: "No Document data found"
     case .genericErrorQtspNotFound: "No selected QTSP found"
@@ -85,6 +88,7 @@ public enum LocalizableKey: String, Sendable {
     case .closeSharingDocument: "Closing will redirect you back to the dashboard without saving or sharing the document."
     case .close: "Close"
     case .share: "Share"
+    case .unableToOpenBrowser: "Unable to open browser"
     }
     return value.format(arguments: args)
   }

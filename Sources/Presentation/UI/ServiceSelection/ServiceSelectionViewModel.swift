@@ -55,7 +55,7 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
         .copy(error: nil)
       }
     } else {
-      setErrorState {
+      setErrorState(.genericErrorQtspNotFound) {
         self.router.pop()
       }
     }
@@ -77,7 +77,7 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
         if let selectedItem {
           try await interactor.createRQESService(selectedItem)
         } else {
-          setErrorState {
+          setErrorState(.genericErrorQtspNotFound) {
             self.setState { $0.copy(error: nil) }
           }
         }
@@ -86,25 +86,28 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
         self.onPause()
         
         await UIApplication.shared.openURLIfPossible(authorizationUrl) {
-          self.setErrorState {
+          self.setErrorState(.unableToOpenBrowser) {
             self.setState { $0.copy(error: nil) }
           }
         }
       } catch {
-        setErrorState {
+        setErrorState(.genericServiceErrorMessage) {
           self.router.pop()
         }
       }
     }
   }
   
-  private func setErrorState(cancelAction: @escaping () -> ()) {
+  private func setErrorState(
+    _ desc: LocalizableKey,
+    cancelAction: @escaping () -> ()
+  ) {
     setState {
       $0.copy(
         isLoading: false,
         error: ContentErrorView.Config(
           title: .genericErrorMessage,
-          description: .genericErrorQtspNotFound,
+          description: desc,
           cancelAction: cancelAction,
           action: { Task { await self.initiate() } }
         )
