@@ -68,7 +68,6 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
   }
   
   func nextStep() {
-    onPause()
     openAuthorization()
   }
   
@@ -82,7 +81,9 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
             self.setState { $0.copy(error: nil) }
           }
         }
+        
         let authorizationUrl = try await interactor.openAuthrorizationURL()
+        self.onPause()
         
         await UIApplication.shared.openURLIfPossible(authorizationUrl) {
           self.setErrorState {

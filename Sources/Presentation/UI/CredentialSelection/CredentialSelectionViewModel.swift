@@ -71,14 +71,16 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
   }
   
   func nextStep() {
-    onPause()
     openAuthorization()
   }
   
   func openAuthorization() {
     Task {
       do {
+        
         let authorizationUrl = try await interactor.openCredentialAuthrorizationURL()
+        self.onPause()
+        
         await UIApplication.shared.openURLIfPossible(authorizationUrl) {
           self.setErrorState {
             self.setState { $0.copy(error: nil) }
