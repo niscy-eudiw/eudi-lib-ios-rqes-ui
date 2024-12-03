@@ -54,8 +54,8 @@ struct TestConstants {
     )
   }
   
-  static func getCredentialInfo() async throws -> CredentialInfo {
-    return try JSONDecoder().decode(CredentialInfo.self, from: Data(mockCredentialJson.utf8))
+  static func getCredentialInfo() async throws -> CredentialsListResponse.CredentialInfo {
+    return try JSONDecoder().decode(CredentialsListResponse.CredentialInfo.self, from: Data(mockCredentialJson.utf8))
   }
   
   static func getMetaData() async throws -> RSSPMetadata {
