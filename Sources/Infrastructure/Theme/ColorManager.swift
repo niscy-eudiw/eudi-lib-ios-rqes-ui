@@ -60,7 +60,7 @@ final class ColorManager: ColorManagerProtocol {
   }
 
   var background: Color {
-    Color("Background", bundle: .module)
+    Color("background", bundle: .module)
   }
 
   var surfaceContriner: Color {
