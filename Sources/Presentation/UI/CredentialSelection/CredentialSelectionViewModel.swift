@@ -129,7 +129,6 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
     if let documentName {
       setState {
         $0.copy(
-          isLoading: false,
           documentName: documentName
         )
         .copy(error: nil)

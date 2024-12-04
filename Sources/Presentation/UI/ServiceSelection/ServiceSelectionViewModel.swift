@@ -35,7 +35,7 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
     super.init(
       router: router,
       initialState: ServiceSelectionState(
-        isLoading: true,
+        isLoading: false,
         services: [],
         error: nil
       )
@@ -49,7 +49,6 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
     if !services.isEmpty {
       setState {
         $0.copy(
-          isLoading: false,
           services: services
         )
         .copy(error: nil)
@@ -73,6 +72,11 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
   
   func openAuthorization() {
     Task {
+      
+      setState {
+        $0.copy(isLoading: true).copy(error: nil)
+      }
+      
       do {
         if let selectedItem {
           try await interactor.createRQESService(selectedItem)
