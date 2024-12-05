@@ -80,7 +80,7 @@ public enum LocalizableKey: String, Sendable {
     case .cancelSigningProcessSubtitle: "Cancel  will will redirect you back to the document list without signing your document."
     case .genericErrorButtonRetry: "TRY AGAIN"
     case .genericErrorMessage: "Oups! Something went wrong"
-    case .genericServiceErrorMessage: "Oups! Something went wrong with the RQES Signing Service"
+    case .genericServiceErrorMessage: "It seems the RQES Signing service is unavailable. Please try again later."
     case .genericErrorDescription: "If the issue persists, please contact customer support"
     case .genericErrorDocumentNotFound: "No Document data found"
     case .genericErrorQtspNotFound: "No selected QTSP found"
