@@ -24,15 +24,20 @@ protocol LocalizationController: Sendable {
 final class LocalizationControllerImpl: LocalizationController {
   
   private let config: any EudiRQESUiConfig
+  private let locale: Locale
 
-  init(config: any EudiRQESUiConfig) {
+  init(
+    config: any EudiRQESUiConfig,
+    locale: Locale
+  ) {
     self.config = config
+    self.locale = locale
   }
 
   func get(with key: LocalizableKey, args: [String]) -> String {
     guard
       !config.translations.isEmpty,
-      let translations = config.translations[Locale.current.identifier],
+      let translations = config.translations[locale.identifier],
       let translation = translations[key]
     else {
       return key.defaultTranslation(args: args)

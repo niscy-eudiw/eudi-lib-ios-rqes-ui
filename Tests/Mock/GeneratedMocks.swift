@@ -594,6 +594,297 @@ class PreferencesControllerStub:PreferencesController, @unchecked Sendable {
 
 
 
+// MARK: - Mocks generated from file: 'Sources/Domain/Controller/RQESController.swift'
+
+import Cuckoo
+import RqesKit
+import Foundation
+@testable import EudiRQESUi
+
+class MockRQESController: RQESController, Cuckoo.ProtocolMock, @unchecked Sendable {
+    typealias MocksType = RQESController
+    typealias Stubbing = __StubbingProxy_RQESController
+    typealias Verification = __VerificationProxy_RQESController
+
+    // Original typealiases
+
+    let cuckoo_manager = Cuckoo.MockManager.preconfiguredManager ?? Cuckoo.MockManager(hasParent: false)
+
+    private var __defaultImplStub: (any RQESController)?
+
+    func enableDefaultImplementation(_ stub: any RQESController) {
+        __defaultImplStub = stub
+        cuckoo_manager.enableDefaultStubImplementation()
+    }
+
+    
+    func getRSSPMetadata() async throws -> RSSPMetadata {
+        return try await cuckoo_manager.callThrows(
+            "getRSSPMetadata() async throws -> RSSPMetadata",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.getRSSPMetadata()
+        )
+    }
+    
+    func getServiceAuthorizationUrl() async throws -> URL {
+        return try await cuckoo_manager.callThrows(
+            "getServiceAuthorizationUrl() async throws -> URL",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.getServiceAuthorizationUrl()
+        )
+    }
+    
+    func authorizeService(_ p0: String) async throws -> RQESServiceAuthorized {
+        return try await cuckoo_manager.callThrows(
+            "authorizeService(_ p0: String) async throws -> RQESServiceAuthorized",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.authorizeService(p0)
+        )
+    }
+    
+    func authorizeCredential(_ p0: String) async throws -> RQESServiceCredentialAuthorized {
+        return try await cuckoo_manager.callThrows(
+            "authorizeCredential(_ p0: String) async throws -> RQESServiceCredentialAuthorized",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.authorizeCredential(p0)
+        )
+    }
+    
+    func signDocuments(_ p0: String) async throws -> [Document] {
+        return try await cuckoo_manager.callThrows(
+            "signDocuments(_ p0: String) async throws -> [Document]",
+            parameters: (p0),
+            escapingParameters: (p0),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.signDocuments(p0)
+        )
+    }
+    
+    func getCredentialsList() async throws -> [CredentialInfo] {
+        return try await cuckoo_manager.callThrows(
+            "getCredentialsList() async throws -> [CredentialInfo]",
+            parameters: (),
+            escapingParameters: (),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.getCredentialsList()
+        )
+    }
+    
+    func getCredentialAuthorizationUrl(credentialInfo p0: CredentialInfo, documents p1: [Document]) async throws -> URL {
+        return try await cuckoo_manager.callThrows(
+            "getCredentialAuthorizationUrl(credentialInfo p0: CredentialInfo, documents p1: [Document]) async throws -> URL",
+            parameters: (p0, p1),
+            escapingParameters: (p0, p1),
+            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+            defaultCall: await __defaultImplStub!.getCredentialAuthorizationUrl(credentialInfo: p0, documents: p1)
+        )
+    }
+
+    struct __StubbingProxy_RQESController: Cuckoo.StubbingProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+    
+        init(manager: Cuckoo.MockManager) {
+            self.cuckoo_manager = manager
+        }
+        
+        func getRSSPMetadata() -> Cuckoo.ProtocolStubThrowingFunction<(), RSSPMetadata> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockRQESController.self,
+                method: "getRSSPMetadata() async throws -> RSSPMetadata",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func getServiceAuthorizationUrl() -> Cuckoo.ProtocolStubThrowingFunction<(), URL> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockRQESController.self,
+                method: "getServiceAuthorizationUrl() async throws -> URL",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func authorizeService<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), RQESServiceAuthorized> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockRQESController.self,
+                method: "authorizeService(_ p0: String) async throws -> RQESServiceAuthorized",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func authorizeCredential<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), RQESServiceCredentialAuthorized> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockRQESController.self,
+                method: "authorizeCredential(_ p0: String) async throws -> RQESServiceCredentialAuthorized",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func signDocuments<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), [Document]> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockRQESController.self,
+                method: "signDocuments(_ p0: String) async throws -> [Document]",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func getCredentialsList() -> Cuckoo.ProtocolStubThrowingFunction<(), [CredentialInfo]> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return .init(stub: cuckoo_manager.createStub(for: MockRQESController.self,
+                method: "getCredentialsList() async throws -> [CredentialInfo]",
+                parameterMatchers: matchers
+            ))
+        }
+        
+        func getCredentialAuthorizationUrl<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(credentialInfo p0: M1, documents p1: M2) -> Cuckoo.ProtocolStubThrowingFunction<(CredentialInfo, [Document]), URL> where M1.MatchedType == CredentialInfo, M2.MatchedType == [Document] {
+            let matchers: [Cuckoo.ParameterMatcher<(CredentialInfo, [Document])>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+            return .init(stub: cuckoo_manager.createStub(for: MockRQESController.self,
+                method: "getCredentialAuthorizationUrl(credentialInfo p0: CredentialInfo, documents p1: [Document]) async throws -> URL",
+                parameterMatchers: matchers
+            ))
+        }
+    }
+
+    struct __VerificationProxy_RQESController: Cuckoo.VerificationProxy {
+        private let cuckoo_manager: Cuckoo.MockManager
+        private let callMatcher: Cuckoo.CallMatcher
+        private let sourceLocation: Cuckoo.SourceLocation
+    
+        init(manager: Cuckoo.MockManager, callMatcher: Cuckoo.CallMatcher, sourceLocation: Cuckoo.SourceLocation) {
+            self.cuckoo_manager = manager
+            self.callMatcher = callMatcher
+            self.sourceLocation = sourceLocation
+        }
+        
+        
+        @discardableResult
+        func getRSSPMetadata() -> Cuckoo.__DoNotUse<(), RSSPMetadata> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "getRSSPMetadata() async throws -> RSSPMetadata",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func getServiceAuthorizationUrl() -> Cuckoo.__DoNotUse<(), URL> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "getServiceAuthorizationUrl() async throws -> URL",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func authorizeService<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(String), RQESServiceAuthorized> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "authorizeService(_ p0: String) async throws -> RQESServiceAuthorized",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func authorizeCredential<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(String), RQESServiceCredentialAuthorized> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "authorizeCredential(_ p0: String) async throws -> RQESServiceCredentialAuthorized",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func signDocuments<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(String), [Document]> where M1.MatchedType == String {
+            let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
+            return cuckoo_manager.verify(
+                "signDocuments(_ p0: String) async throws -> [Document]",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func getCredentialsList() -> Cuckoo.__DoNotUse<(), [CredentialInfo]> {
+            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
+            return cuckoo_manager.verify(
+                "getCredentialsList() async throws -> [CredentialInfo]",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+        
+        
+        @discardableResult
+        func getCredentialAuthorizationUrl<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(credentialInfo p0: M1, documents p1: M2) -> Cuckoo.__DoNotUse<(CredentialInfo, [Document]), URL> where M1.MatchedType == CredentialInfo, M2.MatchedType == [Document] {
+            let matchers: [Cuckoo.ParameterMatcher<(CredentialInfo, [Document])>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
+            return cuckoo_manager.verify(
+                "getCredentialAuthorizationUrl(credentialInfo p0: CredentialInfo, documents p1: [Document]) async throws -> URL",
+                callMatcher: callMatcher,
+                parameterMatchers: matchers,
+                sourceLocation: sourceLocation
+            )
+        }
+    }
+}
+
+class RQESControllerStub:RQESController, @unchecked Sendable {
+
+
+    
+    func getRSSPMetadata() async throws -> RSSPMetadata {
+        return DefaultValueRegistry.defaultValue(for: (RSSPMetadata).self)
+    }
+    
+    func getServiceAuthorizationUrl() async throws -> URL {
+        return DefaultValueRegistry.defaultValue(for: (URL).self)
+    }
+    
+    func authorizeService(_ p0: String) async throws -> RQESServiceAuthorized {
+        return DefaultValueRegistry.defaultValue(for: (RQESServiceAuthorized).self)
+    }
+    
+    func authorizeCredential(_ p0: String) async throws -> RQESServiceCredentialAuthorized {
+        return DefaultValueRegistry.defaultValue(for: (RQESServiceCredentialAuthorized).self)
+    }
+    
+    func signDocuments(_ p0: String) async throws -> [Document] {
+        return DefaultValueRegistry.defaultValue(for: ([Document]).self)
+    }
+    
+    func getCredentialsList() async throws -> [CredentialInfo] {
+        return DefaultValueRegistry.defaultValue(for: ([CredentialInfo]).self)
+    }
+    
+    func getCredentialAuthorizationUrl(credentialInfo p0: CredentialInfo, documents p1: [Document]) async throws -> URL {
+        return DefaultValueRegistry.defaultValue(for: (URL).self)
+    }
+}
+
+
+
+
 // MARK: - Mocks generated from file: 'Sources/Domain/DI/Graph/DIGraph.swift'
 
 import Cuckoo
@@ -704,6 +995,13 @@ class DIGraphTypeStub:DIGraphType, @unchecked Sendable {
 
 
 
+// MARK: - Mocks generated from file: 'Sources/Domain/Entities/DocumentData.swift'
+
+import Cuckoo
+@testable import EudiRQESUi
+
+
+
 // MARK: - Mocks generated from file: 'Sources/Domain/Entities/Error/EudiRQESUiError.swift'
 
 import Cuckoo
@@ -715,6 +1013,21 @@ import Foundation
 // MARK: - Mocks generated from file: 'Sources/Domain/Entities/Localization/LocalizableKey.swift'
 
 import Cuckoo
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: 'Sources/Domain/Entities/QTSPData.swift'
+
+import Cuckoo
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: 'Sources/Domain/Entities/SessionData.swift'
+
+import Cuckoo
+import RqesKit
 @testable import EudiRQESUi
 
 
@@ -778,13 +1091,13 @@ class MockRQESInteractor: RQESInteractor, Cuckoo.ProtocolMock, @unchecked Sendab
         )
     }
     
-    func getCurrentSelection() async -> CurrentSelection? {
+    func getSession() async -> SessionData? {
         return await cuckoo_manager.call(
-            "getCurrentSelection() async -> CurrentSelection?",
+            "getSession() async -> SessionData?",
             parameters: (),
             escapingParameters: (),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.getCurrentSelection()
+            defaultCall: await __defaultImplStub!.getSession()
         )
     }
     
@@ -883,10 +1196,10 @@ class MockRQESInteractor: RQESInteractor, Cuckoo.ProtocolMock, @unchecked Sendab
             ))
         }
         
-        func getCurrentSelection() -> Cuckoo.ProtocolStubFunction<(), CurrentSelection?> {
+        func getSession() -> Cuckoo.ProtocolStubFunction<(), SessionData?> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockRQESInteractor.self,
-                method: "getCurrentSelection() async -> CurrentSelection?",
+                method: "getSession() async -> SessionData?",
                 parameterMatchers: matchers
             ))
         }
@@ -981,10 +1294,10 @@ class MockRQESInteractor: RQESInteractor, Cuckoo.ProtocolMock, @unchecked Sendab
         
         
         @discardableResult
-        func getCurrentSelection() -> Cuckoo.__DoNotUse<(), CurrentSelection?> {
+        func getSession() -> Cuckoo.__DoNotUse<(), SessionData?> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return cuckoo_manager.verify(
-                "getCurrentSelection() async -> CurrentSelection?",
+                "getSession() async -> SessionData?",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -1097,8 +1410,8 @@ class RQESInteractorStub:RQESInteractor, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (Document?).self)
     }
     
-    func getCurrentSelection() async -> CurrentSelection? {
-        return DefaultValueRegistry.defaultValue(for: (CurrentSelection?).self)
+    func getSession() async -> SessionData? {
+        return DefaultValueRegistry.defaultValue(for: (SessionData?).self)
     }
     
     func getQTSps() async -> [QTSPData] {
@@ -2214,20 +2527,6 @@ class ViewStateStub:ViewState, @unchecked Sendable {
 
 import Cuckoo
 import RqesKit
-@testable import EudiRQESUi
-
-
-
-// MARK: - Mocks generated from file: 'Sources/Presentation/Entities/DocumentData.swift'
-
-import Cuckoo
-@testable import EudiRQESUi
-
-
-
-// MARK: - Mocks generated from file: 'Sources/Presentation/Entities/QTSPData.swift'
-
-import Cuckoo
 @testable import EudiRQESUi
 
 

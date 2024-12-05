@@ -56,7 +56,7 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
     
     do {
       let signedDocument = try await interactor.signDocument()
-      let selection = await interactor.getCurrentSelection()
+      let selection = await interactor.getSession()
       
       pdfURL = signedDocument?.fileURL
       if let fileURL = signedDocument?.fileURL {
@@ -75,12 +75,12 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
           .copy(error: nil)
         }
       } else {
-        setErrorState {
+        setErrorState(.genericErrorDocumentNotFound) {
           self.onCancel()
         }
       }
     } catch {
-      setErrorState {
+      setErrorState(.genericServiceErrorMessage) {
         Task { await self.initiate() }
       }
     }
@@ -90,13 +90,16 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
     router.navigateTo(.viewDocument(true))
   }
   
-  private func setErrorState(retryAction: @escaping () -> ()) {
+  private func setErrorState(
+    _ desc: LocalizableKey,
+    retryAction: @escaping () -> ()
+  ) {
     setState {
       $0.copy(
         isLoading: false,
         error: ContentErrorView.Config(
           title: .genericErrorMessage,
-          description: .genericErrorDocumentNotFound,
+          description: desc,
           cancelAction: onCancel,
           action: retryAction
         )

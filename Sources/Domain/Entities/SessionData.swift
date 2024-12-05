@@ -13,19 +13,24 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Swinject
+import RqesKit
 
-final class InteractorAssembly: Assembly {
-  
-  init() {}
-  
-  func assemble(container: Container) {
-    container.register(RQESInteractor.self) { r in
-      RQESInteractorImpl(
-        rqesUi: EudiRQESUi.forceInstance(),
-        rqesController: r.force(RQESController.self)
-      )
-    }
-    .inObjectScope(ObjectScope.transient)
+@Copyable
+struct SessionData {
+  let document: DocumentData?
+  let qtsp: QTSPData?
+  let certificate: CredentialInfo?
+  let code: String?
+
+  init(
+    document: DocumentData? = nil,
+    qtsp: QTSPData? = nil,
+    certificate: CredentialInfo? = nil,
+    code: String? = nil
+  ) {
+    self.document = document
+    self.qtsp = qtsp
+    self.certificate = certificate
+    self.code = code
   }
 }

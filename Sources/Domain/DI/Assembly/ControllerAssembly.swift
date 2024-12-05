@@ -22,7 +22,10 @@ final class ControllerAssembly: Assembly {
   func assemble(container: Container) {
     
     container.register(LocalizationController.self) { r in
-      LocalizationControllerImpl(config: EudiRQESUi.forceConfig())
+      LocalizationControllerImpl(
+        config: EudiRQESUi.forceConfig(),
+        locale: Locale.current
+      )
     }
     .inObjectScope(ObjectScope.container)
     
@@ -33,6 +36,11 @@ final class ControllerAssembly: Assembly {
     
     container.register(PreferencesController.self) { r in
       PreferencesControllerImpl()
+    }
+    .inObjectScope(ObjectScope.transient)
+    
+    container.register(RQESController.self) { r in
+      RQESControllerImpl(rqesUi: EudiRQESUi.forceInstance())
     }
     .inObjectScope(ObjectScope.transient)
   }

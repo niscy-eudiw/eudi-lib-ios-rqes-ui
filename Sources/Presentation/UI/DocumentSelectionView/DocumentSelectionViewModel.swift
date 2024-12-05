@@ -44,7 +44,7 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
   }
   
   func initiate() async {
-    let documentName = await interactor.getCurrentSelection()?.document?.documentName
+    let documentName = await interactor.getSession()?.document?.documentName
     
     if let documentName {
       setState {

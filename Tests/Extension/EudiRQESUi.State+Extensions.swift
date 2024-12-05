@@ -13,15 +13,7 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import XCTest
 @testable import EudiRQESUi
+import Cuckoo
 
-final class eudi_lib_ios_rqes_uiTests: XCTestCase {
-    func testExample() throws {
-        // XCTest Documentation
-        // https://developer.apple.com/documentation/xctest
-
-        // Defining Test Cases and Test Methods
-        // https://developer.apple.com/documentation/xctest/defining_test_cases_and_test_methods
-    }
-}
+extension EudiRQESUi.State: Matchable {}

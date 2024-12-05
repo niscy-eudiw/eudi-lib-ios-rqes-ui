@@ -52,11 +52,19 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
   }
   
   func initiate() async {
+    
     do {
-      try await fetchCredentials()
       try await getDocument()
     } catch {
-      setErrorState {
+      setErrorState(.genericErrorDocumentNotFound) {
+        self.onCancel()
+      }
+    }
+    
+    do {
+      try await fetchCredentials()
+    } catch {
+      setErrorState(.genericServiceErrorMessage) {
         self.onCancel()
       }
     }
@@ -71,21 +79,23 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
   }
   
   func nextStep() {
-    onPause()
     openAuthorization()
   }
   
   func openAuthorization() {
     Task {
       do {
+        
         let authorizationUrl = try await interactor.openCredentialAuthrorizationURL()
+        self.onPause()
+        
         await UIApplication.shared.openURLIfPossible(authorizationUrl) {
-          self.setErrorState {
+          self.setErrorState(.unableToOpenBrowser) {
             self.setState { $0.copy(error: nil) }
           }
         }
       } catch {
-        self.setErrorState {
+        self.setErrorState(.genericServiceErrorMessage) {
           self.setState { $0.copy(error: nil) }
         }
       }
@@ -114,12 +124,11 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
   }
   
   private func getDocument() async throws {
-    let documentName = await interactor.getCurrentSelection()?.document?.documentName
+    let documentName = await interactor.getSession()?.document?.documentName
     
     if let documentName {
       setState {
         $0.copy(
-          isLoading: false,
           documentName: documentName
         )
         .copy(error: nil)
@@ -129,13 +138,16 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
     }
   }
   
-  private func setErrorState(cancelAction: @escaping () -> ()) {
+  private func setErrorState(
+    _ desc: LocalizableKey,
+    cancelAction: @escaping () -> ()
+  ) {
     setState {
       $0.copy(
         isLoading: false,
         error: ContentErrorView.Config(
           title: .genericErrorMessage,
-          description: .genericErrorDocumentNotFound,
+          description: desc,
           cancelAction: cancelAction,
           action: { Task { await self.initiate() } }
         )

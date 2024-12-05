@@ -16,26 +16,6 @@
 import UIKit
 import RqesKit
 
-@Copyable
-struct CurrentSelection {
-  let document: DocumentData?
-  let qtsp: QTSPData?
-  let certificate: CredentialInfo?
-  let code: String?
-
-  init(
-    document: DocumentData? = nil,
-    qtsp: QTSPData? = nil,
-    certificate: CredentialInfo? = nil,
-    code: String? = nil
-  ) {
-    self.document = document
-    self.qtsp = qtsp
-    self.certificate = certificate
-    self.code = code
-  }
-}
-
 public final actor EudiRQESUi {
 
   private static var _shared: EudiRQESUi?
@@ -44,10 +24,10 @@ public final actor EudiRQESUi {
   private static var _viewController: UIViewController?
 
   private let router: any RouterGraph
-  var selection = CurrentSelection()
+  private var session = SessionData()
 
   private static var _rqesService: RQESService?
-  private static var _rQESServiceAuthorized: RQESServiceAuthorized?
+  private static var _rqesServiceAuthorized: RQESServiceAuthorized?
 
   @discardableResult
   public init(config: any EudiRQESUiConfig) {
@@ -55,6 +35,24 @@ public final actor EudiRQESUi {
     self.router = RouterGraphImpl()
     Self._config = config
     Self._shared = self
+  }
+  
+  init(
+    config: any EudiRQESUiConfig,
+    router: any RouterGraph,
+    state: State = .none,
+    session: SessionData = .init(),
+    rqesService: RQESService? = nil,
+    rqesServiceAuthorized: RQESServiceAuthorized? = nil
+  ) {
+    DIGraph.shared.load()
+    self.router = router
+    self.session = session
+    Self._config = config
+    Self._state = state
+    Self._shared = self
+    Self._rqesService = rqesService
+    Self._rqesServiceAuthorized = rqesServiceAuthorized
   }
 
   @MainActor
@@ -92,22 +90,6 @@ public final actor EudiRQESUi {
     
     try await launcSDK(on: container, animated: animated)
   }
-
-  func updateSelectionDocument(with document: DocumentData? = nil) async {
-    selection = selection.copy(document: document)
-  }
-
-  func updateQTSP(with qtsp: QTSPData? = nil) async {
-    selection = selection.copy(qtsp: qtsp)
-  }
-
-  func updateCertificate(with certificate: CredentialInfo) async {
-    selection = selection.copy(certificate: certificate)
-  }
-
-  public func updateAuthorizationCode(with code: String) async {
-    selection = selection.copy(code: code)
-  }
 }
 
 public extension EudiRQESUi {
@@ -121,10 +103,6 @@ public extension EudiRQESUi {
 }
 
 private extension EudiRQESUi {
-
-  func getState() -> State {
-    return Self._state
-  }
 
   func getViewController() -> UIViewController? {
     return Self._viewController
@@ -164,21 +142,44 @@ private extension EudiRQESUi {
   }
   
   func resetCache() async {
-    selection = CurrentSelection()
+    session = SessionData()
     setRQESService(nil)
     setRQESServiceAuthorized(nil)
   }
 
+  func updateAuthorizationCode(with code: String) async {
+    session = session.copy(code: code)
+  }
 }
 
 extension EudiRQESUi {
-
+  
   static func forceConfig() -> any EudiRQESUiConfig {
     return Self._config!
   }
   
   static func forceInstance() -> EudiRQESUi {
     return Self._shared!
+  }
+  
+  func updateSelectionDocument(with document: DocumentData? = nil) async {
+    session = session.copy(document: document)
+  }
+
+  func updateQTSP(with qtsp: QTSPData? = nil) async {
+    session = session.copy(qtsp: qtsp)
+  }
+
+  func updateCertificate(with certificate: CredentialInfo) async {
+    session = session.copy(certificate: certificate)
+  }
+  
+  func getSessionData() -> SessionData {
+    return self.session
+  }
+  
+  func getState() -> State {
+    return Self._state
   }
   
   func getRQESService() -> RQESService? {
@@ -190,11 +191,11 @@ extension EudiRQESUi {
   }
 
   func getRQESServiceAuthorized() -> RQESServiceAuthorized? {
-    Self._rQESServiceAuthorized
+    Self._rqesServiceAuthorized
   }
 
   func setRQESServiceAuthorized(_ service: RQESServiceAuthorized?) {
-    Self._rQESServiceAuthorized = service
+    Self._rqesServiceAuthorized = service
   }
   
   func getRQESConfig() -> RqesServiceConfig {

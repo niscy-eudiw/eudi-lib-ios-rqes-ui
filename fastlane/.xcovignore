@@ -1,0 +1,29 @@
+# Tests
+- GeneratedMocks.swift
+- Test.*.swift
+
+# Config
+- .*Config.*.swift
+- Config.*.swift
+
+# Views/Components
+- ViewModel.swift
+- .*View.swift
+- .*ViewController.swift
+- .*ViewModel.swift
+- .*Modifier.swift
+- .*Content.swift
+- .*UIModel.swift
+
+# Logic
+- .*Manager.swift
+- .*Graph.swift
+- .*Assembly.swift
+
+# Controller
+- LogController.swift
+- PreferencesController.swift
+- RQESController.swift
+
+# Extensions
+- .*Extensions.swift
