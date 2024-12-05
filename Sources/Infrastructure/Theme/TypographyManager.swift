@@ -101,25 +101,25 @@ final class TypographyManager: TypographyManagerProtocol {
     TypographyStyle(font: labelSmallFont, spacing: labelSmallSpacing)
   }
 
-  private let displayLargeFont = Font.system(size: 57, weight: .medium)
-  private let displayMediumFont = Font.system(size: 45, weight: .regular)
-  private let displaySmallFont = Font.system(size: 36, weight: .regular)
+  private let displayLargeFont = Font.largeTitle
+  private let displayMediumFont = Font.title
+  private let displaySmallFont = Font.title3
 
-  private let headlineLargeFont = Font.system(size: 32, weight: .regular)
-  private let headlineMediumFont = Font.system(size: 28, weight: .regular)
-  private let headlineSmallFont = Font.system(size: 24, weight: .regular)
+  private let headlineLargeFont = Font.title3
+  private let headlineMediumFont = Font.headline
+  private let headlineSmallFont = Font.subheadline
 
-  private let titleLargeFont = Font.system(size: 22, weight: .regular)
-  private let titleMediumFont = Font.system(size: 16, weight: .medium)
-  private let titleSmallFont = Font.system(size: 14, weight: .medium)
+  private let titleLargeFont = Font.subheadline
+  private let titleMediumFont = Font.body
+  private let titleSmallFont = Font.caption2
 
-  private let bodyLargeFont = Font.system(size: 17, weight: .regular)
-  private let bodyMediumFont = Font.system(size: 16, weight: .regular)
-  private let bodySmallFont = Font.system(size: 15, weight: .regular)
+  private let bodyLargeFont = Font.body
+  private let bodyMediumFont = Font.callout
+  private let bodySmallFont = Font.caption
 
-  private let labelLargeFont = Font.system(size: 14, weight: .medium)
-  private let labelMediumFont = Font.system(size: 12, weight: .medium)
-  private let labelSmallFont = Font.system(size: 11, weight: .medium)
+  private let labelLargeFont = Font.caption2
+  private let labelMediumFont = Font.footnote
+  private let labelSmallFont = Font.footnote
 
   private let displayLargeSpacing: CGFloat = 0
   private let displayMediumSpacing: CGFloat = 0
@@ -140,4 +140,25 @@ final class TypographyManager: TypographyManagerProtocol {
   private let labelLargeSpacing: CGFloat = 0
   private let labelMediumSpacing: CGFloat = 0
   private let labelSmallSpacing: CGFloat = 0
+}
+
+extension Font.TextStyle {
+
+  var size: CGFloat {
+    switch self {
+    case .largeTitle: return 96
+    case .title: return 60
+    case .title2: return 48
+    case .title3: return 30
+    case .headline: return 24
+    case .subheadline: return 20
+    case .body: return 16
+    case .callout: return 16
+    case .caption: return  16
+    case .caption2: return 14
+    case .footnote: return 10
+    @unknown default:
+      return 16
+    }
+  }
 }
