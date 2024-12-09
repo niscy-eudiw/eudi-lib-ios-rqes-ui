@@ -25,7 +25,7 @@ The `EudiRQESUi` actor defines methods for setting up and using the SDK. The SDK
 
 ### Swift Package Manager
 
-Open `Xcode`, go to `File -> Swift Packages -> Add Package Dependency`, and enter `https://github.com/niscy-eudiw/eudi-lib-ios-rqes-ui.git`
+Open `Xcode`, go to `File -> Swift Packages -> Add Package Dependency`, and enter `https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-ui.git`
 
 You can also add `EudiRQESUi` as a dependency to your `Package.swift`:
 ```swift
