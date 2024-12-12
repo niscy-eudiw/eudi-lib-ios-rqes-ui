@@ -23,7 +23,6 @@ struct SignedDocumenState: ViewState {
   let documentName: String
   let qtspName: String
   let error: ContentErrorView.Config?
-  let isInitialized: Bool
 }
 
 class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocumenState> {
@@ -44,15 +43,12 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
         qtsp: nil,
         documentName: "",
         qtspName: "",
-        error: nil,
-        isInitialized: false
+        error: nil
       )
     )
   }
   
   func initiate() async {
-    
-    guard !viewState.isInitialized else { return }
     
     do {
       let signedDocument = try await interactor.signDocument()
@@ -69,8 +65,7 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
           $0.copy(
             isLoading: false,
             documentName: documentName,
-            qtspName: qtspName,
-            isInitialized: true
+            qtspName: qtspName
           )
           .copy(error: nil)
         }
