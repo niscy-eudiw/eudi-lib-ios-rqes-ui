@@ -118,6 +118,8 @@ It is the application's responsibility to retrieve the `code` query parameter fr
 </array>
 ```
 
+Alternatively, you can use universal app links with associated domains [Apple Documentation](https://developer.apple.com/documentation/xcode/supporting-associated-domains)
+
 Initialize the SDK in your AppDelegate by providing your configuration.
 
 ```swift
