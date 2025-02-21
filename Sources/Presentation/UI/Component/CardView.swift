@@ -26,32 +26,45 @@ enum CardViewType {
   }
 }
 
-struct CardView<Label: View>: View {
+struct CardView: View {
   private let title: String
   private let subtitle: String?
-  private let trailingView: () -> Label
+  private let leadingIcon: Image?
+  private let trailingIcon: Image?
   private let type: CardViewType
+  private let mainTextVerticalPadding: CGFloat?
   private let action: (() -> Void)?
   private let trailingAction: (() -> Void)?
 
   init(
     type: CardViewType = .info,
+    mainTextVerticalPadding: CGFloat? = nil,
     title: String,
     subtitle: String? = nil,
-    @ViewBuilder trailingView: @escaping () -> Label,
+    leadingIcon: Image? = nil,
+    trailingIcon: Image? = Image(systemName: "chevron.right"),
     action: (() -> Void)? = nil,
     trailingAction: (() -> Void)? = nil
   ) {
     self.title = title
     self.subtitle = subtitle
-    self.trailingView = trailingView
+    self.trailingIcon = trailingIcon
     self.type = type
+    self.mainTextVerticalPadding = mainTextVerticalPadding
     self.action = action
     self.trailingAction = trailingAction
+    self.leadingIcon = leadingIcon
   }
 
   var body: some View {
-    HStack(alignment: .center, spacing: SPACING_MEDIUM) {
+    HStack(alignment: .center, spacing: SPACING_MEDIUM_SMALL) {
+      if let leadingIcon {
+        leadingIcon
+          .resizable()
+          .scaledToFit()
+          .frame(width: 24, height: 24)
+      }
+
       VStack(alignment: .leading, spacing: SPACING_NONE) {
         
         Text(title)
@@ -59,9 +72,7 @@ struct CardView<Label: View>: View {
           .foregroundStyle(Theme.shared.color.onSurface)
           .lineLimit(2)
           .truncationMode(.tail)
-          .if(subtitle != nil) {
-            $0.fontWeight(.semibold)
-          }
+          .fontWeight(.semibold)
 
         if let subtitle {
           Text(subtitle)
@@ -72,18 +83,19 @@ struct CardView<Label: View>: View {
         }
       }
       Spacer()
-      Button {
-        trailingAction?()
-      } label: {
-        trailingView()
+      if let trailingIcon {
+        trailingIcon
+          .resizable()
+          .scaledToFit()
+          .frame(width: 20, height: 20)
+          .foregroundStyle(Color.accentColor)
       }
     }
     .contentShape(Rectangle())
     .onTapGesture {
       action?()
     }
-    .padding(SPACING_MEDIUM)
-    .frame(minHeight: 80, alignment: .leading)
+    .padding(.all, mainTextVerticalPadding != nil ? mainTextVerticalPadding : SPACING_MEDIUM)
     .background(type.backgroundColor())
     .cornerRadius(13)
   }
@@ -92,7 +104,8 @@ struct CardView<Label: View>: View {
 #Preview {
   CardView(
     title: "Select document",
-    trailingView: { Image(systemName: "plus") },
+    leadingIcon: Image(.gpdGood),
+    trailingIcon: Image(systemName: "plus"),
     action: {}
   )
   .padding()
@@ -101,7 +114,7 @@ struct CardView<Label: View>: View {
     type: .success,
     title: "Select document",
     subtitle: "Signed by: Entrust",
-    trailingView: { Image(systemName: "plus") },
+    trailingIcon: Image(systemName: "chevron.right"),
     action: {}
   )
   .padding()
@@ -110,7 +123,7 @@ struct CardView<Label: View>: View {
     type: .success,
     title: "Select document",
     subtitle: "Signed by: Entrust",
-    trailingView: { Text("View") },
+    trailingIcon: Image(systemName: "plus"),
     action: {}
   )
   .padding()
@@ -119,7 +132,7 @@ struct CardView<Label: View>: View {
 #Preview("Dark Mode") {
   CardView(
     title: "Select document",
-    trailingView: { Image(systemName: "plus") },
+    trailingIcon: Image(systemName: "plus"),
     action: {}
   )
   .padding()
@@ -128,7 +141,7 @@ struct CardView<Label: View>: View {
     type: .success,
     title: "Select document",
     subtitle: "Signed by: Entrust",
-    trailingView: { Image(systemName: "plus") },
+    trailingIcon: Image(systemName: "plus"),
     action: {}
   )
   .padding()
@@ -137,7 +150,7 @@ struct CardView<Label: View>: View {
     type: .success,
     title: "Select document",
     subtitle: "Signed by: Entrust",
-    trailingView: { Text("View") },
+    trailingIcon: Image(systemName: "plus"),
     action: {}
   )
   .padding()

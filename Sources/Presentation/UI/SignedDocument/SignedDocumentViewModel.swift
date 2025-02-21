@@ -22,6 +22,7 @@ struct SignedDocumenState: ViewState {
   let qtsp: QTSPData?
   let documentName: String
   let qtspName: String
+  let headerConfig: ContentHeaderConfig
   let error: ContentErrorView.Config?
   let isInitialized: Bool
 }
@@ -44,6 +45,12 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
         qtsp: nil,
         documentName: "",
         qtspName: "",
+        headerConfig: .init(
+          appIconAndTextData: .init(
+            appIcon: Image(.euWalletLogo),
+            appText: Image(.eudiTextLogo)
+          )
+        ),
         error: nil,
         isInitialized: false
       )
@@ -70,6 +77,13 @@ class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocu
             isLoading: false,
             documentName: documentName,
             qtspName: qtspName,
+            headerConfig: .init(
+              appIconAndTextData: .init(
+                appIcon: Image(.euWalletLogo),
+                appText: Image(.eudiTextLogo)
+              ),
+              description: ""
+            ),
             isInitialized: true
           )
           .copy(error: nil)

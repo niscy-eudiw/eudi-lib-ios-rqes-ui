@@ -91,10 +91,6 @@ private func content(
 
   CardView(
     title: documentName,
-    trailingView: {
-      Text(viewString)
-        .font(Theme.shared.font.bodyLarge.font)
-    },
     action: {
       view()
     },

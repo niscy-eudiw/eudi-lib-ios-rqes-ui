@@ -18,14 +18,20 @@ import SwiftUI
 private struct LeftImageModifier: ViewModifier {
   private let image: Image
   private let size: CGFloat?
+  private let spacing: CGFloat
 
-  init(image: Image, size: CGFloat? = nil) {
+  init(
+    image: Image,
+    spacing: CGFloat,
+    size: CGFloat? = nil
+  ) {
     self.image = image
+    self.spacing = spacing
     self.size = size
   }
 
   func body(content: Content) -> some View {
-    HStack(alignment: .top, spacing: 0) {
+    HStack(alignment: .center, spacing: spacing) {
       if let size {
         image
           .resizable()
@@ -35,21 +41,20 @@ private struct LeftImageModifier: ViewModifier {
       }
 
       content
-        .fixedSize(horizontal: false, vertical: true)
     }
   }
 }
 
-extension View {
-  func leftImage(image: Image, size: CGFloat? = nil) -> some View {
-    modifier(LeftImageModifier(image: image, size: size))
+public extension View {
+  func leftImage(image: Image, spacing: CGFloat = 0, size: CGFloat? = nil) -> some View {
+    modifier(LeftImageModifier(image: image, spacing: spacing, size: size))
   }
 }
 
 #Preview {
-  Text("QTSP")
-    .leftImage(image: Image(.verifiedUser))
+  Text("Title")
+    .leftImage(image: Image(systemName: "calendar"))
 
-  Text("QTSP requests the following. Please review carefully before sharing your data.")
-    .leftImage(image: Image(.verified))
+  Text("Please review carefully before sharing your data.")
+    .leftImage(image: Image(systemName: "calendar"))
 }

@@ -87,38 +87,27 @@ private func content(
   isLoading: Bool,
   view: @escaping () -> Void
 ) -> some View {
-  VStack(alignment: .leading, spacing: .zero) {
-    
-    Text(success)
-      .font(Theme.shared.font.headlineMedium.font)
-      .fontWeight(.bold)
-      .foregroundStyle(Theme.shared.color.success)
-      .padding(.top, SPACING_LARGE_MEDIUM)
+  VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
 
-    VStack(alignment: .leading, spacing: .zero) {
-      
-      Text(successfullySigned)
-        .font(Theme.shared.font.bodyLarge.font)
-        .foregroundStyle(Theme.shared.color.onSurface)
-
-      Text(documentName)
-        .font(Theme.shared.font.bodyLarge.font)
-        .foregroundStyle(Theme.shared.color.onSurface)
-        .fontWeight(.semibold)
-        .leftImage(image: Image(.verifiedUser))
-    }
-    .padding(.top, SPACING_SMALL)
+    ContentHeader(
+      config: ContentHeaderConfig(
+        appIconAndTextData: AppIconAndTextData(
+          appIcon: Image(.euWalletLogo),
+          appText: Image(.eudiTextLogo)
+        ),
+        description: successfullySigned,
+        relyingPartyData: RelyingPartyData(
+          isVerified: true,
+          name: signedBy
+        )
+      )
+    )
 
     CardView(
       type: .success,
       title: documentName,
-      subtitle: signedBy,
-      trailingView: {
-        Text(viewString)
-          .font(Theme.shared.font.bodyLarge.font)
-      },
-      action: { view() },
-      trailingAction: { view() }
+      leadingIcon: Image(.gpdGood),
+      action: { view() }
     )
     .padding(.top, SPACING_MEDIUM)
 
@@ -136,7 +125,7 @@ private func content(
       success: "Success",
       successfullySigned: "You successfully signed your document",
       documentName: "Document title",
-      signedBy: "Signed by: Entrust",
+      signedBy: "ENTRUST",
       viewString: "View",
       isLoading: false,
       view: {}

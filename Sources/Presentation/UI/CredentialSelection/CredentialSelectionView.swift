@@ -105,8 +105,7 @@ private func content(
       .foregroundStyle(Theme.shared.color.onSurface)
 
     CardView(
-      title: documentName,
-      trailingView: {}
+      title: documentName
     )
   }
 
