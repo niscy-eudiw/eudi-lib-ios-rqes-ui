@@ -31,16 +31,12 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
     ContentScreenView(
       canScroll: true,
       spacing: SPACING_LARGE_MEDIUM,
-      title: localization.get(with: .selectCertificate),
+      title: .selectCertificate,
       errorConfig: viewModel.viewState.error,
       isLoading: viewModel.viewState.isLoading,
       toolbarContent: toolbarAction()
     ) {
       content(
-        title: localization.get(with: .selectCertificateTitle),
-        documentName: viewModel.viewState.documentName,
-        certificate: localization.get(with: .certificate),
-        confirmSigning: localization.get(with: .selectCertificateSubtitle),
         credentials: viewModel.viewState.credentials,
         selectedItem: $selectedItem
       )
@@ -56,10 +52,10 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
       await viewModel.initiate()
     }
     .confirmationDialog(
-      title: localization.get(with: .cancelSigningProcessTitle),
-      message: localization.get(with: .cancelSigningProcessSubtitle),
-      destructiveText: localization.get(with: .cancelSigning),
-      baseText: localization.get(with: .continueSigning),
+      title: .cancelSigningProcessTitle,
+      message: .cancelSigningProcessSubtitle,
+      destructiveText: .cancelSigning,
+      baseText: .continueSigning,
       isPresented: $showSheet,
       destructiveAction: {
         viewModel.onCancel()
@@ -74,15 +70,10 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
     return ToolBarContent(
       trailingActions: [
         Action(
-          title: localization.get(with: .proceed),
+          title: .proceed,
           disabled: selectedItem == nil
         ) {
           viewModel.nextStep()
-        }
-      ],
-      leadingActions: [
-        Action(title: localization.get(with: .cancel)) {
-          showSheet.toggle()
         }
       ]
     )
@@ -92,33 +83,9 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
 @MainActor
 @ViewBuilder
 private func content(
-  title: String,
-  documentName: String,
-  certificate: String,
-  confirmSigning: String,
   credentials: [CredentialDataUIModel],
   selectedItem: Binding<CredentialDataUIModel?>
 ) -> some View {
-  VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
-    Text(title)
-      .font(Theme.shared.font.bodyMedium.font)
-      .foregroundStyle(Theme.shared.color.onSurface)
-
-    CardView(
-      title: documentName
-    )
-  }
-
-  VStack(alignment: .leading, spacing: SPACING_SMALL) {
-    Text(certificate)
-      .font(Theme.shared.font.labelMedium.font)
-      .foregroundStyle(Theme.shared.color.onSurfaceVariant)
-
-    Text(confirmSigning)
-      .font(Theme.shared.font.bodyMedium.font)
-      .foregroundStyle(Theme.shared.color.onSurface)
-  }
-
   List(credentials) { item in
     HStack {
       Text(item.name)
@@ -146,13 +113,9 @@ private func content(
 #Preview {
     ContentScreenView(
       spacing: SPACING_LARGE_MEDIUM,
-      title: "Select certificate"
+      title: .custom("Select certificate")
     ) {
       content(
-        title: "You have chosen to sign the following document:",
-        documentName: "Document_Title.PDF",
-        certificate: "CERTIFICATE",
-        confirmSigning: "Please confirm signing with one of the following certificates:",
         credentials: [
           CredentialDataUIModel(id: "1", name: "Certificate 1"),
           CredentialDataUIModel(id: "2", name: "Certificate 2"),
@@ -161,19 +124,16 @@ private func content(
         selectedItem: .constant(CredentialDataUIModel(id: "4", name: "Certificate 3"))
       )
     }
+    .environment(\.localizationController, PreviewLocalizationController())
     .lightModePreview()
 }
 
 #Preview("Dark Mode") {
     ContentScreenView(
       spacing: SPACING_LARGE_MEDIUM,
-      title: "Select certificate"
+      title: .custom("Select certificate")
     ) {
       content(
-        title: "You have chosen to sign the following document:",
-        documentName: "Document_Title.PDF",
-        certificate: "CERTIFICATE",
-        confirmSigning: "Please confirm signing with one of the following certificates:",
         credentials: [
           CredentialDataUIModel(id: "1", name: "Certificate 1"),
           CredentialDataUIModel(id: "2", name: "Certificate 2"),
@@ -182,5 +142,6 @@ private func content(
         selectedItem: .constant(CredentialDataUIModel(id: "4", name: "Certificate 3"))
       )
     }
+    .environment(\.localizationController, PreviewLocalizationController())
     .darkModePreview()
 }

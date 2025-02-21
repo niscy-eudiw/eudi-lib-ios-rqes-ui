@@ -19,6 +19,7 @@ import SwiftUI
 struct DocumentSelectionState: ViewState {
   let isLoading: Bool
   let document: DocumentData?
+  let qtsp: QTSPData?
   let documentName: String
   let error: ContentErrorView.Config?
 }
@@ -37,6 +38,7 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
       initialState: DocumentSelectionState(
         isLoading: true,
         document: nil,
+        qtsp: nil,
         documentName: "",
         error: nil
       )
@@ -45,11 +47,13 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
   
   func initiate() async {
     let documentName = await interactor.getSession()?.document?.documentName
-    
+    let qtsp = await interactor.getSession()?.qtsp
+
     if let documentName {
       setState {
         $0.copy(
           isLoading: false,
+          qtsp: qtsp,
           documentName: documentName
         )
         .copy(error: nil)
@@ -75,5 +79,9 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
   
   func selectService() {
     router.navigateTo(.serviceSelection)
+  }
+
+  func selectCertificate() {
+    router.navigateTo(.credentialSelection)
   }
 }

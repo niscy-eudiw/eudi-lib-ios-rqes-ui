@@ -13,6 +13,8 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import SwiftUI
+
 struct AppIconAndTextData {
   public let appIcon: Image
   public let appText: Image

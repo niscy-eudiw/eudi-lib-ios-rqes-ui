@@ -39,6 +39,27 @@ extension View {
 }
 
 extension View {
+  func navigationTitle(_ key: LocalizableKey) -> some View {
+    return self.navigationTitle(key.defaultTranslation(args: []))
+  }
+  func confirmationDialog<A, M>(
+    _ key: LocalizableKey,
+    isPresented: Binding<Bool>,
+    titleVisibility: Visibility = .automatic,
+    @ViewBuilder actions: () -> A,
+    @ViewBuilder message: () -> M
+  ) -> some View where A: View, M: View {
+    return self.confirmationDialog(
+      key.defaultTranslation(args: []),
+      isPresented: isPresented,
+      titleVisibility: titleVisibility,
+      actions: actions,
+      message: message
+    )
+  }
+}
+
+extension View {
   func lightModePreview() -> some View {
     return self.background(Color.white)
       .environment(\.colorScheme, .light)

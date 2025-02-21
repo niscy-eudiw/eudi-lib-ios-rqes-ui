@@ -29,13 +29,13 @@ struct SignedDocumentView<Router: RouterGraph>: View {
   var body: some View {
     ContentScreenView(
       spacing: SPACING_LARGE_MEDIUM,
-      title: localization.get(with: .documentSigned),
+      title: .dataShared,
       errorConfig: viewModel.viewState.error,
       isLoading: viewModel.viewState.isLoading,
       toolbarContent: ToolBarContent(
         trailingActions: [
           Action(
-            title: localization.get(with: .close),
+            title: .doneButton,
             callback: {
               showSheet = true
             }
@@ -58,7 +58,7 @@ struct SignedDocumentView<Router: RouterGraph>: View {
       isPresented: $showSheet,
       titleVisibility: .visible
     ) {
-      Button(localization.get(with: .close), role: .destructive) {
+      Button(localization.get(with: .doneButton), role: .destructive) {
         viewModel.onCancel()
       }
 
@@ -119,7 +119,7 @@ private func content(
 #Preview {
   ContentScreenView(
     spacing: SPACING_LARGE_MEDIUM,
-    title: "Navigation title"
+    title: .custom("Navigation title")
   ) {
     content(
       success: "Success",
@@ -131,12 +131,13 @@ private func content(
       view: {}
     )
   }
+  .environment(\.localizationController, PreviewLocalizationController())
 }
 
 #Preview("Dark Mode") {
   ContentScreenView(
     spacing: SPACING_LARGE_MEDIUM,
-    title: "Navigation title"
+    title: .custom("Navigation title")
   ) {
     content(
       success: "Success",
@@ -149,4 +150,5 @@ private func content(
     )
   }
   .darkModePreview()
+  .environment(\.localizationController, PreviewLocalizationController())
 }

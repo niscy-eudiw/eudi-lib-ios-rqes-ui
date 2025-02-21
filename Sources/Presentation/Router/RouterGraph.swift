@@ -122,8 +122,8 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
             )
           )
         case .credentials:
-          CredentialSelectionView(
-            with: CredentialSelectionViewModel(
+          DocumentSelectionView(
+            with: DocumentSelectionViewModel(
               router: self,
               interactor: DIGraph.resolver.force(
                 RQESInteractor.self

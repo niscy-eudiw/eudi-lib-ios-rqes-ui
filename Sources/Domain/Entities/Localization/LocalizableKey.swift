@@ -14,16 +14,16 @@
  * governing permissions and limitations under the Licence.
  */
 
-public enum LocalizableKey: String, Sendable {
+public enum LocalizableKey: Sendable, Equatable, Hashable {
 
+  case custom(String)
   case signDocument
-  case confirmSelection
-  case confirmSelectionTitle
+  case selectDocument
+  case selectDocumentFromDevice
+  case signingCertificateDescription
   case selectService
-  case selectServiceTitle
   case selectServiceSubtitle
   case selectCertificate
-  case selectCertificateTitle
   case certificate
   case selectCertificateSubtitle
   case success
@@ -48,20 +48,21 @@ public enum LocalizableKey: String, Sendable {
   case genericErrorQtspNotFound
   case sharingDocument
   case closeSharingDocument
-  case close
+  case doneButton
   case share
   case unableToOpenBrowser
+  case dataShared
 
   func defaultTranslation(args: [String]) -> String {
     let value = switch self {
+    case .custom(let literal): literal
     case .signDocument: "Sign document"
-    case .confirmSelection: "Confirm selection"
-    case .confirmSelectionTitle: "Please confirm signing of the following."
-    case .selectService: "Select service"
-    case .selectServiceTitle: "Select remote signing service."
+    case .selectDocument: "Select document"
+    case .selectDocumentFromDevice: "Choose a document from your device to sign electronically."
+    case .signingCertificateDescription: "The signing certificate is used to verify your identity and is linked to your electronic signature."
+    case .selectService: "Select signing service"
     case .selectServiceSubtitle: "Remote Signing Service enables secure online document signing."
-    case .selectCertificate: "Select certificate"
-    case .selectCertificateTitle: "You have chosen to sign the following document:"
+    case .selectCertificate: "Select signing certificate"
     case .certificate: "CERTIFICATE"
     case .selectCertificateSubtitle: "Please confirm signing with one of the following certificates:"
     case .success: "Success!"
@@ -86,9 +87,10 @@ public enum LocalizableKey: String, Sendable {
     case .genericErrorQtspNotFound: "No selected QTSP found"
     case .sharingDocument: "Sharing document"
     case .closeSharingDocument: "Closing will redirect you back to the dashboard without saving or sharing the document."
-    case .close: "Close"
+    case .doneButton: "Done"
     case .share: "Share"
     case .unableToOpenBrowser: "Unable to open browser"
+    case .dataShared: "Data shared"
     }
     return value.format(arguments: args)
   }

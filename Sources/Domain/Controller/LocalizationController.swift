@@ -22,7 +22,7 @@ protocol LocalizationController: Sendable {
 }
 
 final class LocalizationControllerImpl: LocalizationController {
-  
+
   private let config: any EudiRQESUiConfig
   private let locale: Locale
 
@@ -55,14 +55,29 @@ final class LocalizationControllerImpl: LocalizationController {
 }
 
 private struct LocalizationControllerKey: EnvironmentKey {
-  static let defaultValue: LocalizationController = DIGraph.resolver.force(
-    LocalizationController.self
-  )
+  static var defaultValue: LocalizationController {
+    if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
+      return PreviewLocalizationController()
+    } else {
+      return DIGraph.resolver.force(LocalizationController.self)
+    }
+  }
 }
+
 
 extension EnvironmentValues {
   var localizationController: LocalizationController {
     get { self[LocalizationControllerKey.self] }
     set { self[LocalizationControllerKey.self] = newValue }
+  }
+}
+
+final class PreviewLocalizationController: LocalizationController {
+  func get(with key: LocalizableKey, args: [String]) -> String {
+    key.defaultTranslation(args: args)
+  }
+  func get(with key: LocalizableKey, args: [String]) -> LocalizedStringKey { LocalizedStringKey("Mocked Translation") }
+  func get(with key: LocalizableKey) -> String {
+    key.defaultTranslation(args: [])
   }
 }

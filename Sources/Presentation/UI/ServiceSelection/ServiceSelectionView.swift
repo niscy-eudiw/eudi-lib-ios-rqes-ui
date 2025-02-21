@@ -28,13 +28,13 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
     ContentScreenView(
       canScroll: true,
       spacing: SPACING_LARGE_MEDIUM,
-      title: localization.get(with: .selectService),
+      title: .selectService,
       errorConfig: viewModel.viewState.error,
       isLoading: viewModel.viewState.isLoading,
       toolbarContent: ToolBarContent(
         trailingActions: [
           Action(
-            title: localization.get(with: .proceed),
+            title: .proceed,
             disabled: viewModel.selectedItem == nil,
             callback: {
               viewModel.nextStep()
@@ -44,8 +44,6 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
       )
     ) {
       content(
-        selectServiceTitle: localization.get(with: .selectServiceTitle),
-        selectServiceSubtitle: localization.get(with: .selectServiceSubtitle),
         services: viewModel.viewState.services,
         selectedItem: $viewModel.selectedItem
       )
@@ -64,19 +62,9 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
 @MainActor
 @ViewBuilder
 private func content(
-  selectServiceTitle: String,
-  selectServiceSubtitle: String,
   services: [QTSPData],
   selectedItem: Binding<QTSPData?>
 ) -> some View {
-  Text(selectServiceTitle)
-    .font(Theme.shared.font.bodyLarge.font)
-    .foregroundStyle(Theme.shared.color.onSurface)
-
-  Text(selectServiceSubtitle)
-    .font(Theme.shared.font.bodyMedium.font)
-    .foregroundStyle(Theme.shared.color.onSurface)
-
   List(services, id: \.name) { item in
     HStack {
       Text(item.name)
@@ -104,11 +92,9 @@ private func content(
 #Preview {
   ContentScreenView(
     spacing: SPACING_LARGE_MEDIUM,
-    title: "Navigation Title"
+    title: .custom("Navigation Title")
   ) {
     content(
-      selectServiceTitle: "Select remote signing service.",
-      selectServiceSubtitle: "Remote signing enables you to digitally sign documents without the need for locally installed digital identities. Cloud-hosted signing service makes remote signing possible.",
       services: [
         QTSPData(name: "Entrust", uri: URL(string: "https://www.entrust.com")!, scaURL: "https://www.entrust.com"),
         QTSPData(name: "Docusign", uri: URL(string: "https://www.docusign.com")!, scaURL: "https://www.entrust.com"),
@@ -123,16 +109,15 @@ private func content(
       )
     )
   }
+  .environment(\.localizationController, PreviewLocalizationController())
 }
 
 #Preview("Dark Mode") {
   ContentScreenView(
     spacing: SPACING_LARGE_MEDIUM,
-    title: "Navigation Title"
+    title: .custom("Navigation Title")
   ) {
     content(
-      selectServiceTitle: "Select remote signing service.",
-      selectServiceSubtitle: "Remote signing enables you to digitally sign documents without the need for locally installed digital identities. Cloud-hosted signing service makes remote signing possible.",
       services: [
         QTSPData(name: "Entrust", uri: URL(string: "https://www.entrust.com")!, scaURL: "https://www.entrust.com"),
         QTSPData(name: "Docusign", uri: URL(string: "https://www.docusign.com")!, scaURL: "https://www.entrust.com"),
@@ -148,4 +133,5 @@ private func content(
     )
   }
   .darkModePreview()
+  .environment(\.localizationController, PreviewLocalizationController())
 }

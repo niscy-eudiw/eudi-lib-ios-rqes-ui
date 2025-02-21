@@ -54,7 +54,7 @@ struct DocumentViewer<Router: RouterGraph>: View {
 
   var body: some View {
     content(
-      navigationTitle: localization.get(with: .viewDocument),
+      navigationTitle: .viewDocument,
       toolbarContent: isSigned ? toolbarAction() : nil,
       viewState: viewModel.viewState,
       error: viewModel.viewState.error
@@ -78,7 +78,7 @@ struct DocumentViewer<Router: RouterGraph>: View {
 @MainActor
 @ViewBuilder
 private func content(
-  navigationTitle: String,
+  navigationTitle: LocalizableKey,
   toolbarContent: ToolBarContent?,
   viewState: DocumentState,
   error: ContentErrorView.Config?
@@ -104,7 +104,7 @@ private func content(
   let document = PDFDocument(data: data)
 
   content(
-    navigationTitle: "View document",
+    navigationTitle: .custom("View document"),
     toolbarContent: nil,
     viewState: .init(
       isLoading: false,
@@ -114,4 +114,5 @@ private func content(
     ),
     error: nil
   )
+  .environment(\.localizationController, PreviewLocalizationController())
 }

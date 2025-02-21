@@ -22,7 +22,7 @@ struct ContentScreenView<Content: View>: View {
   private let padding: CGFloat
   private let spacing: CGFloat
   private let background: Color
-  private let title: String
+  private let title: LocalizableKey
   private let toolbarContent: ToolBarContent?
   private let errorConfig: ContentErrorView.Config?
   private let isLoading: Bool
@@ -33,7 +33,7 @@ struct ContentScreenView<Content: View>: View {
     canScroll: Bool = false,
     spacing: CGFloat = 0,
     background: Color = Theme.shared.color.background,
-    title: String,
+    title: LocalizableKey,
     errorConfig: ContentErrorView.Config? = nil,
     isLoading: Bool = false,
     toolbarContent: ToolBarContent? = nil,

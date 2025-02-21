@@ -57,7 +57,7 @@ struct CardView: View {
   }
 
   var body: some View {
-    HStack(alignment: .center, spacing: SPACING_MEDIUM_SMALL) {
+    HStack(alignment: .center, spacing: SPACING_SMALL) {
       if let leadingIcon {
         leadingIcon
           .resizable()

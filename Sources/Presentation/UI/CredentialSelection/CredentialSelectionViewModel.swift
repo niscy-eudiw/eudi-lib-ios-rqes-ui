@@ -20,7 +20,7 @@ import RqesKit
 struct CredentialSelectionState: ViewState {
   let isLoading: Bool
   let credentials: [CredentialDataUIModel]
-  let documentName: String
+//  let documentName: String
   let error: ContentErrorView.Config?
   let credentialInfos: [CredentialInfo]
   let selectedCredential: CredentialInfo?
@@ -43,7 +43,6 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
       initialState: CredentialSelectionState(
         isLoading: true,
         credentials: [],
-        documentName: "",
         error: nil,
         credentialInfos: [],
         selectedCredential: nil
@@ -52,15 +51,6 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
   }
   
   func initiate() async {
-    
-    do {
-      try await getDocument()
-    } catch {
-      setErrorState(.genericErrorDocumentNotFound) {
-        self.onCancel()
-      }
-    }
-    
     do {
       try await fetchCredentials()
     } catch {
@@ -120,21 +110,6 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
       }
     } catch {
       throw EudiRQESUiError.unableToFetchCredentials
-    }
-  }
-  
-  private func getDocument() async throws {
-    let documentName = await interactor.getSession()?.document?.documentName
-    
-    if let documentName {
-      setState {
-        $0.copy(
-          documentName: documentName
-        )
-        .copy(error: nil)
-      }
-    } else {
-      throw EudiRQESUiError.noDocumentProvided
     }
   }
   

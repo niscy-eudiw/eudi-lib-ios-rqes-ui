@@ -45,7 +45,7 @@ private struct LeftImageModifier: ViewModifier {
   }
 }
 
-public extension View {
+extension View {
   func leftImage(image: Image, spacing: CGFloat = 0, size: CGFloat? = nil) -> some View {
     modifier(LeftImageModifier(image: image, spacing: spacing, size: size))
   }
