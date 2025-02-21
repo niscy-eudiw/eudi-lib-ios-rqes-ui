@@ -152,7 +152,7 @@ extension Font.TextStyle {
     case .title3: return 30
     case .headline: return 24
     case .subheadline: return 20
-    case .body: return 16
+    case .body: return 17
     case .callout: return 16
     case .caption: return  16
     case .caption2: return 14
