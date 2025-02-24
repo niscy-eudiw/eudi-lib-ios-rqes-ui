@@ -15,7 +15,7 @@
  */
 import SwiftUI
 
-struct selectionItemData: Identifiable {
+struct SelectionItemData: Identifiable {
   let id: String
   let overlineText: LocalizableKey?
   let mainText: LocalizableKey?

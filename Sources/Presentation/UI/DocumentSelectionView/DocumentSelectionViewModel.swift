@@ -18,9 +18,9 @@ import SwiftUI
 @Copyable
 struct DocumentSelectionState: ViewState {
   let isLoading: Bool
-  let document: DocumentData?
-  let qtsp: QTSPData?
-  let documentName: String
+  let documentSelection: SelectionItemData?
+  let qtspServiceSelection: SelectionItemData?
+  let certificateSelection: SelectionItemData?
   let error: ContentErrorView.Config?
 }
 
@@ -37,9 +37,9 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
       router: router,
       initialState: DocumentSelectionState(
         isLoading: true,
-        document: nil,
-        qtsp: nil,
-        documentName: "",
+        documentSelection: nil,
+        qtspServiceSelection: nil,
+        certificateSelection: nil,
         error: nil
       )
     )
@@ -53,23 +53,18 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
       setState {
         $0.copy(
           isLoading: false,
-          qtsp: qtsp,
-          documentName: documentName
+          documentSelection: createDocumentSelection(
+            documentName: documentName
+          ),
+          qtspServiceSelection: createQtspServiceSelection(
+            qtspName: qtsp?.name
+          ),
+          certificateSelection: qtsp?.name == nil ? nil : createCertificateSelection()
         )
         .copy(error: nil)
       }
     } else {
-      setState {
-        $0.copy(
-          isLoading: false,
-          error: ContentErrorView.Config(
-            title: .genericErrorMessage,
-            description: .genericErrorDocumentNotFound,
-            cancelAction: onCancel,
-            action: { Task { await self.initiate() } }
-          )
-        )
-      }
+      errorState()
     }
   }
   
@@ -83,5 +78,63 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
 
   func selectCertificate() {
     router.navigateTo(.credentialSelection)
+  }
+
+  private func errorState() {
+    setState {
+      $0.copy(
+        isLoading: false,
+        error: ContentErrorView.Config(
+          title: .genericErrorMessage,
+          description: .genericErrorDocumentNotFound,
+          cancelAction: onCancel,
+          action: { Task { await self.initiate() } }
+        )
+      )
+    }
+  }
+
+  private func createDocumentSelection(
+    documentName: String
+  ) -> SelectionItemData {
+    SelectionItemData(
+      overlineText: .selectDocument,
+      mainText: .custom(documentName),
+      subtitle: .selectDocumentFromDevice,
+      actionText: .view,
+      leadingIcon: Image(.stepOne),
+      leadingIconTint: Theme.shared.color.success,
+      action: {
+        self.viewDocument()
+      }
+    )
+  }
+
+  private func createQtspServiceSelection(
+    qtspName: String?
+  ) -> SelectionItemData {
+    SelectionItemData(
+      overlineText: qtspName == nil ? nil : .selectService,
+      mainText: qtspName == nil ? .selectService : .custom(qtspName ?? ""),
+      subtitle: .selectServiceSubtitle,
+      leadingIcon: Image(.stepTwo),
+      leadingIconTint: qtspName == nil ? Theme.shared.color.onSurface : Theme.shared.color.success,
+      enabled: qtspName == nil,
+      action: {
+        self.selectService()
+      }
+    )
+  }
+
+  private func createCertificateSelection() -> SelectionItemData {
+    SelectionItemData(
+      mainText: .selectCertificate,
+      subtitle: .signingCertificateDescription,
+      leadingIcon: Image(.stepThree),
+      leadingIconTint: Theme.shared.color.onSurface,
+      action: {
+        self.selectCertificate()
+      }
+    )
   }
 }

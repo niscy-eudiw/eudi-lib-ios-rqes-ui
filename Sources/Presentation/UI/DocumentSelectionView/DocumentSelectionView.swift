@@ -42,12 +42,9 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
       )
     ) {
       content(
-        documentName: viewModel.viewState.documentName,
-        qtspName: viewModel.viewState.qtsp?.name,
-        viewString: localization.get(with: .view),
-        view: viewModel.viewDocument,
-        selectService: viewModel.selectService,
-        selectCertificate: viewModel.selectCertificate
+        documentSelection: viewModel.viewState.documentSelection,
+        qtspServiceSelection: viewModel.viewState.qtspServiceSelection,
+        certificateSelection: viewModel.viewState.certificateSelection
       )
     }
     .task {
@@ -73,59 +70,32 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
 @MainActor
 @ViewBuilder
 private func content(
-  documentName: String,
-  qtspName: String?,
-  viewString: String,
-  view: @escaping () -> Void,
-  selectService: @escaping () -> Void,
-  selectCertificate: @escaping () -> Void
+  documentSelection: SelectionItemData?,
+  qtspServiceSelection: SelectionItemData?,
+  certificateSelection: SelectionItemData?
 ) -> some View {
 
   ScrollView {
     VStack(alignment: .leading,spacing: SPACING_MEDIUM) {
-      SelectionItem(
-        selectionItemData: selectionItemData(
-          overlineText: .selectDocument,
-          mainText: .custom(documentName),
-          subtitle: .selectDocumentFromDevice,
-          actionText: .view,
-          leadingIcon: Image(.stepOne),
-          leadingIconTint: Theme.shared.color.success,
-          action: {
-            view()
-          }
+      if let documentSelection {
+        SelectionItem(
+          selectionItemData: documentSelection
         )
-      )
 
-      Divider()
+        Divider()
+      }
 
-      SelectionItem(
-        selectionItemData: selectionItemData(
-          overlineText: qtspName == nil ? nil : .selectService,
-          mainText: qtspName == nil ? .selectService : .custom(qtspName ?? ""),
-          subtitle: .selectServiceSubtitle,
-          leadingIcon: Image(.stepTwo),
-          leadingIconTint: qtspName == nil ? Theme.shared.color.onSurface : Theme.shared.color.success,
-          enabled: qtspName == nil,
-          action: {
-            selectService()
-          }
+      if let qtspServiceSelection {
+        SelectionItem(
+          selectionItemData: qtspServiceSelection
         )
-      )
+      }
 
-      if qtspName != nil {
+      if let certificateSelection {
         Divider()
 
         SelectionItem(
-          selectionItemData: selectionItemData(
-            mainText: .selectCertificate,
-            subtitle: .signingCertificateDescription,
-            leadingIcon: Image(.stepThree),
-            leadingIconTint: Theme.shared.color.onSurface,
-            action: {
-              selectCertificate()
-            }
-          )
+          selectionItemData: certificateSelection
         )
       }
     }
@@ -139,12 +109,23 @@ private func content(
     title: .custom("title")
   ) {
     content(
-      documentName: "documentName",
-      qtspName: "qtspName",
-      viewString: "View",
-      view: {},
-      selectService: {},
-      selectCertificate: {}
+      documentSelection: SelectionItemData(
+        overlineText: .selectDocument,
+        mainText: .custom("documentName"),
+        subtitle: .selectDocumentFromDevice,
+        actionText: .view,
+        leadingIcon: Image(.stepOne),
+        leadingIconTint: Theme.shared.color.success,
+        action: {}
+      ),
+      qtspServiceSelection: SelectionItemData(
+        mainText: .selectCertificate,
+        subtitle: .signingCertificateDescription,
+        leadingIcon: Image(.stepTwo),
+        leadingIconTint: Theme.shared.color.onSurface,
+        action: {}
+      ),
+      certificateSelection: nil
     )
   }
   .environment(\.localizationController, PreviewLocalizationController())
@@ -156,12 +137,23 @@ private func content(
     title: .custom("title")
   ) {
     content(
-      documentName: "documentName",
-      qtspName: "qtspName",
-      viewString: "View",
-      view: {},
-      selectService: {},
-      selectCertificate: {}
+      documentSelection: SelectionItemData(
+        overlineText: .selectDocument,
+        mainText: .custom("documentName"),
+        subtitle: .selectDocumentFromDevice,
+        actionText: .view,
+        leadingIcon: Image(.stepOne),
+        leadingIconTint: Theme.shared.color.success,
+        action: {}
+      ),
+      qtspServiceSelection: SelectionItemData(
+        mainText: .selectCertificate,
+        subtitle: .signingCertificateDescription,
+        leadingIcon: Image(.stepTwo),
+        leadingIconTint: Theme.shared.color.onSurface,
+        action: {}
+      ),
+      certificateSelection: nil
     )
   }
   .darkModePreview()

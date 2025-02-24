@@ -18,13 +18,13 @@ import SwiftUI
 struct SelectionItem: View {
   @Environment(\.localizationController) var localization
 
-  let selectionItemData: selectionItemData
+  let selectionItemData: SelectionItemData
   let verticalPadding: CGFloat
   let horizontalPadding: CGFloat
   let enabled: Bool
 
   init(
-    selectionItemData: selectionItemData,
+    selectionItemData: SelectionItemData,
     verticalPadding: CGFloat = SPACING_MEDIUM,
     horizontalPadding: CGFloat = SPACING_MEDIUM_SMALL,
     enabled: Bool = true
@@ -96,7 +96,7 @@ struct SelectionItem: View {
 #Preview {
   VStack {
     SelectionItem(
-      selectionItemData: selectionItemData(
+      selectionItemData: SelectionItemData(
         overlineText: .selectDocument,
         mainText: .custom("File_to_be_signed.pdf"),
         subtitle: .selectDocumentFromDevice,
@@ -108,7 +108,7 @@ struct SelectionItem: View {
     )
 
     SelectionItem(
-      selectionItemData: selectionItemData(
+      selectionItemData: SelectionItemData(
         mainText: .custom("Select signing service"),
         subtitle: .selectServiceSubtitle,
         leadingIcon: Image(.stepTwo),
