@@ -21,16 +21,19 @@ struct SessionData {
   let qtsp: QTSPData?
   let certificate: CredentialInfo?
   let code: String?
+  let credentialCertificate: [CredentialInfo]?
 
   init(
     document: DocumentData? = nil,
     qtsp: QTSPData? = nil,
     certificate: CredentialInfo? = nil,
-    code: String? = nil
+    code: String? = nil,
+    credentialCertificate: [CredentialInfo]? = nil
   ) {
     self.document = document
     self.qtsp = qtsp
     self.certificate = certificate
     self.code = code
+    self.credentialCertificate = credentialCertificate
   }
 }

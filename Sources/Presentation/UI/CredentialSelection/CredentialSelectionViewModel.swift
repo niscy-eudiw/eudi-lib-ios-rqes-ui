@@ -55,7 +55,7 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
       try await fetchCredentials()
     } catch {
       setErrorState(.genericServiceErrorMessage) {
-        self.onCancel()
+        self.router.pop()
       }
     }
   }
