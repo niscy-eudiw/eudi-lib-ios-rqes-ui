@@ -1,4 +1,4 @@
-// MARK: - Mocks generated from file: 'Sources/Domain/Controller/LocalizationController.swift'
+// MARK: - Mocks generated from file: '../Sources/Domain/Controller/LocalizationController.swift'
 
 import Cuckoo
 import SwiftUI
@@ -152,7 +152,7 @@ class LocalizationControllerStub:LocalizationController, @unchecked Sendable {
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Domain/Controller/LogController.swift'
+// MARK: - Mocks generated from file: '../Sources/Domain/Controller/LogController.swift'
 
 import Cuckoo
 @testable import EudiRQESUi
@@ -271,7 +271,7 @@ class LogControllerStub:LogController, @unchecked Sendable {
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Domain/Controller/PreferencesController.swift'
+// MARK: - Mocks generated from file: '../Sources/Domain/Controller/PreferencesController.swift'
 
 import Cuckoo
 @testable import EudiRQESUi
@@ -594,7 +594,7 @@ class PreferencesControllerStub:PreferencesController, @unchecked Sendable {
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Domain/Controller/RQESController.swift'
+// MARK: - Mocks generated from file: '../Sources/Domain/Controller/RQESController.swift'
 
 import Cuckoo
 import RqesKit
@@ -885,7 +885,7 @@ class RQESControllerStub:RQESController, @unchecked Sendable {
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Domain/DI/Graph/DIGraph.swift'
+// MARK: - Mocks generated from file: '../Sources/Domain/DI/Graph/DIGraph.swift'
 
 import Cuckoo
 import Swinject
@@ -995,14 +995,14 @@ class DIGraphTypeStub:DIGraphType, @unchecked Sendable {
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Domain/Entities/DocumentData.swift'
+// MARK: - Mocks generated from file: '../Sources/Domain/Entities/DocumentData.swift'
 
 import Cuckoo
 @testable import EudiRQESUi
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Domain/Entities/Error/EudiRQESUiError.swift'
+// MARK: - Mocks generated from file: '../Sources/Domain/Entities/Error/EudiRQESUiError.swift'
 
 import Cuckoo
 import Foundation
@@ -1010,21 +1010,21 @@ import Foundation
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Domain/Entities/Localization/LocalizableKey.swift'
+// MARK: - Mocks generated from file: '../Sources/Domain/Entities/Localization/LocalizableKey.swift'
 
 import Cuckoo
 @testable import EudiRQESUi
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Domain/Entities/QTSPData.swift'
+// MARK: - Mocks generated from file: '../Sources/Domain/Entities/QTSPData.swift'
 
 import Cuckoo
 @testable import EudiRQESUi
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Domain/Entities/SessionData.swift'
+// MARK: - Mocks generated from file: '../Sources/Domain/Entities/SessionData.swift'
 
 import Cuckoo
 import RqesKit
@@ -1032,7 +1032,7 @@ import RqesKit
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Domain/Extension/Document+Extensions.swift'
+// MARK: - Mocks generated from file: '../Sources/Domain/Extension/Document+Extensions.swift'
 
 import Cuckoo
 import Foundation
@@ -1041,7 +1041,7 @@ import RqesKit
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Domain/Extension/Resolver+Extensions.swift'
+// MARK: - Mocks generated from file: '../Sources/Domain/Extension/Resolver+Extensions.swift'
 
 import Cuckoo
 import Swinject
@@ -1049,7 +1049,7 @@ import Swinject
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Domain/Extension/String+Extensions.swift'
+// MARK: - Mocks generated from file: '../Sources/Domain/Extension/String+Extensions.swift'
 
 import Cuckoo
 import SwiftUI
@@ -1057,7 +1057,7 @@ import SwiftUI
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Domain/Interactor/RQESInteractor.swift'
+// MARK: - Mocks generated from file: '../Sources/Domain/Interactor/RQESInteractor.swift'
 
 import Cuckoo
 import Foundation
@@ -1450,7 +1450,7 @@ class RQESInteractorStub:RQESInteractor, @unchecked Sendable {
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Infrastructure/Config/EudiRQESUiConfig.swift'
+// MARK: - Mocks generated from file: '../Sources/Infrastructure/Config/EudiRQESUiConfig.swift'
 
 import Cuckoo
 import Foundation
@@ -1623,7 +1623,7 @@ public class EudiRQESUiConfigStub:EudiRQESUiConfig, @unchecked Sendable {
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Infrastructure/Config/RqesServiceConfig.swift'
+// MARK: - Mocks generated from file: '../Sources/Infrastructure/Config/RqesServiceConfig.swift'
 
 import Cuckoo
 import Foundation
@@ -1632,7 +1632,7 @@ import RqesKit
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Infrastructure/EudiRQESUi.swift'
+// MARK: - Mocks generated from file: '../Sources/Infrastructure/EudiRQESUi.swift'
 
 import Cuckoo
 import UIKit
@@ -1641,7 +1641,7 @@ import RqesKit
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Infrastructure/Theme/ColorManager.swift'
+// MARK: - Mocks generated from file: '../Sources/Infrastructure/Theme/ColorManager.swift'
 
 import Cuckoo
 import SwiftUI
@@ -1772,6 +1772,16 @@ public class MockColorManagerProtocol: ColorManagerProtocol, Cuckoo.ProtocolMock
             )
         }
     }
+    
+    public var black: Color {
+        get {
+            return cuckoo_manager.getter(
+                "black",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.black
+            )
+        }
+    }
 
 
     public struct __StubbingProxy_ColorManagerProtocol: Cuckoo.StubbingProxy {
@@ -1823,6 +1833,10 @@ public class MockColorManagerProtocol: ColorManagerProtocol, Cuckoo.ProtocolMock
         
         var onPrimary: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockColorManagerProtocol,Color> {
             return .init(manager: cuckoo_manager, name: "onPrimary")
+        }
+        
+        var black: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockColorManagerProtocol,Color> {
+            return .init(manager: cuckoo_manager, name: "black")
         }
     }
 
@@ -1879,6 +1893,10 @@ public class MockColorManagerProtocol: ColorManagerProtocol, Cuckoo.ProtocolMock
         
         var onPrimary: Cuckoo.VerifyReadOnlyProperty<Color> {
             return .init(manager: cuckoo_manager, name: "onPrimary", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        var black: Cuckoo.VerifyReadOnlyProperty<Color> {
+            return .init(manager: cuckoo_manager, name: "black", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
     }
 }
@@ -1950,6 +1968,12 @@ public class ColorManagerProtocolStub:ColorManagerProtocol, @unchecked Sendable 
             return DefaultValueRegistry.defaultValue(for: (Color).self)
         }
     }
+    
+    public var black: Color {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (Color).self)
+        }
+    }
 
 
 }
@@ -1957,7 +1981,7 @@ public class ColorManagerProtocolStub:ColorManagerProtocol, @unchecked Sendable 
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Infrastructure/Theme/ThemeManager.swift'
+// MARK: - Mocks generated from file: '../Sources/Infrastructure/Theme/ThemeManager.swift'
 
 import Cuckoo
 @testable import EudiRQESUi
@@ -2056,7 +2080,7 @@ public class ThemeProtocolStub:ThemeProtocol, @unchecked Sendable {
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Infrastructure/Theme/TypographyManager.swift'
+// MARK: - Mocks generated from file: '../Sources/Infrastructure/Theme/TypographyManager.swift'
 
 import Cuckoo
 import Foundation
@@ -2469,7 +2493,7 @@ public class TypographyManagerProtocolStub:TypographyManagerProtocol, @unchecked
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Presentation/Architecture/ViewModel.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/Architecture/ViewModel.swift'
 
 import Cuckoo
 import SwiftUI
@@ -2523,7 +2547,7 @@ class ViewStateStub:ViewState, @unchecked Sendable {
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Presentation/Entities/CredentialDataUIModel.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/Entities/CredentialDataUIModel.swift'
 
 import Cuckoo
 import RqesKit
@@ -2531,22 +2555,14 @@ import RqesKit
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Presentation/Extension/UIApplication+Extensions.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/Extension/UIApplication+Extensions.swift'
 
 import Cuckoo
 @testable import EudiRQESUi
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Presentation/Extension/View+Extensions.swift'
-
-import Cuckoo
-import SwiftUI
-@testable import EudiRQESUi
-
-
-
-// MARK: - Mocks generated from file: 'Sources/Presentation/Modifiers/ConfirmationDialogModifier.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/Extension/View+Extensions.swift'
 
 import Cuckoo
 import SwiftUI
@@ -2554,7 +2570,7 @@ import SwiftUI
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Presentation/Modifiers/FastenedDynamicModifier.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/Modifiers/ConfirmationDialogModifier.swift'
 
 import Cuckoo
 import SwiftUI
@@ -2562,7 +2578,7 @@ import SwiftUI
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Presentation/Modifiers/LeftImageModifier.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/Modifiers/FastenedDynamicModifier.swift'
 
 import Cuckoo
 import SwiftUI
@@ -2570,7 +2586,7 @@ import SwiftUI
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Presentation/Modifiers/ToolBarContent.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/Modifiers/LeftImageModifier.swift'
 
 import Cuckoo
 import SwiftUI
@@ -2578,7 +2594,15 @@ import SwiftUI
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Presentation/Router/RouterGraph.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/Modifiers/ToolBarContent.swift'
+
+import Cuckoo
+import SwiftUI
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: '../Sources/Presentation/Router/RouterGraph.swift'
 
 import Cuckoo
 import Foundation
@@ -2868,22 +2892,14 @@ class RouterGraphStub:RouterGraph, @unchecked Sendable {
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Presentation/UI/Component/CardView.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/Component/CardView.swift'
 
 import Cuckoo
 @testable import EudiRQESUi
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Presentation/UI/Component/ContentErrorView.swift'
-
-import Cuckoo
-import SwiftUI
-@testable import EudiRQESUi
-
-
-
-// MARK: - Mocks generated from file: 'Sources/Presentation/UI/Component/ContentScreenView.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/Component/ContentErrorView.swift'
 
 import Cuckoo
 import SwiftUI
@@ -2891,7 +2907,7 @@ import SwiftUI
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Presentation/UI/Component/LoadingView.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/Component/ContentHeader/AppIconAndTextData.swift'
 
 import Cuckoo
 import SwiftUI
@@ -2899,7 +2915,7 @@ import SwiftUI
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Presentation/UI/Component/WrapButtonView.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/Component/ContentHeader/ContentHeaderView.swift'
 
 import Cuckoo
 import SwiftUI
@@ -2907,7 +2923,7 @@ import SwiftUI
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Presentation/UI/Container/ContainerView.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/Component/ContentHeader/RelyingPartyData.swift'
 
 import Cuckoo
 import SwiftUI
@@ -2915,7 +2931,7 @@ import SwiftUI
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Presentation/UI/CredentialSelection/CredentialSelectionView.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/Component/ContentScreenView.swift'
 
 import Cuckoo
 import SwiftUI
@@ -2923,7 +2939,62 @@ import SwiftUI
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Presentation/UI/CredentialSelection/CredentialSelectionViewModel.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/Component/LoadingView.swift'
+
+import Cuckoo
+import SwiftUI
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/Component/SelectionItem/SelectionItem.swift'
+
+import Cuckoo
+import SwiftUI
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/Component/SelectionItem/selectionItemData.swift'
+
+import Cuckoo
+import SwiftUI
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/Component/WrapButtonView.swift'
+
+import Cuckoo
+import SwiftUI
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/Component/WrapText.swift'
+
+import Cuckoo
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/Container/ContainerView.swift'
+
+import Cuckoo
+import SwiftUI
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/CredentialSelection/CredentialSelectionView.swift'
+
+import Cuckoo
+import SwiftUI
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/CredentialSelection/CredentialSelectionViewModel.swift'
 
 import Cuckoo
 import SwiftUI
@@ -2932,7 +3003,7 @@ import RqesKit
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Presentation/UI/DocumentSelectionView/DocumentSelectionView.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/DocumentSelectionView/DocumentSelectionView.swift'
 
 import Cuckoo
 import SwiftUI
@@ -2940,7 +3011,7 @@ import SwiftUI
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Presentation/UI/DocumentSelectionView/DocumentSelectionViewModel.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/DocumentSelectionView/DocumentSelectionViewModel.swift'
 
 import Cuckoo
 import SwiftUI
@@ -2948,16 +3019,7 @@ import SwiftUI
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Presentation/UI/DocumentView/DocumentView.swift'
-
-import Cuckoo
-import SwiftUI
-import PDFKit
-@testable import EudiRQESUi
-
-
-
-// MARK: - Mocks generated from file: 'Sources/Presentation/UI/DocumentView/DocumentViewModel.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/DocumentView/DocumentView.swift'
 
 import Cuckoo
 import SwiftUI
@@ -2966,7 +3028,16 @@ import PDFKit
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Presentation/UI/ServiceSelection/ServiceSelectionView.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/DocumentView/DocumentViewModel.swift'
+
+import Cuckoo
+import SwiftUI
+import PDFKit
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/ServiceSelection/ServiceSelectionView.swift'
 
 import Cuckoo
 import SwiftUI
@@ -2974,7 +3045,7 @@ import SwiftUI
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Presentation/UI/ServiceSelection/ServiceSelectionViewModel.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/ServiceSelection/ServiceSelectionViewModel.swift'
 
 import Cuckoo
 import SwiftUI
@@ -2982,7 +3053,7 @@ import SwiftUI
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Presentation/UI/SignedDocument/SignedDocumentView.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/SignedDocument/SignedDocumentView.swift'
 
 import Cuckoo
 import SwiftUI
@@ -2990,7 +3061,7 @@ import SwiftUI
 
 
 
-// MARK: - Mocks generated from file: 'Sources/Presentation/UI/SignedDocument/SignedDocumentViewModel.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/SignedDocument/SignedDocumentViewModel.swift'
 
 import Cuckoo
 import SwiftUI
