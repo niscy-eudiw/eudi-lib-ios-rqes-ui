@@ -47,11 +47,6 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
         services: viewModel.viewState.services,
         selectedItem: $viewModel.selectedItem
       )
-      .onChange(of: viewModel.selectedItem) { newValue in
-        if let newValue = newValue {
-          viewModel.selectQTSP(newValue)
-        }
-      }
       .task {
         await viewModel.initiate()
       }

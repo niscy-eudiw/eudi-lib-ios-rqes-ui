@@ -60,12 +60,6 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
     }
   }
   
-  func selectQTSP(_ qtsp: QTSPData) {
-    Task {
-      await interactor.updateQTSP(qtsp)
-    }
-  }
-  
   func nextStep() {
     openAuthorization()
   }
@@ -81,12 +75,13 @@ class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceS
         if let selectedItem {
           try await interactor.createRQESService(selectedItem)
         } else {
-          setErrorState(.genericErrorQtspNotFound) {
-            self.setState { $0.copy(error: nil) }
-          }
+          throw EudiRQESUiError.noRQESServiceProvided
         }
         
         let authorizationUrl = try await interactor.openAuthrorizationURL()
+        
+        await interactor.updateQTSP(selectedItem)
+        
         self.onPause()
         
         await UIApplication.shared.openURLIfPossible(authorizationUrl) {
