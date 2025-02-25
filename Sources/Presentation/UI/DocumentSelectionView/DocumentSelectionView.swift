@@ -29,41 +29,32 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
   var body: some View {
     ContentScreenView(
       spacing: SPACING_LARGE_MEDIUM,
-      title: localization.get(with: .confirmSelection),
+      title: .signDocument,
       errorConfig: viewModel.viewState.error,
       isLoading: viewModel.viewState.isLoading,
       toolbarContent: .init(
-        trailingActions: [
-          Action(
-            title: localization.get(with: .proceed),
-            callback: {
-              viewModel.selectService()
-            }
-          )
-        ],
         leadingActions: [
           Action(
-            title: localization.get(with: .cancel),
+            title: .cancel,
             callback: { showSheet.toggle() }
           )
         ]
       )
     ) {
       content(
-        confirmSelectionTitle: localization.get(with: .confirmSelectionTitle),
-        documentName: viewModel.viewState.documentName,
-        viewString: localization.get(with: .view),
-        view: viewModel.viewDocument
+        documentSelection: viewModel.viewState.documentSelection,
+        qtspServiceSelection: viewModel.viewState.qtspServiceSelection,
+        certificateSelection: viewModel.viewState.certificateSelection
       )
     }
     .task {
       await viewModel.initiate()
     }
     .confirmationDialog(
-      title: localization.get(with: .cancelSigningProcessTitle),
-      message: localization.get(with: .cancelSigningProcessSubtitle),
-      destructiveText: localization.get(with: .cancelSigning),
-      baseText: localization.get(with: .continueSigning),
+      title: .cancelSigningProcessTitle,
+      message: .cancelSigningProcessSubtitle,
+      destructiveText: .cancelSigning,
+      baseText: .continueSigning,
       isPresented: $showSheet,
       destructiveAction: {
         viewModel.onCancel()
@@ -79,58 +70,92 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
 @MainActor
 @ViewBuilder
 private func content(
-  confirmSelectionTitle: String,
-  documentName: String,
-  viewString: String,
-  view: @escaping () -> Void
+  documentSelection: SelectionItemData?,
+  qtspServiceSelection: SelectionItemData?,
+  certificateSelection: SelectionItemData?
 ) -> some View {
-  
-  Text(confirmSelectionTitle)
-    .font(Theme.shared.font.bodyLarge.font)
-    .foregroundStyle(Theme.shared.color.onSurface)
 
-  CardView(
-    title: documentName,
-    trailingView: {
-      Text(viewString)
-        .font(Theme.shared.font.bodyLarge.font)
-    },
-    action: {
-      view()
-    },
-    trailingAction: {
-      view()
+  ScrollView {
+    VStack(alignment: .leading,spacing: SPACING_MEDIUM) {
+      if let documentSelection {
+        SelectionItem(
+          selectionItemData: documentSelection
+        )
+
+        Divider()
+      }
+
+      if let qtspServiceSelection {
+        SelectionItem(
+          selectionItemData: qtspServiceSelection
+        )
+      }
+
+      if let certificateSelection {
+        Divider()
+
+        SelectionItem(
+          selectionItemData: certificateSelection
+        )
+      }
     }
-  )
-
-  Spacer()
+  }
+  .scrollIndicators(.hidden)
 }
 
 #Preview {
   ContentScreenView(
     spacing: SPACING_LARGE_MEDIUM,
-    title: "title"
+    title: .custom("title")
   ) {
     content(
-      confirmSelectionTitle: "confirmSelectionTitle",
-      documentName: "documentName",
-      viewString: "View",
-      view: {}
+      documentSelection: SelectionItemData(
+        overlineText: .selectDocument,
+        mainText: .custom("documentName"),
+        subtitle: .selectDocumentFromDevice,
+        actionText: .view,
+        leadingIcon: Image(.stepOne),
+        leadingIconTint: Theme.shared.color.success,
+        action: {}
+      ),
+      qtspServiceSelection: SelectionItemData(
+        mainText: .selectCertificate,
+        subtitle: .signingCertificateDescription,
+        leadingIcon: Image(.stepTwo),
+        leadingIconTint: Theme.shared.color.onSurface,
+        action: {}
+      ),
+      certificateSelection: nil
     )
   }
+  .environment(\.localizationController, PreviewLocalizationController())
 }
 
 #Preview("Dark Mode") {
   ContentScreenView(
     spacing: SPACING_LARGE_MEDIUM,
-    title: "title"
+    title: .custom("title")
   ) {
     content(
-      confirmSelectionTitle: "confirmSelectionTitle",
-      documentName: "documentName",
-      viewString: "View",
-      view: {}
+      documentSelection: SelectionItemData(
+        overlineText: .selectDocument,
+        mainText: .custom("documentName"),
+        subtitle: .selectDocumentFromDevice,
+        actionText: .view,
+        leadingIcon: Image(.stepOne),
+        leadingIconTint: Theme.shared.color.success,
+        action: {}
+      ),
+      qtspServiceSelection: SelectionItemData(
+        mainText: .selectCertificate,
+        subtitle: .signingCertificateDescription,
+        leadingIcon: Image(.stepTwo),
+        leadingIconTint: Theme.shared.color.onSurface,
+        action: {}
+      ),
+      certificateSelection: nil
     )
   }
   .darkModePreview()
+  .environment(\.localizationController, PreviewLocalizationController())
 }

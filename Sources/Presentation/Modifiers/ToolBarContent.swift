@@ -17,13 +17,13 @@ import SwiftUI
 
 struct Action: Identifiable {
   let id = UUID()
-  let title: String?
+  let title: LocalizableKey?
   let image: Image?
   let disabled: Bool
   let callback: (() -> Void)?
   
   init(
-    title: String? = nil,
+    title: LocalizableKey? = nil,
     image: Image? = nil,
     disabled: Bool = false,
     callback: (() -> Void)? = nil
@@ -73,6 +73,9 @@ struct ToolBarContent: ToolbarContent {
 }
 
 private struct ActionView: View {
+  
+  @Environment(\.localizationController) var localization
+  
   let action: Action
   let disabled: Bool
   
@@ -97,7 +100,7 @@ private struct ActionView: View {
   @ViewBuilder
   private var content: some View {
     if let title = action.title {
-      Text(title)
+      Text(localization.get(with: title))
     }
     if let image = action.image {
       image
@@ -112,19 +115,19 @@ private struct ActionView: View {
         ToolBarContent(
           trailingActions: [
             Action(
-              title: "State",
+              title: .state,
               disabled: false,
               callback: {}
             ),
             Action(
-              title: "Proceed",
+              title: .proceed,
               disabled: false,
               callback: {}
             )
           ],
           leadingActions: [
             Action(
-              title: "Cancel",
+              title: .cancel,
               disabled: false,
               callback: {}
             )
@@ -132,4 +135,5 @@ private struct ActionView: View {
         )
       }
   }
+  .environment(\.localizationController, PreviewLocalizationController())
 }

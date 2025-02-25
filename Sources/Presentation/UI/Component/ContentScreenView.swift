@@ -17,12 +17,14 @@
 import SwiftUI
 
 struct ContentScreenView<Content: View>: View {
+  
+  @Environment(\.localizationController) var localization
 
   private let content: Content
   private let padding: CGFloat
   private let spacing: CGFloat
   private let background: Color
-  private let title: String
+  private let title: LocalizableKey
   private let toolbarContent: ToolBarContent?
   private let errorConfig: ContentErrorView.Config?
   private let isLoading: Bool
@@ -33,7 +35,7 @@ struct ContentScreenView<Content: View>: View {
     canScroll: Bool = false,
     spacing: CGFloat = 0,
     background: Color = Theme.shared.color.background,
-    title: String,
+    title: LocalizableKey,
     errorConfig: ContentErrorView.Config? = nil,
     isLoading: Bool = false,
     toolbarContent: ToolBarContent? = nil,
@@ -73,7 +75,7 @@ struct ContentScreenView<Content: View>: View {
     .if(errorConfig != nil) {
       $0.navigationBarHidden(true)
     }
-    .navigationTitle(title)
+    .navigationTitle(localization.get(with: title))
     .navigationBarTitleDisplayMode(.inline)
     .if(toolbarContent != nil) {
       $0.toolbar {

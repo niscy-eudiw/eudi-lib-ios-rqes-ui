@@ -17,10 +17,10 @@ import SwiftUI
 
 extension View {
   func confirmationDialog(
-    title: String,
-    message: String,
-    destructiveText: String,
-    baseText: String,
+    title: LocalizableKey,
+    message: LocalizableKey,
+    destructiveText: LocalizableKey,
+    baseText: LocalizableKey,
     isPresented: Binding<Bool>,
     destructiveAction: @escaping () -> Void,
     baseAction: @escaping () -> Void
@@ -40,10 +40,13 @@ extension View {
 }
 
 struct ConfirmationDialogModifier: ViewModifier {
-  let title: String
-  let message: String
-  let destructiveText: String
-  let baseText: String
+  
+  @Environment(\.localizationController) var localization
+
+  let title: LocalizableKey
+  let message: LocalizableKey
+  let destructiveText: LocalizableKey
+  let baseText: LocalizableKey
   let isPresented: Binding<Bool>
   let destructiveAction: () -> Void
   let baseAction: () -> Void
@@ -51,18 +54,18 @@ struct ConfirmationDialogModifier: ViewModifier {
   func body(content: Content) -> some View {
     content
       .confirmationDialog(
-        title,
+        localization.get(with: title),
         isPresented: isPresented,
         titleVisibility: .visible
       ) {
-        Button(destructiveText, role: .destructive) {
+        Button(localization.get(with: destructiveText), role: .destructive) {
           destructiveAction()
         }
-        Button(baseText, role: .cancel) {
+        Button(localization.get(with: baseText), role: .cancel) {
           baseAction()
         }
       } message: {
-        Text(message)
+        Text(localization.get(with: message))
       }
   }
 }
