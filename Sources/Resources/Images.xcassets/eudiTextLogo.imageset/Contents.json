@@ -3,6 +3,16 @@
     {
       "filename" : "eudiTextLogo.svg",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "eudiTextLogoDark.svg",
+      "idiom" : "universal"
     }
   ],
   "info" : {
