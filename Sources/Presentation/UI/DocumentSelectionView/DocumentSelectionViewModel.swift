@@ -113,17 +113,27 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
   private func createQtspServiceSelection(
     qtspName: String?
   ) -> SelectionItemData {
-    SelectionItemData(
-      overlineText: qtspName == nil ? nil : .selectService,
-      mainText: qtspName == nil ? .selectService : .custom(qtspName ?? ""),
-      subtitle: .selectServiceSubtitle,
-      leadingIcon: Image(.stepTwo),
-      leadingIconTint: qtspName == nil ? Theme.shared.color.onSurface : Theme.shared.color.success,
-      enabled: qtspName == nil,
-      action: {
-        self.selectService()
-      }
-    )
+    if let qtspName {
+      SelectionItemData(
+        overlineText: .selectService,
+        mainText: .custom(qtspName),
+        subtitle: .selectServiceSubtitle,
+        leadingIcon: Image(.stepTwo),
+        leadingIconTint: Theme.shared.color.success,
+        enabled: false
+      )
+    } else {
+      SelectionItemData(
+        mainText: .selectService,
+        subtitle: .selectServiceSubtitle,
+        leadingIcon: Image(.stepTwo),
+        leadingIconTint: Theme.shared.color.onSurface,
+        enabled: true,
+        action: {
+          self.selectService()
+        }
+      )
+    }
   }
 
   private func createCertificateSelection() -> SelectionItemData {
