@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct ContentErrorView: View {
+  
   @Environment(\.localizationController) var localization
 
   private let config: Config

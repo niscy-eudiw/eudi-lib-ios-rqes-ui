@@ -40,6 +40,7 @@ extension View {
 }
 
 struct ConfirmationDialogModifier: ViewModifier {
+  
   @Environment(\.localizationController) var localization
 
   let title: LocalizableKey
@@ -53,7 +54,7 @@ struct ConfirmationDialogModifier: ViewModifier {
   func body(content: Content) -> some View {
     content
       .confirmationDialog(
-        title,
+        localization.get(with: title),
         isPresented: isPresented,
         titleVisibility: .visible
       ) {

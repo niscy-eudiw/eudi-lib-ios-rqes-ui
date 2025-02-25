@@ -73,7 +73,9 @@ struct ToolBarContent: ToolbarContent {
 }
 
 private struct ActionView: View {
+  
   @Environment(\.localizationController) var localization
+  
   let action: Action
   let disabled: Bool
   

@@ -17,6 +17,8 @@
 import SwiftUI
 
 struct ContentScreenView<Content: View>: View {
+  
+  @Environment(\.localizationController) var localization
 
   private let content: Content
   private let padding: CGFloat
@@ -73,7 +75,7 @@ struct ContentScreenView<Content: View>: View {
     .if(errorConfig != nil) {
       $0.navigationBarHidden(true)
     }
-    .navigationTitle(title)
+    .navigationTitle(localization.get(with: title))
     .navigationBarTitleDisplayMode(.inline)
     .if(toolbarContent != nil) {
       $0.toolbar {

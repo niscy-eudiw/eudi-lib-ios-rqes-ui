@@ -16,6 +16,7 @@
 import SwiftUI
 
 struct SelectionItem: View {
+  
   @Environment(\.localizationController) var localization
 
   let selectionItemData: SelectionItemData
