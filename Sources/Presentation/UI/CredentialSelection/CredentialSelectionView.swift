@@ -21,7 +21,6 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
   @ObservedObject private var viewModel: CredentialSelectionViewModel<Router>
   
   @State private var selectedItem: CredentialDataUIModel?
-  @State private var showSheet = false
 
   init(with viewModel:CredentialSelectionViewModel<Router>) {
     self.viewModel = viewModel
@@ -51,19 +50,6 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
     .task {
       await viewModel.initiate()
     }
-    .confirmationDialog(
-      title: .cancelSigningProcessTitle,
-      message: .cancelSigningProcessSubtitle,
-      destructiveText: .cancelSigning,
-      baseText: .continueSigning,
-      isPresented: $showSheet,
-      destructiveAction: {
-        viewModel.onCancel()
-      },
-      baseAction: {
-        showSheet.toggle()
-      }
-    )
   }
 
   private func toolbarAction() -> ToolBarContent? {

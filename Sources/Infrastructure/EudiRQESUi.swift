@@ -174,6 +174,14 @@ extension EudiRQESUi {
     session = session.copy(certificate: certificate)
   }
   
+  func updateCredentialInfo(with info: [CredentialInfo]) async {
+    session = session.copy(credentialCertificate: info)
+  }
+  
+  func getCredentialInfo() -> [CredentialInfo]? {
+    return session.credentialCertificate
+  }
+  
   func getSessionData() -> SessionData {
     return self.session
   }
@@ -209,6 +217,7 @@ extension EudiRQESUi {
   @MainActor
   func cancel(animated: Bool = true) async {
     await setState(.none)
+    await resetCache()
     await pause(animated: animated)
   }
 

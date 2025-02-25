@@ -122,11 +122,17 @@ final class RQESInteractorImpl: RQESInteractor {
   }
   
   func fetchCredentials() async throws -> Result<[CredentialInfo], any Error> {
+    
+    if let credentials = await self.rqesUi.getCredentialInfo() {
+      return .success(credentials)
+    }
+    
     if let authorizationCode = await self.getSession()?.code {
       do {
         let rQESServiceAuthorized = try await rqesController.authorizeService(authorizationCode)
         await self.rqesUi.setRQESServiceAuthorized(rQESServiceAuthorized)
         let credentials = try await rqesController.getCredentialsList()
+        await self.rqesUi.updateCredentialInfo(with: credentials)
         return .success(credentials)
       } catch {
         return .failure(error)
