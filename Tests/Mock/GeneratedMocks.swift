@@ -1121,9 +1121,9 @@ class MockRQESInteractor: RQESInteractor, Cuckoo.ProtocolMock, @unchecked Sendab
         )
     }
     
-    func updateQTSP(_ p0: QTSPData) async {
+    func updateQTSP(_ p0: QTSPData?) async {
         return await cuckoo_manager.call(
-            "updateQTSP(_ p0: QTSPData) async",
+            "updateQTSP(_ p0: QTSPData?) async",
             parameters: (p0),
             escapingParameters: (p0),
             superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
@@ -1220,10 +1220,10 @@ class MockRQESInteractor: RQESInteractor, Cuckoo.ProtocolMock, @unchecked Sendab
             ))
         }
         
-        func updateQTSP<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(QTSPData)> where M1.MatchedType == QTSPData {
-            let matchers: [Cuckoo.ParameterMatcher<(QTSPData)>] = [wrap(matchable: p0) { $0 }]
+        func updateQTSP<M1: Cuckoo.OptionalMatchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnFunction<(QTSPData?)> where M1.OptionalMatchedType == QTSPData {
+            let matchers: [Cuckoo.ParameterMatcher<(QTSPData?)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockRQESInteractor.self,
-                method: "updateQTSP(_ p0: QTSPData) async",
+                method: "updateQTSP(_ p0: QTSPData?) async",
                 parameterMatchers: matchers
             ))
         }
@@ -1330,10 +1330,10 @@ class MockRQESInteractor: RQESInteractor, Cuckoo.ProtocolMock, @unchecked Sendab
         
         
         @discardableResult
-        func updateQTSP<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(QTSPData), Void> where M1.MatchedType == QTSPData {
-            let matchers: [Cuckoo.ParameterMatcher<(QTSPData)>] = [wrap(matchable: p0) { $0 }]
+        func updateQTSP<M1: Cuckoo.OptionalMatchable>(_ p0: M1) -> Cuckoo.__DoNotUse<(QTSPData?), Void> where M1.OptionalMatchedType == QTSPData {
+            let matchers: [Cuckoo.ParameterMatcher<(QTSPData?)>] = [wrap(matchable: p0) { $0 }]
             return cuckoo_manager.verify(
-                "updateQTSP(_ p0: QTSPData) async",
+                "updateQTSP(_ p0: QTSPData?) async",
                 callMatcher: callMatcher,
                 parameterMatchers: matchers,
                 sourceLocation: sourceLocation
@@ -1422,7 +1422,7 @@ class RQESInteractorStub:RQESInteractor, @unchecked Sendable {
         return DefaultValueRegistry.defaultValue(for: (Result<[CredentialInfo], any Error>).self)
     }
     
-    func updateQTSP(_ p0: QTSPData) async {
+    func updateQTSP(_ p0: QTSPData?) async {
         return DefaultValueRegistry.defaultValue(for: (Void).self)
     }
     

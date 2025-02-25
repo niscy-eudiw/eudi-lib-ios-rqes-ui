@@ -21,7 +21,7 @@ protocol RQESInteractor: Sendable {
   func getSession() async -> SessionData?
   func getQTSps() async -> [QTSPData]
   func fetchCredentials() async throws -> Result<[CredentialInfo], any Error>
-  func updateQTSP(_ qtsp: QTSPData) async
+  func updateQTSP(_ qtsp: QTSPData?) async
   func updateDocument(_ url: URL) async
   func createRQESService(_ qtsp: QTSPData) async throws
   func saveCertificate(_ certificate: CredentialInfo) async
@@ -77,7 +77,7 @@ final class RQESInteractorImpl: RQESInteractor {
     await self.rqesUi.getSessionData()
   }
   
-  func updateQTSP(_ qtsp: QTSPData) async {
+  func updateQTSP(_ qtsp: QTSPData?) async {
     await self.rqesUi.updateQTSP(with: qtsp)
   }
   
