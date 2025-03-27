@@ -12,6 +12,8 @@ fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
 fastlane/*.xcresult
+.env.release
+.env.dev
 
 #XCOV
 xcov_output
