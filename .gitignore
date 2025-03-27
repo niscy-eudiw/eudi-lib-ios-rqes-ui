@@ -12,7 +12,7 @@ fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
 fastlane/*.xcresult
-.env.demo
+.env.release
 .env.dev
 
 #XCOV
