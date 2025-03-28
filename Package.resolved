@@ -1,5 +1,5 @@
 {
-  "originHash" : "85c42d6eaa6eefc50223b8cebffbbe7bfdb2d7844ba7d025179e3996dd61451c",
+  "originHash" : "80fd044ad55a7522a52088a243321eab233b857d131668f6a736df0a78216578",
   "pins" : [
     {
       "identity" : "aexml",
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Brightify/Cuckoo.git",
       "state" : {
-        "revision" : "4379da27d87754aca5121ac906ecb4c640ba82d0",
-        "version" : "2.0.14"
+        "revision" : "8f723758c47bd7b7dc340b66f9dbd1170f331ed2",
+        "version" : "2.0.16"
       }
     },
     {
@@ -105,8 +105,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-certificates.git",
       "state" : {
-        "revision" : "274f8668d3ec5d2892904d8465635c5ea659f767",
-        "version" : "1.7.0"
+        "revision" : "d608282ae53b9bf2e14c8a5b67c89927ba5d7afe",
+        "version" : "1.8.1"
       }
     },
     {
@@ -123,14 +123,14 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-crypto.git",
       "state" : {
-        "revision" : "45305d32cfb830faebcaa9a7aea66ad342637518",
-        "version" : "3.11.1"
+        "revision" : "a6ce32a18b81b04ce7e897d1d98df6eb2da04786",
+        "version" : "3.12.2"
       }
     },
     {
       "identity" : "swift-format",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-format.git",
+      "location" : "https://github.com/swiftlang/swift-format",
       "state" : {
         "revision" : "83248b4fa37919f78ffbd4650946759bcc54c2b5",
         "version" : "509.0.0"
@@ -141,8 +141,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-log.git",
       "state" : {
-        "revision" : "96a2f8a0fa41e9e09af4585e2724c4e825410b91",
-        "version" : "1.6.2"
+        "revision" : "3d8596ed08bd13520157f0355e35caed215ffbfa",
+        "version" : "1.6.3"
       }
     },
     {
@@ -157,7 +157,7 @@
     {
       "identity" : "swift-syntax",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-syntax.git",
+      "location" : "https://github.com/swiftlang/swift-syntax.git",
       "state" : {
         "revision" : "74203046135342e4a4a627476dd6caf8b28fe11b",
         "version" : "509.0.0"
@@ -168,8 +168,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/SwiftCopyableMacro.git",
       "state" : {
-        "revision" : "ef98211fe120f887fdd772d5ae4f025b759551dd",
-        "version" : "0.0.1"
+        "revision" : "1983f8e7d805d323b834846b1a7594a327729cbe",
+        "version" : "0.0.3"
       }
     },
     {
