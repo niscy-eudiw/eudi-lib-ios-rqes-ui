@@ -13,24 +13,6 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-import Foundation
 import RqesKit
 
-public struct RqesServiceConfig: Sendable {
-  public let clientId: String
-  public let clientSecret: String
-  public let authFlowRedirectionURI: String
-  public let hashAlgorithm: HashAlgorithmOID
-
-  public init(
-    clientId: String,
-    clientSecret: String,
-    authFlowRedirectionURI: String,
-    hashAlgorithm: HashAlgorithmOID
-  ) {
-    self.clientId = clientId
-    self.clientSecret = clientSecret
-    self.authFlowRedirectionURI = authFlowRedirectionURI
-    self.hashAlgorithm = hashAlgorithm
-  }
-}
+extension HashAlgorithmOID: @retroactive Equatable {}

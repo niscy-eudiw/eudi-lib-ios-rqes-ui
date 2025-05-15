@@ -14,6 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 import SwiftUI
+import RqesKit
 
 struct ServiceSelectionView<Router: RouterGraph>: View {
   
@@ -91,15 +92,25 @@ private func content(
   ) {
     content(
       services: [
-        QTSPData(name: "Entrust", uri: URL(string: "https://www.entrust.com")!, scaURL: "https://www.entrust.com"),
-        QTSPData(name: "Docusign", uri: URL(string: "https://www.docusign.com")!, scaURL: "https://www.entrust.com"),
-        QTSPData(name: "Ascertia", uri: URL(string: "https://www.ascertia.com")!, scaURL: "https://www.entrust.com")
+        QTSPData(
+          name: "Entrust",
+          uri: URL(string: "https://www.entrust.com")!,
+          scaURL: "https://www.entrust.com",
+          clientId: "clientId",
+          clientSecret: "clientSecret",
+          authFlowRedirectionURI: "authFlowRedirectionURI",
+          hashAlgorithm: HashAlgorithmOID.SHA256
+        )
       ],
       selectedItem: .constant(
         QTSPData(
           name: "Entrust",
           uri: URL(string: "https://www.entrust.com")!,
-          scaURL: "https://www.entrust.com"
+          scaURL: "https://www.entrust.com",
+          clientId: "clientId",
+          clientSecret: "clientSecret",
+          authFlowRedirectionURI: "authFlowRedirectionURI",
+          hashAlgorithm: HashAlgorithmOID.SHA256
         )
       )
     )
@@ -114,15 +125,25 @@ private func content(
   ) {
     content(
       services: [
-        QTSPData(name: "Entrust", uri: URL(string: "https://www.entrust.com")!, scaURL: "https://www.entrust.com"),
-        QTSPData(name: "Docusign", uri: URL(string: "https://www.docusign.com")!, scaURL: "https://www.entrust.com"),
-        QTSPData(name: "Ascertia", uri: URL(string: "https://www.ascertia.com")!, scaURL: "https://www.entrust.com")
+        QTSPData(
+          name: "Entrust",
+          uri: URL(string: "https://www.entrust.com")!,
+          scaURL: "https://www.entrust.com",
+          clientId: "clientId",
+          clientSecret: "clientSecret",
+          authFlowRedirectionURI: "authFlowRedirectionURI",
+          hashAlgorithm: HashAlgorithmOID.SHA256
+        )
       ],
       selectedItem: .constant(
         QTSPData(
           name: "Entrust",
           uri: URL(string: "https://www.entrust.com")!,
-          scaURL: "https://www.entrust.com"
+          scaURL: "https://www.entrust.com",
+          clientId: "clientId",
+          clientSecret: "clientSecret",
+          authFlowRedirectionURI: "authFlowRedirectionURI",
+          hashAlgorithm: HashAlgorithmOID.SHA256
         )
       )
     )

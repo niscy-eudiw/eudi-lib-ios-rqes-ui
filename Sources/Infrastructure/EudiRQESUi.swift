@@ -206,10 +206,6 @@ extension EudiRQESUi {
     Self._rqesServiceAuthorized = service
   }
   
-  func getRQESConfig() -> RqesServiceConfig {
-    return Self.forceConfig().rQESConfig
-  }
-  
   func getRssps() -> [QTSPData] {
     return Self.forceConfig().rssps
   }
