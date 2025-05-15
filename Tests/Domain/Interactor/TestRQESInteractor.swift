@@ -47,12 +47,6 @@ final class TestRQESInteractor: XCTestCase {
   }
   
   func testCreateRQESService_WhenQtspSelected_ThenCreateAndCacheService() async throws {
-    // Given
-    stub(config) { mock in
-      when(mock.rQESConfig.get).thenReturn(
-        TestConstants.mockRqesService
-      )
-    }
     // When
     try await interactor.createRQESService(TestConstants.mockQtspData)
     
@@ -65,11 +59,6 @@ final class TestRQESInteractor: XCTestCase {
     // Given
     let fileUri = try XCTUnwrap(URL(string: "rqes://no_extension"))
     
-    stub(config) { mock in
-      when(mock.rQESConfig.get).thenReturn(
-        TestConstants.mockRqesService
-      )
-    }
     eudiRQESUi = .init(
       config: config,
       router: MockRouterGraph(),

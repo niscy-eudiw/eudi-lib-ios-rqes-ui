@@ -40,7 +40,6 @@ final class RQESInteractorImpl: RQESInteractor {
   }
   
   func createRQESService(_ qtsp: QTSPData) async throws {
-    let rQESConfig = await rqesUi.getRQESConfig()
     guard
       let fileExtension = await getSession()?.document?.uri.pathExtension,
       fileExtension.isEmpty == false
@@ -51,13 +50,13 @@ final class RQESInteractorImpl: RQESInteractor {
       .init(
         clientConfig: .init(
           OAuth2Client: CSCClientConfig.OAuth2Client(
-            clientId: rQESConfig.clientId,
-            clientSecret: rQESConfig.clientSecret
+            clientId: qtsp.clientId,
+            clientSecret: qtsp.clientSecret
           ),
-          authFlowRedirectionURI: rQESConfig.authFlowRedirectionURI,
+          authFlowRedirectionURI: qtsp.authFlowRedirectionURI,
           scaBaseURL: qtsp.scaURL
         ),
-        defaultHashAlgorithmOID: rQESConfig.hashAlgorithm,
+        defaultHashAlgorithmOID: qtsp.hashAlgorithm,
         fileExtension: ".\(fileExtension)"
       )
     )

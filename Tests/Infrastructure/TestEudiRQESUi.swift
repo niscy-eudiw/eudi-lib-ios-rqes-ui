@@ -45,11 +45,7 @@ final class TestEudiRQESUi: XCTestCase {
     let controller = await UIViewController()
     let expectedDocumentData = TestConstants.mockDocumentData
     let expectedState = EudiRQESUi.State.initial(self.config)
-    let expectedClientId = TestConstants.mockRqesService.clientId
     
-    stub(config) { mock in
-      when(mock.rQESConfig.get).thenReturn(TestConstants.mockRqesService)
-    }
     stub(router) { mock in
       when(mock.clear()).thenDoNothing()
     }
@@ -71,9 +67,6 @@ final class TestEudiRQESUi: XCTestCase {
     
     let session = await eudiRQESUi.getSessionData()
     XCTAssertEqual(session.document, expectedDocumentData)
-    
-    let config = await eudiRQESUi.getRQESConfig()
-    XCTAssertEqual(config.clientId, expectedClientId)
     
     let state = await eudiRQESUi.getState()
     XCTAssertEqual(state, expectedState)

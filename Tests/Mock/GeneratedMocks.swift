@@ -1020,6 +1020,7 @@ import Cuckoo
 // MARK: - Mocks generated from file: '../Sources/Domain/Entities/QTSPData.swift'
 
 import Cuckoo
+import RqesKit
 @testable import EudiRQESUi
 
 
@@ -1036,6 +1037,14 @@ import RqesKit
 
 import Cuckoo
 import Foundation
+import RqesKit
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: '../Sources/Domain/Extension/HashAlgorithmOID+Extensions.swift'
+
+import Cuckoo
 import RqesKit
 @testable import EudiRQESUi
 
@@ -1512,16 +1521,6 @@ public class MockEudiRQESUiConfig: EudiRQESUiConfig, Cuckoo.ProtocolMock, @unche
             )
         }
     }
-    
-    public var rQESConfig: RqesServiceConfig {
-        get {
-            return cuckoo_manager.getter(
-                "rQESConfig",
-                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.rQESConfig
-            )
-        }
-    }
 
 
     public struct __StubbingProxy_EudiRQESUiConfig: Cuckoo.StubbingProxy {
@@ -1545,10 +1544,6 @@ public class MockEudiRQESUiConfig: EudiRQESUiConfig, Cuckoo.ProtocolMock, @unche
         
         var printLogs: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockEudiRQESUiConfig,Bool> {
             return .init(manager: cuckoo_manager, name: "printLogs")
-        }
-        
-        var rQESConfig: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockEudiRQESUiConfig,RqesServiceConfig> {
-            return .init(manager: cuckoo_manager, name: "rQESConfig")
         }
     }
 
@@ -1578,10 +1573,6 @@ public class MockEudiRQESUiConfig: EudiRQESUiConfig, Cuckoo.ProtocolMock, @unche
         var printLogs: Cuckoo.VerifyReadOnlyProperty<Bool> {
             return .init(manager: cuckoo_manager, name: "printLogs", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
-        
-        var rQESConfig: Cuckoo.VerifyReadOnlyProperty<RqesServiceConfig> {
-            return .init(manager: cuckoo_manager, name: "rQESConfig", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
     }
 }
 
@@ -1610,25 +1601,10 @@ public class EudiRQESUiConfigStub:EudiRQESUiConfig, @unchecked Sendable {
             return DefaultValueRegistry.defaultValue(for: (Bool).self)
         }
     }
-    
-    public var rQESConfig: RqesServiceConfig {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (RqesServiceConfig).self)
-        }
-    }
 
 
 }
 
-
-
-
-// MARK: - Mocks generated from file: '../Sources/Infrastructure/Config/RqesServiceConfig.swift'
-
-import Cuckoo
-import Foundation
-import RqesKit
-@testable import EudiRQESUi
 
 
 
@@ -3041,6 +3017,7 @@ import PDFKit
 
 import Cuckoo
 import SwiftUI
+import RqesKit
 @testable import EudiRQESUi
 
 

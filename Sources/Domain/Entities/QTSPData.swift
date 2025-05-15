@@ -13,19 +13,33 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
+import RqesKit
 
 public struct QTSPData: Equatable, Sendable {
+  
   public let name: String
   public let uri: URL
   public let scaURL: String
+  public let clientId: String
+  public let clientSecret: String
+  public let authFlowRedirectionURI: String
+  public let hashAlgorithm: HashAlgorithmOID
 
   public init(
     name: String,
     uri: URL,
-    scaURL: String
+    scaURL: String,
+    clientId: String,
+    clientSecret: String,
+    authFlowRedirectionURI: String,
+    hashAlgorithm: HashAlgorithmOID
   ) {
     self.name = name
     self.uri = uri
     self.scaURL = scaURL
+    self.clientId = clientId
+    self.clientSecret = clientSecret
+    self.authFlowRedirectionURI = authFlowRedirectionURI
+    self.hashAlgorithm = hashAlgorithm
   }
 }
