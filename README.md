@@ -60,8 +60,6 @@ final class RQESConfigImpl: EudiRQESUiConfig {
   // Optional. Default is false.
   var printLogs: Bool
 
-  var rQESConfig: RqesServiceConfig
-
   // Optional. Default English translations will be used if not set.
   var translations: [String : [LocalizableKey : String]]
 
@@ -79,22 +77,17 @@ final class RQESConfigImpl: EudiRQESUiConfig {
     return .init(
             name: "your_dev_name",
             uri: URL(string: "your_dev_uri")!,
-            scaURL: "your_dev_sca"
+            scaURL: "your_dev_sca",
+            clientId: "your_dev_clientid",
+            clientSecret: "your_dev_secret",
+            authFlowRedirectionURI: "your_registered_deeplink",
+            hashAlgorithm: .SHA256
         )
   }
 
   var printLogs: Bool {
     true
   }
-
-  var rQESConfig: RqesServiceConfig {
-    return .init(
-            clientId: "your_dev_clientid",
-            clientSecret: "your_dev_secret",
-            authFlowRedirectionURI: "your_registered_deeplink",
-            hashAlgorithm: .SHA256
-        )
-    }
 }
 ```
 
