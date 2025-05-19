@@ -65,12 +65,12 @@ struct ContentHeader: View {
 
   var body: some View {
     VStack(alignment: .center, spacing: SPACING_MEDIUM) {
-      AppIconAndText(
+      AppIconAndTextView(
         appIconAndTextData: config.appIconAndTextData
       )
 
       if let description = config.description {
-        WrapText(
+        WrapTextView(
           text: description,
           textConfig: config.descriptionTextConfig ?? TextConfig(
             font: Theme.shared.font.bodyLarge.font,
@@ -84,7 +84,7 @@ struct ContentHeader: View {
       }
 
       if let relyingPartyData = config.relyingPartyData {
-        RelyingParty(relyingPartyData: relyingPartyData)
+        RelyingPartyView(relyingPartyData: relyingPartyData)
           .padding(.vertical, SPACING_SMALL)
       }
     }

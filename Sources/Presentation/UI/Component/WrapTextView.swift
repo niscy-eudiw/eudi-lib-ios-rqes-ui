@@ -13,7 +13,7 @@
  * ANY KIND, either express or implied. See the Licence for the specific language
  * governing permissions and limitations under the Licence.
  */
-struct WrapText: View {
+struct WrapTextView: View {
   private let text: String
   private let textConfig: TextConfig
 
