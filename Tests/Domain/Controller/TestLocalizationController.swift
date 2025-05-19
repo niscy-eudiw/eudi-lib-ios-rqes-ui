@@ -35,7 +35,7 @@ final class TestLocalizationController: XCTestCase {
     self.controller = nil
   }
   
-  func testGet_WhenTranslationIsAvailableWithoutArgs_ReturnsStringTranslation() {
+  func testGet_WhenTranslationIsAvailableWithoutArgs_ThenReturnsStringTranslation() {
     // Given
     let customGenericErrorTranslation = "CustomGenericError"
     stub(config) { mock in
@@ -49,7 +49,7 @@ final class TestLocalizationController: XCTestCase {
     XCTAssertEqual(result, customGenericErrorTranslation)
   }
   
-  func testGet_WhenTranslationIsAvailableWithoutArgs_ReturnsLocalizedStringKeyTranslation() {
+  func testGet_WhenTranslationIsAvailableWithoutArgs_ThenReturnsLocalizedStringKeyTranslation() {
     // Given
     let customGenericErrorTranslation = "CustomGenericError"
     stub(config) { mock in
@@ -63,7 +63,7 @@ final class TestLocalizationController: XCTestCase {
     XCTAssertEqual(result, customGenericErrorTranslation.toLocalizedStringKey)
   }
   
-  func testGet_WhenTranslationIsNotAvailableWithoutArgs_ReturnsDefaultStringTranslation() {
+  func testGet_WhenTranslationIsNotAvailableWithoutArgs_ThenReturnsDefaultStringTranslation() {
     // Given
     stub(config) { mock in
       when(mock.translations.get).thenReturn([:])
@@ -74,7 +74,7 @@ final class TestLocalizationController: XCTestCase {
     XCTAssertEqual(result, LocalizableKey.genericErrorMessage.defaultTranslation(args: []))
   }
   
-  func testGet_WhenTranslationIsNotAvailableWithArgs_ReturnsDefaultStringTranslation() {
+  func testGet_WhenTranslationIsNotAvailableWithArgs_ThenReturnsDefaultStringTranslation() {
     // Given
     stub(config) { mock in
       when(mock.translations.get).thenReturn([:])
@@ -84,5 +84,4 @@ final class TestLocalizationController: XCTestCase {
     
     XCTAssertEqual(result, LocalizableKey.signedBy.defaultTranslation(args: ["NISCY"]))
   }
-  
 }

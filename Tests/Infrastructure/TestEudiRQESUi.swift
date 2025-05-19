@@ -39,8 +39,8 @@ final class TestEudiRQESUi: XCTestCase {
     self.eudiRQESUi = nil
   }
   
-  func testInitiate_WhenMethodIsCalled_ThenVerifyStateAndCacheAndRouter() async throws {
-    
+  func testInitiate_WhenRouterGraphClearAndNextViewCalled_ThenVerifyStateAndCacheAndRouter() async throws {
+
     // Given
     let controller = await UIViewController()
     let expectedDocumentData = TestConstants.mockDocumentData
@@ -73,7 +73,7 @@ final class TestEudiRQESUi: XCTestCase {
     
   }
   
-  func testResume_WhenMethodIsCalled_ThenVerifyStateAndCacheAndRouter() async throws {
+  func testResume_WhenRouterGraphClearAndNextViewCalled_ThenVerifyStateAndCacheAndRouter() async throws {
     
     // Given
     let controller = await UIViewController()
