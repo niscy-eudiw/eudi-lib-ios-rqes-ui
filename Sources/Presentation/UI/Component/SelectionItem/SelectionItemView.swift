@@ -15,7 +15,7 @@
  */
 import SwiftUI
 
-struct SelectionItem: View {
+struct SelectionItemView: View {
   
   @Environment(\.localizationController) var localization
 
@@ -96,7 +96,7 @@ struct SelectionItem: View {
 
 #Preview {
   VStack {
-    SelectionItem(
+    SelectionItemView(
       selectionItemData: SelectionItemData(
         overlineText: .selectDocument,
         mainText: .custom("File_to_be_signed.pdf"),
@@ -108,7 +108,7 @@ struct SelectionItem: View {
       )
     )
 
-    SelectionItem(
+    SelectionItemView(
       selectionItemData: SelectionItemData(
         mainText: .custom("Select signing service"),
         subtitle: .selectServiceSubtitle,

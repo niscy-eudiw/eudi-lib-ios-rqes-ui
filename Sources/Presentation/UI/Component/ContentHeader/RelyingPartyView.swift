@@ -37,7 +37,7 @@ struct RelyingPartyData {
   }
 }
 
-struct RelyingParty: View {
+struct RelyingPartyView: View {
   private let relyingPartyData: RelyingPartyData
 
   init(relyingPartyData: RelyingPartyData) {
@@ -47,7 +47,7 @@ struct RelyingParty: View {
   var body: some View {
     VStack(alignment: .center, spacing: SPACING_SMALL) {
       if let name = relyingPartyData.name {
-        WrapText(
+        WrapTextView(
           text: name,
           textConfig: relyingPartyData.nameTextConfig ?? TextConfig(
             font: Theme.shared.font.bodyLarge.font,
@@ -67,7 +67,7 @@ struct RelyingParty: View {
       }
 
       if let description = relyingPartyData.description {
-        WrapText(
+        WrapTextView(
           text: description,
           textConfig: relyingPartyData.descriptionTextConfig ?? TextConfig(
             font: Theme.shared.font.bodyMedium.font,

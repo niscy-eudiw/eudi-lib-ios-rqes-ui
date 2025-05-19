@@ -78,7 +78,7 @@ private func content(
   ScrollView {
     VStack(alignment: .leading,spacing: SPACING_MEDIUM) {
       if let documentSelection {
-        SelectionItem(
+        SelectionItemView(
           selectionItemData: documentSelection
         )
 
@@ -86,7 +86,7 @@ private func content(
       }
 
       if let qtspServiceSelection {
-        SelectionItem(
+        SelectionItemView(
           selectionItemData: qtspServiceSelection
         )
       }
@@ -94,7 +94,7 @@ private func content(
       if let certificateSelection {
         Divider()
 
-        SelectionItem(
+        SelectionItemView(
           selectionItemData: certificateSelection
         )
       }
