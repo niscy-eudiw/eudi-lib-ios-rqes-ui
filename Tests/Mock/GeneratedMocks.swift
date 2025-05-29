@@ -2883,7 +2883,7 @@ import SwiftUI
 
 
 
-// MARK: - Mocks generated from file: '../Sources/Presentation/UI/Component/ContentHeader/AppIconAndTextData.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/Component/ContentHeader/AppIconAndTextView.swift'
 
 import Cuckoo
 import SwiftUI
@@ -2899,7 +2899,7 @@ import SwiftUI
 
 
 
-// MARK: - Mocks generated from file: '../Sources/Presentation/UI/Component/ContentHeader/RelyingPartyData.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/Component/ContentHeader/RelyingPartyView.swift'
 
 import Cuckoo
 import SwiftUI
@@ -2923,7 +2923,7 @@ import SwiftUI
 
 
 
-// MARK: - Mocks generated from file: '../Sources/Presentation/UI/Component/SelectionItem/SelectionItem.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/Component/SelectionItem/SelectionItemView.swift'
 
 import Cuckoo
 import SwiftUI
@@ -2947,7 +2947,7 @@ import SwiftUI
 
 
 
-// MARK: - Mocks generated from file: '../Sources/Presentation/UI/Component/WrapText.swift'
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/Component/WrapTextView.swift'
 
 import Cuckoo
 @testable import EudiRQESUi

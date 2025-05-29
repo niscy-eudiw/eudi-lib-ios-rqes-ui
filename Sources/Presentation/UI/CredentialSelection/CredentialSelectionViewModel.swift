@@ -20,7 +20,6 @@ import RqesKit
 struct CredentialSelectionState: ViewState {
   let isLoading: Bool
   let credentials: [CredentialDataUIModel]
-//  let documentName: String
   let error: ContentErrorView.Config?
   let credentialInfos: [CredentialInfo]
   let selectedCredential: CredentialInfo?
@@ -72,7 +71,7 @@ final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router,
     openAuthorization()
   }
   
-  func openAuthorization() {
+  private func openAuthorization() {
     Task {
       do {
         
