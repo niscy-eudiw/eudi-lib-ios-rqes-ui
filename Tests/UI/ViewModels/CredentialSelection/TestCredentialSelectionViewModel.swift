@@ -110,6 +110,8 @@ final class TestCredentialSelectionViewModel: XCTestCase {
   @MainActor
   func testSetCertificate_WhenViewStateHasCredentialInfos_ThenSaveCertificateCalled() async throws{
     // Given
+    let expectation = XCTestExpectation(description: "saveCertificate called")
+
     let credentialDataUIModel = CredentialDataUIModel(id: "id", name: "description")
     let expectedCredentialInfo = try await TestConstants.getCredentialInfo()
     let expectedCredentialInfos = [expectedCredentialInfo]
@@ -122,8 +124,6 @@ final class TestCredentialSelectionViewModel: XCTestCase {
       )
       .copy(error: nil)
     }
-
-    let expectation = XCTestExpectation(description: "saveCertificate called")
 
     stub(interactor) { stub in
       when(stub.saveCertificate(any())).then { _ in
@@ -143,13 +143,14 @@ final class TestCredentialSelectionViewModel: XCTestCase {
   @MainActor
   func testNextStep_WhenOpenCredentialAuthrorizationURLFailure_ThenSetErrorState() async {
     // Given
+    let expectation = expectation(description: "Error is set in viewState")
+
     let error = EudiRQESUiError.noDocumentProvided
     stub(interactor) { stub in
       when(stub.openCredentialAuthrorizationURL()).thenThrow(error)
     }
 
     // When
-    let expectation = expectation(description: "Error is set in viewState")
     viewModel.nextStep()
 
     Task {

@@ -116,7 +116,7 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     )
 
     stub(router) { mock in
-      _ = when(mock.navigateTo(any()).thenDoNothing())
+      when(mock.navigateTo(any())).thenDoNothing()
     }
 
     stub(interactor) { stub in
@@ -145,7 +145,7 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     )
 
     stub(router) { mock in
-      _ = when(mock.navigateTo(any()).thenDoNothing())
+      when(mock.navigateTo(any())).thenDoNothing()
     }
 
     stub(interactor) { stub in
@@ -183,7 +183,7 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     )
 
     stub(router) { mock in
-      _ = when(mock.navigateTo(any()).thenDoNothing())
+      when(mock.navigateTo(any())).thenDoNothing()
     }
 
     stub(interactor) { stub in
@@ -229,7 +229,7 @@ final class TestDocumentSelectionViewModel: XCTestCase {
   func testViewDocument_whenRouterNavigateToViewDocument_ThenNavigateToWasCalled() async {
     // Given
     stub(router) { mock in
-      _ = when(mock.navigateTo(any()).thenDoNothing())
+      when(mock.navigateTo(any())).thenDoNothing()
     }
 
     // When
@@ -243,7 +243,7 @@ final class TestDocumentSelectionViewModel: XCTestCase {
   func testSelectService_whenRouterNavigateToViewDocument_ThenNavigateToWasCalled() async {
     // Given
     stub(router) { mock in
-      _ = when(mock.navigateTo(any()).thenDoNothing())
+      when(mock.navigateTo(any())).thenDoNothing()
     }
 
     // When
@@ -257,7 +257,7 @@ final class TestDocumentSelectionViewModel: XCTestCase {
   func testSelectCertificate_whenRouterNavigateToViewDocument_ThenNavigateToWasCalled() async {
     // Given
     stub(router) { mock in
-      _ = when(mock.navigateTo(any()).thenDoNothing())
+      when(mock.navigateTo(any())).thenDoNothing()
     }
 
     // When
