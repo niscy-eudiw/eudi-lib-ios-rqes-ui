@@ -7,10 +7,8 @@
 - Config.*.swift
 
 # Views/Components
-- ViewModel.swift
 - .*View.swift
 - .*ViewController.swift
-- .*ViewModel.swift
 - .*Modifier.swift
 - .*Content.swift
 - .*UIModel.swift
