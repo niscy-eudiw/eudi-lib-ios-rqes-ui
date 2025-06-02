@@ -208,7 +208,6 @@ final class TestServiceSelectionViewModel: XCTestCase {
     viewModel.openAuthorization()
 
     // Then
-    // Wait for error state (since openAuthorization launches a Task)
     let expectation = self.expectation(description: "Error is set in viewState")
     Task {
       while viewModel.viewState.error == nil {
@@ -232,5 +231,50 @@ final class TestServiceSelectionViewModel: XCTestCase {
     verify(interactor, never()).createRQESService(any())
     verify(interactor, never()).openAuthrorizationURL()
     verify(interactor, never()).updateQTSP(any())
+  }
+
+  @MainActor
+  func testErrorAction_WhenInvoked_RetriesAndRecoversState() async {
+    stub(interactor) { stub in
+      when(stub.getQTSps()).thenReturn([])
+    }
+    stub(router) { mock in
+      when(mock.pop()).thenDoNothing()
+    }
+    await viewModel.initiate()
+    XCTAssertNotNil(viewModel.viewState.error)
+
+    let qtsp = QTSPData(
+      name: "name",
+      uri: URL(string: "uri")!,
+      scaURL: "scaURL",
+      clientId: "clientId",
+      clientSecret: "clientSecret",
+      authFlowRedirectionURI: "authFlowRedirectionURI",
+      hashAlgorithm: "hashAlgorithm"
+    )
+    let qtspData = [qtsp]
+    stub(interactor) { stub in
+      when(stub.getQTSps()).thenReturn(qtspData)
+    }
+
+    guard let retryAction = viewModel.viewState.error?.action else {
+      XCTFail("Retry action should not be nil")
+      return
+    }
+    retryAction()
+
+    let expectation = expectation(description: "State is recovered after retry")
+    Task {
+      while viewModel.viewState.error != nil {
+        try? await Task.sleep(nanoseconds: 20_000_000)
+      }
+      expectation.fulfill()
+    }
+    await fulfillment(of: [expectation], timeout: 1.0)
+
+    XCTAssertNil(viewModel.viewState.error)
+    XCTAssertEqual(viewModel.viewState.services, qtspData)
+    XCTAssertFalse(viewModel.viewState.isLoading)
   }
 }

@@ -160,9 +160,18 @@ final class TestCredentialSelectionViewModel: XCTestCase {
       expectation.fulfill()
     }
 
-    await fulfillment(of: [expectation], timeout: 1.0)
     // Then
+    await fulfillment(of: [expectation], timeout: 1.0)
+
     XCTAssertEqual(viewModel.viewState.error?.title, .genericErrorMessage)
+
+    guard let cancelAction = viewModel.viewState.error?.cancelAction else {
+      XCTFail("cancelAction should not be nil")
+      return
+    }
+    cancelAction()
+
+    XCTAssertNil(viewModel.viewState.error)
   }
 
 
@@ -181,6 +190,49 @@ final class TestCredentialSelectionViewModel: XCTestCase {
 
     // Then
     XCTAssertNil(viewModel.viewState.error)
+  }
+
+  @MainActor
+  func testErrorAction_WhenInvoked_RetriesAndRecoversState() async throws {
+    // Given
+    let expectation = expectation(description: "State is recovered after retry")
+    let expectedCredentialInfo = try await TestConstants.getCredentialInfo()
+    let expectedCredentials = [expectedCredentialInfo]
+
+    stub(interactor) { stub in
+      when(stub.fetchCredentials()).thenThrow(EudiRQESUiError.unableToFetchCredentials)
+    }
+    stub(router) { mock in
+      when(mock.pop()).thenDoNothing()
+    }
+
+    // When
+    await viewModel.initiate()
+
+    // Then
+    XCTAssertNotNil(viewModel.viewState.error)
+
+    stub(interactor) { stub in
+      when(stub.fetchCredentials()).thenReturn(.success(expectedCredentials))
+    }
+
+    guard let retryAction = viewModel.viewState.error?.action else {
+      XCTFail("Retry action should not be nil")
+      return
+    }
+    retryAction()
+
+    Task {
+      while viewModel.viewState.error != nil {
+        try? await Task.sleep(nanoseconds: 20_000_000)
+      }
+      expectation.fulfill()
+    }
+    await fulfillment(of: [expectation], timeout: 1.0)
+
+    XCTAssertNil(viewModel.viewState.error)
+    XCTAssertFalse(viewModel.viewState.isLoading)
+    XCTAssertEqual(viewModel.viewState.credentials.count, expectedCredentials.count)
   }
 }
 

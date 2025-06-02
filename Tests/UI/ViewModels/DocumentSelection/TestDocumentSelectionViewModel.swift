@@ -205,6 +205,60 @@ final class TestDocumentSelectionViewModel: XCTestCase {
   }
 
   @MainActor
+  func testErrorAction_WhenInvoked_RetriesAndRecoversState() async {
+    // Given
+    let sessionWithNilDoc: SessionData = .init()
+    let sessionWithDoc = SessionData(
+      document: TestConstants.mockDocumentData,
+      qtsp: QTSPData(
+        name: "name",
+        uri: URL(string: "uri")!,
+        scaURL: "scaURL",
+        clientId: "clientId",
+        clientSecret: "clientSecret",
+        authFlowRedirectionURI: "authFlowRedirectionURI",
+        hashAlgorithm: "hashAlgorithm"
+      )
+    )
+
+    stub(interactor) { stub in
+      when(stub.getSession()).thenReturn(sessionWithNilDoc)
+    }
+
+    // When
+    await viewModel.initiate()
+    XCTAssertNotNil(viewModel.viewState.error)
+
+    stub(interactor) { stub in
+      when(stub.getSession()).thenReturn(sessionWithDoc)
+    }
+
+    guard let retryAction = viewModel.viewState.error?.action else {
+      XCTFail("Retry action is nil")
+      return
+    }
+    retryAction()
+
+    let expectation = expectation(description: "State is recovered after retry")
+    Task {
+      while viewModel.viewState.error != nil {
+        try? await Task.sleep(nanoseconds: 20_000_000)
+      }
+      expectation.fulfill()
+    }
+    await fulfillment(of: [expectation], timeout: 1.0)
+
+    // Then
+    XCTAssertNil(viewModel.viewState.error)
+    XCTAssertFalse(viewModel.viewState.isLoading)
+    XCTAssertEqual(
+      viewModel.viewState.documentSelection?.mainText,
+      .custom(TestConstants.mockDocumentData.documentName)
+    )
+  }
+
+
+  @MainActor
   func testInitiate_WhenGetSessionReturnSessionDataWithNilDocumentName_ThenReturnSuccess() async {
     // Given
     let expectedSession: SessionData = .init()

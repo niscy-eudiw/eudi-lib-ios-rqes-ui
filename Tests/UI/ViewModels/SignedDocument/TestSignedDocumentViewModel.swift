@@ -83,7 +83,7 @@ final class TestSignedDocumentViewModel: XCTestCase {
   }
 
   @MainActor
-  func testInitiate_WhenGenSessionThrowError_ThenSetErrorState() async {
+  func testInitiate_WhenGetSessionReturnNil_ThenSetErrorState() async {
     // Given
     let expectedDocument = Document(
       id: "id",
@@ -186,6 +186,116 @@ final class TestSignedDocumentViewModel: XCTestCase {
     // Then
     XCTAssertEqual(viewModel.viewState.documentName, mockSession.document?.documentName)
     XCTAssertEqual(viewModel.viewState.qtspName, mockSession.qtsp?.name)
+    XCTAssertTrue(viewModel.viewState.isInitialized)
+  }
+
+  @MainActor
+  func testErrorAction_WhenInvoked_RetriesAndRecoversState() async {
+    stub(interactor) { mock in
+      when(mock.signDocument()).thenThrow(EudiRQESUiError.noDocumentProvided)
+    }
+
+    await viewModel.initiate()
+    XCTAssertNotNil(viewModel.viewState.error)
+    XCTAssertEqual(viewModel.viewState.error?.title, .genericErrorMessage)
+
+    let expectedDocument = Document(
+      id: "id",
+      fileURL: URL(string: "uri")!
+    )
+    let expectedDocumentData = DocumentData(
+      documentName: "documentName",
+      uri: URL(string: "uri")!
+    )
+    let qtsp = QTSPData(
+      name: "name",
+      uri: URL(string: "uri")!,
+      scaURL: "scaURL",
+      clientId: "clientId",
+      clientSecret: "clientSecret",
+      authFlowRedirectionURI: "authFlowRedirectionURI",
+      hashAlgorithm: "hashAlgorithm"
+    )
+    let mockSession: SessionData = .init(
+      document: expectedDocumentData,
+      qtsp: qtsp
+    )
+
+    stub(interactor) { mock in
+      when(mock.signDocument()).thenReturn(expectedDocument)
+    }
+    stub(interactor) { mock in
+      when(mock.getSession()).thenReturn(mockSession)
+    }
+    stub(interactor) { mock in
+      when(mock.updateDocument(any())).thenDoNothing()
+    }
+
+    guard let retryAction = viewModel.viewState.error?.action else {
+      XCTFail("Retry action should not be nil")
+      return
+    }
+    retryAction()
+
+    let expectation = expectation(description: "ViewModel recovers after retry")
+    Task {
+      while viewModel.viewState.error != nil {
+        try? await Task.sleep(nanoseconds: 20_000_000)
+      }
+      expectation.fulfill()
+    }
+    await fulfillment(of: [expectation], timeout: 1.0)
+
+    XCTAssertNil(viewModel.viewState.error)
+    XCTAssertFalse(viewModel.viewState.isLoading)
+    XCTAssertEqual(viewModel.viewState.documentName, expectedDocumentData.documentName)
+    XCTAssertEqual(viewModel.viewState.qtspName, qtsp.name)
+    XCTAssertTrue(viewModel.viewState.isInitialized)
+  }
+
+  @MainActor
+  func testInitiate_WhenIsInitializedIsTrue_ThenDoesNothing() async {
+    // Given
+    let initialState = SignedDocumenState(
+      isLoading: false,
+      document: DocumentData(
+        documentName: "test.pdf",
+        uri: URL(string: "file://uri")!
+      ),
+      qtsp: QTSPData(
+        name: "qtsp",
+        uri: URL(string: "uri")!,
+        scaURL: "scaURL",
+        clientId: "clientId",
+        clientSecret: "clientSecret",
+        authFlowRedirectionURI: "authFlowRedirectionURI",
+        hashAlgorithm: "hashAlgorithm"
+      ),
+      documentName: "test.pdf",
+      qtspName: "qtsp",
+      headerConfig: .init(
+        appIconAndTextData: .init(
+          appIcon: Image(.euWalletLogo),
+          appText: Image(.eudiTextLogo)
+        )
+      ),
+      error: nil,
+      isInitialized: true
+    )
+
+    viewModel.setState { _ in initialState }
+
+    stub(interactor) { mock in
+      when(mock.signDocument()).thenReturn(nil)
+
+      when(mock.getSession()).thenReturn(nil)
+
+      when(mock.updateDocument(any())).thenDoNothing()
+    }
+
+    await viewModel.initiate()
+
+    // Then
     XCTAssertTrue(viewModel.viewState.isInitialized)
   }
 }
