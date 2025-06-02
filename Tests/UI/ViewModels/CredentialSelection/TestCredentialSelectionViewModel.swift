@@ -64,6 +64,8 @@ final class TestCredentialSelectionViewModel: XCTestCase {
     // Then
     XCTAssertFalse(viewModel.viewState.isLoading)
     XCTAssertEqual(viewModel.viewState.credentials.count, expectedCredentials.count)
+    XCTAssertEqual(viewModel.viewState.credentialInfos.count, expectedCredentials.count)
+    XCTAssertNil(viewModel.viewState.error)
   }
 
   @MainActor
@@ -233,6 +235,7 @@ final class TestCredentialSelectionViewModel: XCTestCase {
     XCTAssertNil(viewModel.viewState.error)
     XCTAssertFalse(viewModel.viewState.isLoading)
     XCTAssertEqual(viewModel.viewState.credentials.count, expectedCredentials.count)
+    XCTAssertEqual(viewModel.viewState.credentialInfos.count, expectedCredentials.count)
   }
 }
 

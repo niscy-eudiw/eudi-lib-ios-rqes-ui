@@ -51,10 +51,11 @@ final class TestDocumentSelectionViewModel: XCTestCase {
   @MainActor
   func testInitiate_WhenGetSessionReturnSessionData_ThenReturnSuccess() async {
     // Given
+    let expectedQTSPName = "name"
     let expectedSession: SessionData = .init(
       document: TestConstants.mockDocumentData,
       qtsp: QTSPData(
-        name: "name",
+        name: expectedQTSPName,
         uri: URL(string: "uri")!,
         scaURL: "scaURL",
         clientId: "clientId",
@@ -77,6 +78,14 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     XCTAssertEqual(
       viewModel.viewState.documentSelection?.mainText,
       .custom(TestConstants.mockDocumentData.documentName)
+    )
+    XCTAssertEqual(
+      viewModel.viewState.qtspServiceSelection?.mainText,
+      .custom(expectedQTSPName)
+    )
+    XCTAssertEqual(
+      viewModel.viewState.certificateSelection?.mainText,
+      .selectCertificate
     )
   }
 
@@ -207,11 +216,12 @@ final class TestDocumentSelectionViewModel: XCTestCase {
   @MainActor
   func testErrorAction_WhenInvoked_RetriesAndRecoversState() async {
     // Given
+    let expectedQTSPName = "name"
     let sessionWithNilDoc: SessionData = .init()
     let sessionWithDoc = SessionData(
       document: TestConstants.mockDocumentData,
       qtsp: QTSPData(
-        name: "name",
+        name: expectedQTSPName,
         uri: URL(string: "uri")!,
         scaURL: "scaURL",
         clientId: "clientId",
@@ -254,6 +264,14 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     XCTAssertEqual(
       viewModel.viewState.documentSelection?.mainText,
       .custom(TestConstants.mockDocumentData.documentName)
+    )
+    XCTAssertEqual(
+      viewModel.viewState.qtspServiceSelection?.mainText,
+      .custom(expectedQTSPName)
+    )
+    XCTAssertEqual(
+      viewModel.viewState.certificateSelection?.mainText,
+      .selectCertificate
     )
   }
 

@@ -186,6 +186,14 @@ final class TestSignedDocumentViewModel: XCTestCase {
     // Then
     XCTAssertEqual(viewModel.viewState.documentName, mockSession.document?.documentName)
     XCTAssertEqual(viewModel.viewState.qtspName, mockSession.qtsp?.name)
+    XCTAssertEqual(
+      viewModel.viewState.headerConfig.appIconAndTextData.appIcon,
+      Image(.euWalletLogo)
+    )
+    XCTAssertEqual(
+      viewModel.viewState.headerConfig.appIconAndTextData.appText,
+      Image(.eudiTextLogo)
+    )
     XCTAssertTrue(viewModel.viewState.isInitialized)
   }
 
@@ -251,6 +259,14 @@ final class TestSignedDocumentViewModel: XCTestCase {
     XCTAssertEqual(viewModel.viewState.documentName, expectedDocumentData.documentName)
     XCTAssertEqual(viewModel.viewState.qtspName, qtsp.name)
     XCTAssertTrue(viewModel.viewState.isInitialized)
+    XCTAssertEqual(
+      viewModel.viewState.headerConfig.appIconAndTextData.appIcon,
+      Image(.euWalletLogo)
+    )
+    XCTAssertEqual(
+      viewModel.viewState.headerConfig.appIconAndTextData.appText,
+      Image(.eudiTextLogo)
+    )
   }
 
   @MainActor
@@ -293,6 +309,7 @@ final class TestSignedDocumentViewModel: XCTestCase {
       when(mock.updateDocument(any())).thenDoNothing()
     }
 
+    // When
     await viewModel.initiate()
 
     // Then

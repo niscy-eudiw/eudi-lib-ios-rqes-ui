@@ -72,6 +72,7 @@ final class TestServiceSelectionViewModel: XCTestCase {
     // Then
 
     XCTAssertNil(viewModel.viewState.error)
+    XCTAssertFalse(viewModel.viewState.isLoading)
     XCTAssertEqual(viewModel.viewState.services, qtspData)
   }
 
@@ -176,7 +177,7 @@ final class TestServiceSelectionViewModel: XCTestCase {
     }
 
     // When
-    viewModel.openAuthorization()
+    viewModel.nextStep()
 
     Task {
       while viewModel.viewState.error == nil {

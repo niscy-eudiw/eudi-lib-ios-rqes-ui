@@ -74,8 +74,9 @@ final class TestDocumentViewModel: XCTestCase {
     }
 
     XCTAssertFalse(viewModel.viewState.isLoading)
-    XCTAssertEqual(viewModel.viewState.documentSource, expectedDocumentSource)
     XCTAssertNotNil(viewModel.viewState.error)
+    XCTAssertEqual(viewModel.viewState.documentSource, expectedDocumentSource)
+    XCTAssertEqual(viewModel.viewState.documentSource, expectedDocumentSource)
 
     cancelAction()
     verify(router).pop()
