@@ -18,7 +18,6 @@ import PDFKit
 
 enum DocumentSource: Hashable, Equatable {
   case pdfUrl(URL)
-  case pdfBase64(String)
 }
 
 @Copyable
@@ -73,10 +72,6 @@ class DocumentViewModel<Router: RouterGraph>: ViewModel<Router, DocumentState> {
       loadPDF(
         fromURL: url
       )
-    case .pdfBase64(let base64String):
-      loadPDF(
-        fromBase64: base64String
-      )
     }
   }
   
@@ -88,23 +83,6 @@ class DocumentViewModel<Router: RouterGraph>: ViewModel<Router, DocumentState> {
           pdfDocument: document
         )
         .copy(error: nil)
-      }
-    } else {
-      setErrorState {
-        self.router.pop()
-      }
-    }
-  }
-  
-  private func loadPDF(fromBase64 base64String: String) {
-    if let data = Data(base64Encoded: base64String),
-       let document = PDFDocument(data: data) {
-      setState {
-        $0.copy(
-          isLoading: false,
-          pdfDocument: document,
-          error: nil
-        )
       }
     } else {
       setErrorState {
