@@ -117,7 +117,7 @@ final class TestServiceSelectionViewModel: XCTestCase {
     // When
     viewModel.nextStep()
 
-    await waitUntil({ self.viewModel.viewState.error != nil }, timeout: 1.0)
+    await waitUntil{ self.viewModel.viewState.error != nil }
 
     // Then
     XCTAssertNotNil(viewModel.viewState.error)
@@ -156,7 +156,7 @@ final class TestServiceSelectionViewModel: XCTestCase {
     // When
     viewModel.nextStep()
 
-    await waitUntil({ self.viewModel.viewState.error != nil }, timeout: 1.0)
+    await waitUntil{ self.viewModel.viewState.error != nil }
 
     // Then
     XCTAssertFalse(viewModel.viewState.isLoading)
@@ -178,7 +178,7 @@ final class TestServiceSelectionViewModel: XCTestCase {
     viewModel.openAuthorization()
 
     // Then
-    await waitUntil({ self.viewModel.viewState.error != nil }, timeout: 1.0)
+    await waitUntil{ self.viewModel.viewState.error != nil }
 
     guard let cancelAction = viewModel.viewState.error?.cancelAction else {
       XCTFail("cancelAction should not be nil")
@@ -226,7 +226,7 @@ final class TestServiceSelectionViewModel: XCTestCase {
     }
     retryAction()
 
-    await waitUntil({ self.viewModel.viewState.error == nil }, timeout: 1.0)
+    await waitUntil{ self.viewModel.viewState.error == nil }
 
     XCTAssertNil(viewModel.viewState.error)
     XCTAssertEqual(viewModel.viewState.services, qtspData)

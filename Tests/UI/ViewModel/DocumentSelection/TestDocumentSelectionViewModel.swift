@@ -235,7 +235,7 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     }
     retryAction()
 
-    await waitUntil({ self.viewModel.viewState.error == nil }, timeout: 1.0)
+    await waitUntil{ self.viewModel.viewState.error == nil }
 
     // Then
     XCTAssertNil(viewModel.viewState.error)

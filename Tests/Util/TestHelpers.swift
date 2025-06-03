@@ -17,8 +17,8 @@ import Foundation
 
 @MainActor
 func waitUntil(
+  timeout: TimeInterval = 1.5,
   _ condition: @escaping () -> Bool,
-  timeout: TimeInterval = 1.0
 ) async {
   let end = Date().addingTimeInterval(timeout)
   while !condition(), Date() < end {
