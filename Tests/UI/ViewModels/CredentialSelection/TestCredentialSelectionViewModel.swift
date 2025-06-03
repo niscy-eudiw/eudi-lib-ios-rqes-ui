@@ -147,7 +147,7 @@ final class TestCredentialSelectionViewModel: XCTestCase {
     // When
     viewModel.nextStep()
 
-    await waitForError(in: viewModel, timeout: 1.0)
+    await waitUntil({ self.viewModel.viewState.error != nil }, timeout: 1.0)
 
     // Then
     XCTAssertEqual(viewModel.viewState.error?.title, .genericErrorMessage)
@@ -205,34 +205,12 @@ final class TestCredentialSelectionViewModel: XCTestCase {
     }
     retryAction()
 
-    await waitForNoError(in: viewModel, timeout: 1.0)
+    await waitUntil({ self.viewModel.viewState.error == nil }, timeout: 1.0)
 
     XCTAssertNil(viewModel.viewState.error)
     XCTAssertFalse(viewModel.viewState.isLoading)
     XCTAssertEqual(viewModel.viewState.credentials.count, expectedCredentials.count)
     XCTAssertEqual(viewModel.viewState.credentialInfos.count, expectedCredentials.count)
-  }
-}
-
-extension TestCredentialSelectionViewModel {
-  private func waitForError(
-    in viewModel: CredentialSelectionViewModel<MockRouterGraph>,
-    timeout: TimeInterval
-  ) async {
-    let end = Date().addingTimeInterval(timeout)
-    while viewModel.viewState.error == nil && Date() < end {
-      try? await Task.sleep(nanoseconds: 20_000_000)
-    }
-  }
-
-  private func waitForNoError(
-    in viewModel: CredentialSelectionViewModel<MockRouterGraph>,
-    timeout: TimeInterval
-  ) async {
-    let end = Date().addingTimeInterval(timeout)
-    while viewModel.viewState.error != nil && Date() < end {
-      try? await Task.sleep(nanoseconds: 20_000_000)
-    }
   }
 }
 

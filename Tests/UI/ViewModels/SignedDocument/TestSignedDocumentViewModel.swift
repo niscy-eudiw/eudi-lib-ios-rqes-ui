@@ -231,7 +231,7 @@ final class TestSignedDocumentViewModel: XCTestCase {
     }
     retryAction()
 
-    await waitForNoError(in: viewModel, timeout: 1.0)
+    await waitUntil({ self.viewModel.viewState.error == nil }, timeout: 1.0)
 
     XCTAssertNil(viewModel.viewState.error)
     XCTAssertFalse(viewModel.viewState.isLoading)
@@ -292,17 +292,5 @@ final class TestSignedDocumentViewModel: XCTestCase {
 
     // Then
     XCTAssertTrue(viewModel.viewState.isInitialized)
-  }
-}
-
-extension TestSignedDocumentViewModel {
-  private func waitForNoError(
-    in viewModel: SignedDocumentViewModel<MockRouterGraph>,
-    timeout: TimeInterval
-  ) async {
-    let end = Date().addingTimeInterval(timeout)
-    while viewModel.viewState.error != nil && Date() < end {
-      try? await Task.sleep(nanoseconds: 20_000_000)
-    }
   }
 }

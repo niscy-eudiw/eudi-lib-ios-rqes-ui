@@ -117,7 +117,7 @@ final class TestServiceSelectionViewModel: XCTestCase {
     // When
     viewModel.nextStep()
 
-    await waitForError(in: viewModel, timeout: 1.0)
+    await waitUntil({ self.viewModel.viewState.error != nil }, timeout: 1.0)
 
     // Then
     XCTAssertNotNil(viewModel.viewState.error)
@@ -156,7 +156,7 @@ final class TestServiceSelectionViewModel: XCTestCase {
     // When
     viewModel.nextStep()
 
-    await waitForError(in: viewModel, timeout: 1.0)
+    await waitUntil({ self.viewModel.viewState.error != nil }, timeout: 1.0)
 
     // Then
     XCTAssertFalse(viewModel.viewState.isLoading)
@@ -178,7 +178,7 @@ final class TestServiceSelectionViewModel: XCTestCase {
     viewModel.openAuthorization()
 
     // Then
-    await waitForError(in: viewModel, timeout: 1.0)
+    await waitUntil({ self.viewModel.viewState.error != nil }, timeout: 1.0)
 
     guard let cancelAction = viewModel.viewState.error?.cancelAction else {
       XCTFail("cancelAction should not be nil")
@@ -226,32 +226,10 @@ final class TestServiceSelectionViewModel: XCTestCase {
     }
     retryAction()
 
-    await waitForNoError(in: viewModel, timeout: 1.0)
+    await waitUntil({ self.viewModel.viewState.error == nil }, timeout: 1.0)
 
     XCTAssertNil(viewModel.viewState.error)
     XCTAssertEqual(viewModel.viewState.services, qtspData)
     XCTAssertFalse(viewModel.viewState.isLoading)
-  }
-}
-
-extension TestServiceSelectionViewModel {
-  private func waitForError(
-    in viewModel: ServiceSelectionViewModel<MockRouterGraph>,
-    timeout: TimeInterval
-  ) async {
-    let end = Date().addingTimeInterval(timeout)
-    while viewModel.viewState.error == nil && Date() < end {
-      try? await Task.sleep(nanoseconds: 20_000_000)
-    }
-  }
-
-  private func waitForNoError(
-    in viewModel: ServiceSelectionViewModel<MockRouterGraph>,
-    timeout: TimeInterval
-  ) async {
-    let end = Date().addingTimeInterval(timeout)
-    while viewModel.viewState.error != nil && Date() < end {
-      try? await Task.sleep(nanoseconds: 20_000_000)
-    }
   }
 }

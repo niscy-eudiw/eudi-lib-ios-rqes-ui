@@ -235,7 +235,7 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     }
     retryAction()
 
-    await waitForNoError(in: viewModel, timeout: 1.0)
+    await waitUntil({ self.viewModel.viewState.error == nil }, timeout: 1.0)
 
     // Then
     XCTAssertNil(viewModel.viewState.error)
@@ -311,17 +311,5 @@ final class TestDocumentSelectionViewModel: XCTestCase {
 
     // Then
     verify(router).navigateTo(equal(to: .credentialSelection))
-  }
-}
-
-extension TestDocumentSelectionViewModel {
-  private func waitForNoError(
-    in viewModel: DocumentSelectionViewModel<MockRouterGraph>,
-    timeout: TimeInterval
-  ) async {
-    let end = Date().addingTimeInterval(timeout)
-    while viewModel.viewState.error != nil && Date() < end {
-      try? await Task.sleep(nanoseconds: 20_000_000)
-    }
   }
 }
