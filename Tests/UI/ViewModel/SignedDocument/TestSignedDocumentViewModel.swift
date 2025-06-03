@@ -231,7 +231,7 @@ final class TestSignedDocumentViewModel: XCTestCase {
     }
     retryAction()
 
-    await waitUntil({ self.viewModel.viewState.error == nil }, timeout: 1.0)
+    await waitUntil{ self.viewModel.viewState.error == nil }
 
     XCTAssertNil(viewModel.viewState.error)
     XCTAssertFalse(viewModel.viewState.isLoading)

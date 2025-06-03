@@ -147,7 +147,7 @@ final class TestCredentialSelectionViewModel: XCTestCase {
     // When
     viewModel.nextStep()
 
-    await waitUntil({ self.viewModel.viewState.error != nil }, timeout: 1.0)
+    await waitUntil{ self.viewModel.viewState.error != nil }
 
     // Then
     XCTAssertEqual(viewModel.viewState.error?.title, .genericErrorMessage)
@@ -205,7 +205,7 @@ final class TestCredentialSelectionViewModel: XCTestCase {
     }
     retryAction()
 
-    await waitUntil({ self.viewModel.viewState.error == nil }, timeout: 1.0)
+    await waitUntil{ self.viewModel.viewState.error == nil }
 
     XCTAssertNil(viewModel.viewState.error)
     XCTAssertFalse(viewModel.viewState.isLoading)
