@@ -19,36 +19,27 @@ import RqesKit
 import RQES_LIBRARY
 @testable import EudiRQESUi
 
+@MainActor
 final class TestDocumentViewModel: XCTestCase {
   var interactor: MockRQESInteractor!
   var router: MockRouterGraph!
-  var config: MockEudiRQESUiConfig!
-  var eudiRQESUi: EudiRQESUi!
   var viewModel: DocumentViewModel<MockRouterGraph>!
 
   override func setUp() async throws {
     self.interactor = MockRQESInteractor()
     self.router = MockRouterGraph()
-    self.config = MockEudiRQESUiConfig()
-    self.eudiRQESUi = .init(
-      config: config,
-      router: router
-    )
-    self.viewModel = await DocumentViewModel(
+    self.viewModel = DocumentViewModel(
       router: router,
       interactor: interactor
     )
   }
 
-  override func tearDown() {
+  override func tearDown() async throws {
     self.interactor = nil
     self.router = nil
-    self.config = nil
-    self.eudiRQESUi = nil
     self.viewModel = nil
   }
 
-  @MainActor
   func testInitiate_WhenGetSessionDocumentPdfUrl_ThenLoadDocumentFails() async {
     // Given
     let expectedDocumentSource = DocumentSource.pdfUrl(URL(string: "file://internal/test.pdf")!)
@@ -82,7 +73,6 @@ final class TestDocumentViewModel: XCTestCase {
     verify(router).pop()
   }
 
-  @MainActor
   func testInitiate_WhenGetSessionDocumentisNil_ThenSetErrorState() async {
     // Given
     let expectedSession: SessionData = .init()

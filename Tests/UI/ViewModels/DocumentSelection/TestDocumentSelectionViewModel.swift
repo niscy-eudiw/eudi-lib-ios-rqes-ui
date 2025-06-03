@@ -19,36 +19,27 @@ import RqesKit
 import RQES_LIBRARY
 @testable import EudiRQESUi
 
+@MainActor
 final class TestDocumentSelectionViewModel: XCTestCase {
   var interactor: MockRQESInteractor!
   var router: MockRouterGraph!
-  var config: MockEudiRQESUiConfig!
-  var eudiRQESUi: EudiRQESUi!
   var viewModel: DocumentSelectionViewModel<MockRouterGraph>!
 
   override func setUp() async throws {
     self.interactor = MockRQESInteractor()
     self.router = MockRouterGraph()
-    self.config = MockEudiRQESUiConfig()
-    self.eudiRQESUi = .init(
-      config: config,
-      router: router
-    )
-    self.viewModel = await DocumentSelectionViewModel(
+    self.viewModel = DocumentSelectionViewModel(
       router: router,
       interactor: interactor
     )
   }
 
-  override func tearDown() {
+  override func tearDown() async throws {
     self.interactor = nil
     self.router = nil
-    self.config = nil
-    self.eudiRQESUi = nil
     self.viewModel = nil
   }
 
-  @MainActor
   func testInitiate_WhenGetSessionReturnSessionData_ThenReturnSuccess() async {
     // Given
     let expectedQTSPName = "name"
@@ -89,7 +80,6 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     )
   }
 
-  @MainActor
   func testInitiate_WhenGetSessionReturnSessionDataWithNilQtsp_ThenReturnSuccess() async {
     // Given
     let expectedSession: SessionData = .init(
@@ -117,7 +107,6 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     XCTAssertNil(viewModel.viewState.certificateSelection?.mainText)
   }
 
-  @MainActor
   func testInitiate_WhenGetSessionReturnSessionData_ThenVerifyViewDocumentCalled() async {
     // Given
     let expectedSession: SessionData = .init(
@@ -146,7 +135,6 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     verify(router).navigateTo(equal(to: .viewDocument(false)))
   }
 
-  @MainActor
   func testInitiate_WhenGetSessionReturnSessionData_ThenVerifySelectService() async {
     // Given
     let expectedSession: SessionData = .init(
@@ -175,7 +163,6 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     verify(router).navigateTo(equal(to: .serviceSelection))
   }
 
-  @MainActor
   func testInitiate_WhenGetSessionReturnSessionData_ThenVerifySelectCertificate() async {
     // Given
     let expectedSession: SessionData = .init(
@@ -213,7 +200,6 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     verify(router).navigateTo(equal(to: .credentialSelection))
   }
 
-  @MainActor
   func testErrorAction_WhenInvoked_RetriesAndRecoversState() async {
     // Given
     let expectedQTSPName = "name"
@@ -249,14 +235,7 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     }
     retryAction()
 
-    let expectation = expectation(description: "State is recovered after retry")
-    Task {
-      while viewModel.viewState.error != nil {
-        try? await Task.sleep(nanoseconds: 20_000_000)
-      }
-      expectation.fulfill()
-    }
-    await fulfillment(of: [expectation], timeout: 1.0)
+    await waitForNoError(in: viewModel, timeout: 1.0)
 
     // Then
     XCTAssertNil(viewModel.viewState.error)
@@ -275,8 +254,6 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     )
   }
 
-
-  @MainActor
   func testInitiate_WhenGetSessionReturnSessionDataWithNilDocumentName_ThenReturnSuccess() async {
     // Given
     let expectedSession: SessionData = .init()
@@ -297,7 +274,6 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     )
   }
 
-  @MainActor
   func testViewDocument_whenRouterNavigateToViewDocument_ThenNavigateToWasCalled() async {
     // Given
     stub(router) { mock in
@@ -311,7 +287,6 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     verify(router).navigateTo(equal(to: .viewDocument(false)))
   }
 
-  @MainActor
   func testSelectService_whenRouterNavigateToViewDocument_ThenNavigateToWasCalled() async {
     // Given
     stub(router) { mock in
@@ -325,7 +300,6 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     verify(router).navigateTo(equal(to: .serviceSelection))
   }
 
-  @MainActor
   func testSelectCertificate_whenRouterNavigateToViewDocument_ThenNavigateToWasCalled() async {
     // Given
     stub(router) { mock in
@@ -340,3 +314,14 @@ final class TestDocumentSelectionViewModel: XCTestCase {
   }
 }
 
+extension TestDocumentSelectionViewModel {
+  private func waitForNoError(
+    in viewModel: DocumentSelectionViewModel<MockRouterGraph>,
+    timeout: TimeInterval
+  ) async {
+    let end = Date().addingTimeInterval(timeout)
+    while viewModel.viewState.error != nil && Date() < end {
+      try? await Task.sleep(nanoseconds: 20_000_000)
+    }
+  }
+}

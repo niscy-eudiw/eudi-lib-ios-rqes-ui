@@ -19,6 +19,7 @@ import RqesKit
 import RQES_LIBRARY
 @testable import EudiRQESUi
 
+@MainActor
 final class TestCredentialSelectionViewModel: XCTestCase {
   var interactor: MockRQESInteractor!
   var router: MockRouterGraph!
@@ -29,26 +30,18 @@ final class TestCredentialSelectionViewModel: XCTestCase {
   override func setUp() async throws {
     self.interactor = MockRQESInteractor()
     self.router = MockRouterGraph()
-    self.config = MockEudiRQESUiConfig()
-    self.eudiRQESUi = .init(
-      config: config,
-      router: router
-    )
-    self.viewModel = await CredentialSelectionViewModel(
+    self.viewModel = CredentialSelectionViewModel(
       router: router,
       interactor: interactor
     )
   }
 
-  override func tearDown() {
+  override func tearDown() async throws {
     self.interactor = nil
     self.router = nil
-    self.config = nil
-    self.eudiRQESUi = nil
     self.viewModel = nil
   }
 
-  @MainActor
   func testInitiate_successfulCredentialsFetch_updatesState() async throws {
     // Given
     let expectedCredentialInfo = try await TestConstants.getCredentialInfo()
@@ -68,7 +61,6 @@ final class TestCredentialSelectionViewModel: XCTestCase {
     XCTAssertNil(viewModel.viewState.error)
   }
 
-  @MainActor
   func testInitiate_WhenFetchCredentialsFailure_ThenSetErrorState() async {
     // Given
     let error = EudiRQESUiError.unableToFetchCredentials
@@ -94,7 +86,6 @@ final class TestCredentialSelectionViewModel: XCTestCase {
     verify(router).pop()
   }
 
-  @MainActor
   func testInitiate_WhenFetchCredentialsReturnsError_ThenSetErrorState() async {
     // Given
     let error = EudiRQESUiError.unableToFetchCredentials
@@ -109,7 +100,6 @@ final class TestCredentialSelectionViewModel: XCTestCase {
     XCTAssertEqual(viewModel.viewState.error?.title, .genericErrorMessage)
   }
 
-  @MainActor
   func testSetCertificate_WhenViewStateHasCredentialInfos_ThenSaveCertificateCalled() async throws{
     // Given
     let expectation = XCTestExpectation(description: "saveCertificate called")
@@ -134,7 +124,6 @@ final class TestCredentialSelectionViewModel: XCTestCase {
     }
 
     // When
-
     viewModel.setCertificate(credentialDataUIModel)
 
     // Then
@@ -142,10 +131,13 @@ final class TestCredentialSelectionViewModel: XCTestCase {
     verify(interactor).saveCertificate(any())
   }
 
-  @MainActor
   func testNextStep_WhenOpenCredentialAuthrorizationURLFailure_ThenSetErrorState() async {
     // Given
-    let expectation = expectation(description: "Error is set in viewState")
+    self.config = MockEudiRQESUiConfig()
+    self.eudiRQESUi = .init(
+      config: config,
+      router: router
+    )
 
     let error = EudiRQESUiError.noDocumentProvided
     stub(interactor) { stub in
@@ -155,16 +147,9 @@ final class TestCredentialSelectionViewModel: XCTestCase {
     // When
     viewModel.nextStep()
 
-    Task {
-      while viewModel.viewState.error == nil {
-        try? await Task.sleep(nanoseconds: 20_000_000)
-      }
-      expectation.fulfill()
-    }
+    await waitForError(in: viewModel, timeout: 1.0)
 
     // Then
-    await fulfillment(of: [expectation], timeout: 1.0)
-
     XCTAssertEqual(viewModel.viewState.error?.title, .genericErrorMessage)
 
     guard let cancelAction = viewModel.viewState.error?.cancelAction else {
@@ -176,8 +161,6 @@ final class TestCredentialSelectionViewModel: XCTestCase {
     XCTAssertNil(viewModel.viewState.error)
   }
 
-
-  @MainActor
   func testNextStep_WhenOpenCredentialAuthrorizationURLSuccess_ThenOnPauseCalledAndNoError() async {
     // Given
     let url = URL(string: "https://example.com")!
@@ -194,10 +177,8 @@ final class TestCredentialSelectionViewModel: XCTestCase {
     XCTAssertNil(viewModel.viewState.error)
   }
 
-  @MainActor
   func testErrorAction_WhenInvoked_RetriesAndRecoversState() async throws {
     // Given
-    let expectation = expectation(description: "State is recovered after retry")
     let expectedCredentialInfo = try await TestConstants.getCredentialInfo()
     let expectedCredentials = [expectedCredentialInfo]
 
@@ -224,18 +205,34 @@ final class TestCredentialSelectionViewModel: XCTestCase {
     }
     retryAction()
 
-    Task {
-      while viewModel.viewState.error != nil {
-        try? await Task.sleep(nanoseconds: 20_000_000)
-      }
-      expectation.fulfill()
-    }
-    await fulfillment(of: [expectation], timeout: 1.0)
+    await waitForNoError(in: viewModel, timeout: 1.0)
 
     XCTAssertNil(viewModel.viewState.error)
     XCTAssertFalse(viewModel.viewState.isLoading)
     XCTAssertEqual(viewModel.viewState.credentials.count, expectedCredentials.count)
     XCTAssertEqual(viewModel.viewState.credentialInfos.count, expectedCredentials.count)
+  }
+}
+
+extension TestCredentialSelectionViewModel {
+  private func waitForError(
+    in viewModel: CredentialSelectionViewModel<MockRouterGraph>,
+    timeout: TimeInterval
+  ) async {
+    let end = Date().addingTimeInterval(timeout)
+    while viewModel.viewState.error == nil && Date() < end {
+      try? await Task.sleep(nanoseconds: 20_000_000)
+    }
+  }
+
+  private func waitForNoError(
+    in viewModel: CredentialSelectionViewModel<MockRouterGraph>,
+    timeout: TimeInterval
+  ) async {
+    let end = Date().addingTimeInterval(timeout)
+    while viewModel.viewState.error != nil && Date() < end {
+      try? await Task.sleep(nanoseconds: 20_000_000)
+    }
   }
 }
 

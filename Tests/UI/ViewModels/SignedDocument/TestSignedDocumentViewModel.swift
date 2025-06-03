@@ -19,36 +19,27 @@ import RqesKit
 import RQES_LIBRARY
 @testable import EudiRQESUi
 
+@MainActor
 final class TestSignedDocumentViewModel: XCTestCase {
   var interactor: MockRQESInteractor!
   var router: MockRouterGraph!
-  var config: MockEudiRQESUiConfig!
-  var eudiRQESUi: EudiRQESUi!
   var viewModel: SignedDocumentViewModel<MockRouterGraph>!
 
   override func setUp() async throws {
     self.interactor = MockRQESInteractor()
     self.router = MockRouterGraph()
-    self.config = MockEudiRQESUiConfig()
-    self.eudiRQESUi = .init(
-      config: config,
-      router: router
-    )
-    self.viewModel = await SignedDocumentViewModel(
+    self.viewModel = SignedDocumentViewModel(
       router: router,
       interactor: interactor
     )
   }
 
-  override func tearDown() {
+  override func tearDown() async throws {
     self.interactor = nil
     self.router = nil
-    self.config = nil
-    self.eudiRQESUi = nil
     self.viewModel = nil
   }
 
-  @MainActor
   func testViewDocument_ThenNavigatesToViewDocumentWith() async {
     // Given
     stub(router) { mock in
@@ -62,7 +53,6 @@ final class TestSignedDocumentViewModel: XCTestCase {
     verify(router).navigateTo(equal(to: .viewDocument(true)))
   }
 
-  @MainActor
   func testInitiate_WhenSignDocumentThrowError_ThenSetErrorState() async {
     // Given
     let expectedError = EudiRQESUiError.noDocumentProvided
@@ -82,7 +72,6 @@ final class TestSignedDocumentViewModel: XCTestCase {
     verify(interactor, never()).getSession()
   }
 
-  @MainActor
   func testInitiate_WhenGetSessionReturnNil_ThenSetErrorState() async {
     // Given
     let expectedDocument = Document(
@@ -111,7 +100,6 @@ final class TestSignedDocumentViewModel: XCTestCase {
     XCTAssertEqual(viewModel.viewState.error?.description, .genericErrorDocumentNotFound)
   }
 
-  @MainActor
   func testInitiate_WhenGenSessionReturnsEmptyDocument_ThenSetErrorState() async {
     // Given
     let mockSession : SessionData = .init()
@@ -141,7 +129,6 @@ final class TestSignedDocumentViewModel: XCTestCase {
     XCTAssertEqual(viewModel.viewState.error?.description, .genericErrorDocumentNotFound)
   }
 
-  @MainActor
   func testInitiate_WhenGenSessionReturnsSessionData_ThenSetState() async {
     // Given
     let expectedDocument = Document(
@@ -197,7 +184,6 @@ final class TestSignedDocumentViewModel: XCTestCase {
     XCTAssertTrue(viewModel.viewState.isInitialized)
   }
 
-  @MainActor
   func testErrorAction_WhenInvoked_RetriesAndRecoversState() async {
     stub(interactor) { mock in
       when(mock.signDocument()).thenThrow(EudiRQESUiError.noDocumentProvided)
@@ -245,14 +231,7 @@ final class TestSignedDocumentViewModel: XCTestCase {
     }
     retryAction()
 
-    let expectation = expectation(description: "ViewModel recovers after retry")
-    Task {
-      while viewModel.viewState.error != nil {
-        try? await Task.sleep(nanoseconds: 20_000_000)
-      }
-      expectation.fulfill()
-    }
-    await fulfillment(of: [expectation], timeout: 1.0)
+    await waitForNoError(in: viewModel, timeout: 1.0)
 
     XCTAssertNil(viewModel.viewState.error)
     XCTAssertFalse(viewModel.viewState.isLoading)
@@ -269,7 +248,6 @@ final class TestSignedDocumentViewModel: XCTestCase {
     )
   }
 
-  @MainActor
   func testInitiate_WhenIsInitializedIsTrue_ThenDoesNothing() async {
     // Given
     let initialState = SignedDocumenState(
@@ -314,5 +292,17 @@ final class TestSignedDocumentViewModel: XCTestCase {
 
     // Then
     XCTAssertTrue(viewModel.viewState.isInitialized)
+  }
+}
+
+extension TestSignedDocumentViewModel {
+  private func waitForNoError(
+    in viewModel: SignedDocumentViewModel<MockRouterGraph>,
+    timeout: TimeInterval
+  ) async {
+    let end = Date().addingTimeInterval(timeout)
+    while viewModel.viewState.error != nil && Date() < end {
+      try? await Task.sleep(nanoseconds: 20_000_000)
+    }
   }
 }
