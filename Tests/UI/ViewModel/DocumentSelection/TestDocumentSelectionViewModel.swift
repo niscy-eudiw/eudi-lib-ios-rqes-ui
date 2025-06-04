@@ -256,7 +256,13 @@ final class TestDocumentSelectionViewModel: XCTestCase {
 
   func testInitiate_WhenGetSessionReturnSessionDataWithNilDocumentName_ThenReturnSuccess() async {
     // Given
+    let stateRecorder = viewModel.$viewState.record()
+    
     let expectedSession: SessionData = .init()
+    let expectedError = ContentErrorView.Config(
+      title: .genericErrorMessage,
+      description: .genericErrorDocumentNotFound,
+    )
 
     stub(interactor) { stub in
       when(stub.getSession()).thenReturn(expectedSession)
@@ -266,12 +272,9 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     await viewModel.initiate()
 
     // Then
-    XCTAssertFalse(viewModel.viewState.isLoading)
-    XCTAssertNotNil(viewModel.viewState.error)
-    XCTAssertEqual(
-      viewModel.viewState.error?.title,
-      .genericErrorMessage
-    )
+    let state = stateRecorder.fetchState()
+    XCTAssertFalse(state.isLoading)
+    XCTAssertEqual(state.error, expectedError)
   }
 
   func testViewDocument_whenRouterNavigateToViewDocument_ThenNavigateToWasCalled() async {

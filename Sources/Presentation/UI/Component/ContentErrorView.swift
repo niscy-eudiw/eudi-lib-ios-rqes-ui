@@ -56,8 +56,8 @@ struct ContentErrorView: View {
 }
 
 extension ContentErrorView {
-  struct Config {
-
+  struct Config: Equatable {
+    
     let title: LocalizableKey
     let description: LocalizableKey
     let button: LocalizableKey
@@ -77,5 +77,13 @@ extension ContentErrorView {
       self.action = action
       self.cancelAction = cancelAction
     }
+  }
+}
+
+extension ContentErrorView.Config {
+  static func == (lhs: ContentErrorView.Config, rhs: ContentErrorView.Config) -> Bool {
+    return lhs.title == rhs.title
+    && lhs.description == rhs.description
+    && lhs.button == rhs.button
   }
 }
