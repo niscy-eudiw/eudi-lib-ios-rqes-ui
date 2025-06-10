@@ -42,6 +42,7 @@ final class TestDocumentSelectionViewModel: XCTestCase {
 
   func testInitiate_WhenGetSessionReturnSessionData_ThenReturnSuccess() async {
     // Given
+    let stateRecorder = viewModel.$viewState.record()
     let expectedQTSPName = "name"
     let expectedSession: SessionData = .init(
       document: TestConstants.mockDocumentData,
@@ -64,24 +65,27 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     await viewModel.initiate()
 
     // Then
-    XCTAssertFalse(viewModel.viewState.isLoading)
-    XCTAssertNil(viewModel.viewState.error)
+    let state = stateRecorder.fetchState()
+    XCTAssertFalse(state.isLoading)
+    XCTAssertNil(state.error)
     XCTAssertEqual(
-      viewModel.viewState.documentSelection?.mainText,
+      state.documentSelection?.mainText,
       .custom(TestConstants.mockDocumentData.documentName)
     )
     XCTAssertEqual(
-      viewModel.viewState.qtspServiceSelection?.mainText,
+      state.qtspServiceSelection?.mainText,
       .custom(expectedQTSPName)
     )
     XCTAssertEqual(
-      viewModel.viewState.certificateSelection?.mainText,
+      state.certificateSelection?.mainText,
       .selectCertificate
     )
   }
 
   func testInitiate_WhenGetSessionReturnSessionDataWithNilQtsp_ThenReturnSuccess() async {
     // Given
+    let stateRecorder = viewModel.$viewState.record()
+
     let expectedSession: SessionData = .init(
       document: TestConstants.mockDocumentData
     )
@@ -94,17 +98,18 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     await viewModel.initiate()
 
     // Then
-    XCTAssertFalse(viewModel.viewState.isLoading)
-    XCTAssertNil(viewModel.viewState.error)
+    let state = stateRecorder.fetchState()
+    XCTAssertFalse(state.isLoading)
+    XCTAssertNil(state.error)
     XCTAssertEqual(
-      viewModel.viewState.documentSelection?.mainText,
+      state.documentSelection?.mainText,
       .custom(TestConstants.mockDocumentData.documentName)
     )
     XCTAssertEqual(
-      viewModel.viewState.qtspServiceSelection?.mainText,
+      state.qtspServiceSelection?.mainText,
       .selectService
     )
-    XCTAssertNil(viewModel.viewState.certificateSelection?.mainText)
+    XCTAssertNil(state.certificateSelection?.mainText)
   }
 
   func testInitiate_WhenGetSessionReturnSessionData_ThenVerifyViewDocumentCalled() async {
@@ -202,6 +207,8 @@ final class TestDocumentSelectionViewModel: XCTestCase {
 
   func testErrorAction_WhenInvoked_RetriesAndRecoversState() async {
     // Given
+    let stateRecorder = viewModel.$viewState.record()
+
     let expectedQTSPName = "name"
     let sessionWithNilDoc: SessionData = .init()
     let sessionWithDoc = SessionData(
@@ -221,13 +228,12 @@ final class TestDocumentSelectionViewModel: XCTestCase {
       when(stub.getSession()).thenReturn(sessionWithNilDoc)
     }
 
+    stub(interactor) { stub in
+      when(stub.getSession()).thenReturn(sessionWithNilDoc, sessionWithDoc)
+    }
+
     // When
     await viewModel.initiate()
-    XCTAssertNotNil(viewModel.viewState.error)
-
-    stub(interactor) { stub in
-      when(stub.getSession()).thenReturn(sessionWithDoc)
-    }
 
     guard let retryAction = viewModel.viewState.error?.action else {
       XCTFail("Retry action is nil")
@@ -238,18 +244,25 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     await waitUntil{ self.viewModel.viewState.error == nil }
 
     // Then
-    XCTAssertNil(viewModel.viewState.error)
-    XCTAssertFalse(viewModel.viewState.isLoading)
+    let state = stateRecorder.fetchStates(expectedCount: 2)
+    guard let firstState = state.first, let lastState = state.last else {
+      XCTFail("Expected error in state, but was nil")
+      return
+    }
+    XCTAssertNotNil(firstState.error)
+
+    XCTAssertNil(lastState.error)
+    XCTAssertFalse(lastState.isLoading)
     XCTAssertEqual(
-      viewModel.viewState.documentSelection?.mainText,
+      lastState.documentSelection?.mainText,
       .custom(TestConstants.mockDocumentData.documentName)
     )
     XCTAssertEqual(
-      viewModel.viewState.qtspServiceSelection?.mainText,
+      lastState.qtspServiceSelection?.mainText,
       .custom(expectedQTSPName)
     )
     XCTAssertEqual(
-      viewModel.viewState.certificateSelection?.mainText,
+      lastState.certificateSelection?.mainText,
       .selectCertificate
     )
   }
