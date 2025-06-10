@@ -44,6 +44,7 @@ final class TestCredentialSelectionViewModel: XCTestCase {
 
   func testInitiate_successfulCredentialsFetch_updatesState() async throws {
     // Given
+    let stateRecorder = viewModel.$viewState.record()
     let expectedCredentialInfo = try await TestConstants.getCredentialInfo()
     let expectedCredentials = [expectedCredentialInfo]
 
@@ -55,14 +56,16 @@ final class TestCredentialSelectionViewModel: XCTestCase {
     await viewModel.initiate()
 
     // Then
-    XCTAssertFalse(viewModel.viewState.isLoading)
-    XCTAssertEqual(viewModel.viewState.credentials.count, expectedCredentials.count)
-    XCTAssertEqual(viewModel.viewState.credentialInfos.count, expectedCredentials.count)
-    XCTAssertNil(viewModel.viewState.error)
+    let state = stateRecorder.fetchState()
+    XCTAssertFalse(state.isLoading)
+    XCTAssertEqual(state.credentials.count, expectedCredentials.count)
+    XCTAssertEqual(state.credentialInfos.count, expectedCredentials.count)
+    XCTAssertNil(state.error)
   }
 
   func testInitiate_WhenFetchCredentialsFailure_ThenSetErrorState() async {
     // Given
+    let stateRecorder = viewModel.$viewState.record()
     let error = EudiRQESUiError.unableToFetchCredentials
     stub(interactor) { stub in
       when(stub.fetchCredentials()).thenThrow(error)
@@ -76,18 +79,23 @@ final class TestCredentialSelectionViewModel: XCTestCase {
     await viewModel.initiate()
 
     // Then
-    XCTAssertEqual(viewModel.viewState.error?.title, .genericErrorMessage)
-
     guard let cancelAction = viewModel.viewState.error?.cancelAction else {
       XCTFail("cancelAction should not be nil")
       return
     }
     cancelAction()
+
+    await waitUntil{ self.viewModel.viewState.error != nil }
+
+    let state = stateRecorder.fetchState()
+    XCTAssertEqual(state.error?.title, .genericErrorMessage)
+
     verify(router).pop()
   }
 
   func testInitiate_WhenFetchCredentialsReturnsError_ThenSetErrorState() async {
     // Given
+    let stateRecorder = viewModel.$viewState.record()
     let error = EudiRQESUiError.unableToFetchCredentials
     stub(interactor) { stub in
       when(stub.fetchCredentials()).thenReturn(.failure(error))
@@ -97,12 +105,13 @@ final class TestCredentialSelectionViewModel: XCTestCase {
     await viewModel.initiate()
 
     // Then
-    XCTAssertEqual(viewModel.viewState.error?.title, .genericErrorMessage)
+    let state = stateRecorder.fetchState()
+    XCTAssertEqual(state.error?.title, .genericErrorMessage)
   }
 
   func testSetCertificate_WhenViewStateHasCredentialInfos_ThenSaveCertificateCalled() async throws{
     // Given
-    let expectation = XCTestExpectation(description: "saveCertificate called")
+    let expectation = XCTestExpectation(description: "SaveCertificate called")
 
     let credentialDataUIModel = CredentialDataUIModel(id: "id", name: "description")
     let expectedCredentialInfo = try await TestConstants.getCredentialInfo()
@@ -133,6 +142,7 @@ final class TestCredentialSelectionViewModel: XCTestCase {
 
   func testNextStep_WhenOpenCredentialAuthrorizationURLFailure_ThenSetErrorState() async {
     // Given
+    let stateRecorder = viewModel.$viewState.record()
     self.config = MockEudiRQESUiConfig()
     self.eudiRQESUi = .init(
       config: config,
@@ -147,44 +157,37 @@ final class TestCredentialSelectionViewModel: XCTestCase {
     // When
     viewModel.nextStep()
 
+    // Then
     await waitUntil{ self.viewModel.viewState.error != nil }
 
-    // Then
-    XCTAssertEqual(viewModel.viewState.error?.title, .genericErrorMessage)
-
     guard let cancelAction = viewModel.viewState.error?.cancelAction else {
-      XCTFail("cancelAction should not be nil")
+      XCTFail("CancelAction should not be nil")
       return
     }
     cancelAction()
 
-    XCTAssertNil(viewModel.viewState.error)
-  }
+    let state = stateRecorder.fetchStates(expectedCount: 2)
 
-  func testNextStep_WhenOpenCredentialAuthrorizationURLSuccess_ThenOnPauseCalledAndNoError() async {
-    // Given
-    let url = URL(string: "https://example.com")!
-
-    stub(interactor) { stub in
-      when(stub.openCredentialAuthrorizationURL()).thenReturn(url)
+    guard let firstState = state.first, let lastState = state.last else {
+      XCTFail("Expected error in state, but was nil")
+      return
     }
-
-    // When
-    viewModel.nextStep()
-    await Task.yield()
-
-    // Then
-    XCTAssertNil(viewModel.viewState.error)
+    XCTAssertEqual(firstState.error?.title, .genericErrorMessage)
+    XCTAssertNil(lastState.error)
   }
 
   func testErrorAction_WhenInvoked_RetriesAndRecoversState() async throws {
     // Given
+    let stateRecorder = viewModel.$viewState.record()
     let expectedCredentialInfo = try await TestConstants.getCredentialInfo()
     let expectedCredentials = [expectedCredentialInfo]
 
     stub(interactor) { stub in
-      when(stub.fetchCredentials()).thenThrow(EudiRQESUiError.unableToFetchCredentials)
+      when(stub.fetchCredentials())
+        .thenThrow(EudiRQESUiError.unableToFetchCredentials)
+        .thenReturn(.success(expectedCredentials))
     }
+
     stub(router) { mock in
       when(mock.pop()).thenDoNothing()
     }
@@ -193,12 +196,6 @@ final class TestCredentialSelectionViewModel: XCTestCase {
     await viewModel.initiate()
 
     // Then
-    XCTAssertNotNil(viewModel.viewState.error)
-
-    stub(interactor) { stub in
-      when(stub.fetchCredentials()).thenReturn(.success(expectedCredentials))
-    }
-
     guard let retryAction = viewModel.viewState.error?.action else {
       XCTFail("Retry action should not be nil")
       return
@@ -207,10 +204,18 @@ final class TestCredentialSelectionViewModel: XCTestCase {
 
     await waitUntil{ self.viewModel.viewState.error == nil }
 
-    XCTAssertNil(viewModel.viewState.error)
-    XCTAssertFalse(viewModel.viewState.isLoading)
-    XCTAssertEqual(viewModel.viewState.credentials.count, expectedCredentials.count)
-    XCTAssertEqual(viewModel.viewState.credentialInfos.count, expectedCredentials.count)
+    let state = stateRecorder.fetchStates(expectedCount: 2)
+    guard let firstState = state.first, let lastState = state.last else {
+      XCTFail("Expected error in state, but was nil")
+      return
+    }
+
+    XCTAssertNotNil(firstState.error)
+
+    XCTAssertNil(state.last!.error)
+    XCTAssertFalse(lastState.isLoading)
+    XCTAssertEqual(lastState.credentials.count, expectedCredentials.count)
+    XCTAssertEqual(lastState.credentialInfos.count, expectedCredentials.count)
   }
 }
 

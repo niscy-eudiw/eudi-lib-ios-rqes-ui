@@ -1,5 +1,5 @@
 {
-  "originHash" : "80fd044ad55a7522a52088a243321eab233b857d131668f6a736df0a78216578",
+  "originHash" : "9f03d3c3233cad878918ca06fbf7ca1a96375460873ca0db1d514d2e46249244",
   "pins" : [
     {
       "identity" : "aexml",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "db806756c989760b35108146381535aec231092b",
         "version" : "4.7.0"
+      }
+    },
+    {
+      "identity" : "combineexpectations",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/groue/CombineExpectations.git",
+      "state" : {
+        "revision" : "04d4e4b21c9e8361925f03f64a7ecda89ef9974f",
+        "version" : "0.10.0"
       }
     },
     {
