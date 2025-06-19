@@ -623,7 +623,7 @@ class MockRQESController: RQESController, Cuckoo.ProtocolMock, @unchecked Sendab
             "getRSSPMetadata() async throws -> RSSPMetadata",
             parameters: (),
             escapingParameters: (),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: await __defaultImplStub!.getRSSPMetadata()
         )
     }
@@ -633,7 +633,7 @@ class MockRQESController: RQESController, Cuckoo.ProtocolMock, @unchecked Sendab
             "getServiceAuthorizationUrl() async throws -> URL",
             parameters: (),
             escapingParameters: (),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: await __defaultImplStub!.getServiceAuthorizationUrl()
         )
     }
@@ -643,7 +643,7 @@ class MockRQESController: RQESController, Cuckoo.ProtocolMock, @unchecked Sendab
             "authorizeService(_ p0: String) async throws -> RQESServiceAuthorized",
             parameters: (p0),
             escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: await __defaultImplStub!.authorizeService(p0)
         )
     }
@@ -653,7 +653,7 @@ class MockRQESController: RQESController, Cuckoo.ProtocolMock, @unchecked Sendab
             "authorizeCredential(_ p0: String) async throws -> RQESServiceCredentialAuthorized",
             parameters: (p0),
             escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: await __defaultImplStub!.authorizeCredential(p0)
         )
     }
@@ -663,7 +663,7 @@ class MockRQESController: RQESController, Cuckoo.ProtocolMock, @unchecked Sendab
             "signDocuments(_ p0: String) async throws -> [Document]",
             parameters: (p0),
             escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: await __defaultImplStub!.signDocuments(p0)
         )
     }
@@ -673,7 +673,7 @@ class MockRQESController: RQESController, Cuckoo.ProtocolMock, @unchecked Sendab
             "getCredentialsList() async throws -> [CredentialInfo]",
             parameters: (),
             escapingParameters: (),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: await __defaultImplStub!.getCredentialsList()
         )
     }
@@ -683,7 +683,7 @@ class MockRQESController: RQESController, Cuckoo.ProtocolMock, @unchecked Sendab
             "getCredentialAuthorizationUrl(credentialInfo p0: CredentialInfo, documents p1: [Document]) async throws -> URL",
             parameters: (p0, p1),
             escapingParameters: (p0, p1),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: await __defaultImplStub!.getCredentialAuthorizationUrl(credentialInfo: p0, documents: p1)
         )
     }
@@ -695,7 +695,7 @@ class MockRQESController: RQESController, Cuckoo.ProtocolMock, @unchecked Sendab
             self.cuckoo_manager = manager
         }
         
-        func getRSSPMetadata() -> Cuckoo.ProtocolStubThrowingFunction<(), RSSPMetadata> {
+        func getRSSPMetadata() -> Cuckoo.ProtocolStubThrowingFunction<(), RSSPMetadata,Error> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockRQESController.self,
                 method: "getRSSPMetadata() async throws -> RSSPMetadata",
@@ -703,7 +703,7 @@ class MockRQESController: RQESController, Cuckoo.ProtocolMock, @unchecked Sendab
             ))
         }
         
-        func getServiceAuthorizationUrl() -> Cuckoo.ProtocolStubThrowingFunction<(), URL> {
+        func getServiceAuthorizationUrl() -> Cuckoo.ProtocolStubThrowingFunction<(), URL,Error> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockRQESController.self,
                 method: "getServiceAuthorizationUrl() async throws -> URL",
@@ -711,7 +711,7 @@ class MockRQESController: RQESController, Cuckoo.ProtocolMock, @unchecked Sendab
             ))
         }
         
-        func authorizeService<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), RQESServiceAuthorized> where M1.MatchedType == String {
+        func authorizeService<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), RQESServiceAuthorized,Error> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockRQESController.self,
                 method: "authorizeService(_ p0: String) async throws -> RQESServiceAuthorized",
@@ -719,7 +719,7 @@ class MockRQESController: RQESController, Cuckoo.ProtocolMock, @unchecked Sendab
             ))
         }
         
-        func authorizeCredential<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), RQESServiceCredentialAuthorized> where M1.MatchedType == String {
+        func authorizeCredential<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), RQESServiceCredentialAuthorized,Error> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockRQESController.self,
                 method: "authorizeCredential(_ p0: String) async throws -> RQESServiceCredentialAuthorized",
@@ -727,7 +727,7 @@ class MockRQESController: RQESController, Cuckoo.ProtocolMock, @unchecked Sendab
             ))
         }
         
-        func signDocuments<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), [Document]> where M1.MatchedType == String {
+        func signDocuments<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(String), [Document],Error> where M1.MatchedType == String {
             let matchers: [Cuckoo.ParameterMatcher<(String)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockRQESController.self,
                 method: "signDocuments(_ p0: String) async throws -> [Document]",
@@ -735,7 +735,7 @@ class MockRQESController: RQESController, Cuckoo.ProtocolMock, @unchecked Sendab
             ))
         }
         
-        func getCredentialsList() -> Cuckoo.ProtocolStubThrowingFunction<(), [CredentialInfo]> {
+        func getCredentialsList() -> Cuckoo.ProtocolStubThrowingFunction<(), [CredentialInfo],Error> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockRQESController.self,
                 method: "getCredentialsList() async throws -> [CredentialInfo]",
@@ -743,7 +743,7 @@ class MockRQESController: RQESController, Cuckoo.ProtocolMock, @unchecked Sendab
             ))
         }
         
-        func getCredentialAuthorizationUrl<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(credentialInfo p0: M1, documents p1: M2) -> Cuckoo.ProtocolStubThrowingFunction<(CredentialInfo, [Document]), URL> where M1.MatchedType == CredentialInfo, M2.MatchedType == [Document] {
+        func getCredentialAuthorizationUrl<M1: Cuckoo.Matchable, M2: Cuckoo.Matchable>(credentialInfo p0: M1, documents p1: M2) -> Cuckoo.ProtocolStubThrowingFunction<(CredentialInfo, [Document]), URL,Error> where M1.MatchedType == CredentialInfo, M2.MatchedType == [Document] {
             let matchers: [Cuckoo.ParameterMatcher<(CredentialInfo, [Document])>] = [wrap(matchable: p0) { $0.0 }, wrap(matchable: p1) { $0.1 }]
             return .init(stub: cuckoo_manager.createStub(for: MockRQESController.self,
                 method: "getCredentialAuthorizationUrl(credentialInfo p0: CredentialInfo, documents p1: [Document]) async throws -> URL",
@@ -1095,7 +1095,7 @@ class MockRQESInteractor: RQESInteractor, Cuckoo.ProtocolMock, @unchecked Sendab
             "signDocument() async throws -> Document?",
             parameters: (),
             escapingParameters: (),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: await __defaultImplStub!.signDocument()
         )
     }
@@ -1125,7 +1125,7 @@ class MockRQESInteractor: RQESInteractor, Cuckoo.ProtocolMock, @unchecked Sendab
             "fetchCredentials() async throws -> Result<[CredentialInfo], any Error>",
             parameters: (),
             escapingParameters: (),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: await __defaultImplStub!.fetchCredentials()
         )
     }
@@ -1155,7 +1155,7 @@ class MockRQESInteractor: RQESInteractor, Cuckoo.ProtocolMock, @unchecked Sendab
             "createRQESService(_ p0: QTSPData) async throws",
             parameters: (p0),
             escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: await __defaultImplStub!.createRQESService(p0)
         )
     }
@@ -1175,7 +1175,7 @@ class MockRQESInteractor: RQESInteractor, Cuckoo.ProtocolMock, @unchecked Sendab
             "openAuthrorizationURL() async throws -> URL",
             parameters: (),
             escapingParameters: (),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: await __defaultImplStub!.openAuthrorizationURL()
         )
     }
@@ -1185,7 +1185,7 @@ class MockRQESInteractor: RQESInteractor, Cuckoo.ProtocolMock, @unchecked Sendab
             "openCredentialAuthrorizationURL() async throws -> URL",
             parameters: (),
             escapingParameters: (),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: await __defaultImplStub!.openCredentialAuthrorizationURL()
         )
     }
@@ -1197,7 +1197,7 @@ class MockRQESInteractor: RQESInteractor, Cuckoo.ProtocolMock, @unchecked Sendab
             self.cuckoo_manager = manager
         }
         
-        func signDocument() -> Cuckoo.ProtocolStubThrowingFunction<(), Document?> {
+        func signDocument() -> Cuckoo.ProtocolStubThrowingFunction<(), Document?,Error> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockRQESInteractor.self,
                 method: "signDocument() async throws -> Document?",
@@ -1221,7 +1221,7 @@ class MockRQESInteractor: RQESInteractor, Cuckoo.ProtocolMock, @unchecked Sendab
             ))
         }
         
-        func fetchCredentials() -> Cuckoo.ProtocolStubThrowingFunction<(), Result<[CredentialInfo], any Error>> {
+        func fetchCredentials() -> Cuckoo.ProtocolStubThrowingFunction<(), Result<[CredentialInfo], any Error>,Error> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockRQESInteractor.self,
                 method: "fetchCredentials() async throws -> Result<[CredentialInfo], any Error>",
@@ -1245,7 +1245,7 @@ class MockRQESInteractor: RQESInteractor, Cuckoo.ProtocolMock, @unchecked Sendab
             ))
         }
         
-        func createRQESService<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(QTSPData)> where M1.MatchedType == QTSPData {
+        func createRQESService<M1: Cuckoo.Matchable>(_ p0: M1) -> Cuckoo.ProtocolStubNoReturnThrowingFunction<(QTSPData),Error> where M1.MatchedType == QTSPData {
             let matchers: [Cuckoo.ParameterMatcher<(QTSPData)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockRQESInteractor.self,
                 method: "createRQESService(_ p0: QTSPData) async throws",
@@ -1261,7 +1261,7 @@ class MockRQESInteractor: RQESInteractor, Cuckoo.ProtocolMock, @unchecked Sendab
             ))
         }
         
-        func openAuthrorizationURL() -> Cuckoo.ProtocolStubThrowingFunction<(), URL> {
+        func openAuthrorizationURL() -> Cuckoo.ProtocolStubThrowingFunction<(), URL,Error> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockRQESInteractor.self,
                 method: "openAuthrorizationURL() async throws -> URL",
@@ -1269,7 +1269,7 @@ class MockRQESInteractor: RQESInteractor, Cuckoo.ProtocolMock, @unchecked Sendab
             ))
         }
         
-        func openCredentialAuthrorizationURL() -> Cuckoo.ProtocolStubThrowingFunction<(), URL> {
+        func openCredentialAuthrorizationURL() -> Cuckoo.ProtocolStubThrowingFunction<(), URL,Error> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockRQESInteractor.self,
                 method: "openCredentialAuthrorizationURL() async throws -> URL",
@@ -2665,7 +2665,7 @@ class MockRouterGraph: RouterGraph, Cuckoo.ProtocolMock, @unchecked Sendable {
             "nextView(for p0: EudiRQESUi.State) throws -> UIViewController",
             parameters: (p0),
             escapingParameters: (p0),
-            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
             defaultCall: __defaultImplStub!.nextView(for: p0)
         )
     }
@@ -2723,7 +2723,7 @@ class MockRouterGraph: RouterGraph, Cuckoo.ProtocolMock, @unchecked Sendable {
             ))
         }
         
-        func nextView<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(EudiRQESUi.State), UIViewController> where M1.MatchedType == EudiRQESUi.State {
+        func nextView<M1: Cuckoo.Matchable>(for p0: M1) -> Cuckoo.ProtocolStubThrowingFunction<(EudiRQESUi.State), UIViewController,Error> where M1.MatchedType == EudiRQESUi.State {
             let matchers: [Cuckoo.ParameterMatcher<(EudiRQESUi.State)>] = [wrap(matchable: p0) { $0 }]
             return .init(stub: cuckoo_manager.createStub(for: MockRouterGraph.self,
                 method: "nextView(for p0: EudiRQESUi.State) throws -> UIViewController",

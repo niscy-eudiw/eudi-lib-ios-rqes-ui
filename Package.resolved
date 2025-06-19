@@ -1,5 +1,5 @@
 {
-  "originHash" : "9f03d3c3233cad878918ca06fbf7ca1a96375460873ca0db1d514d2e46249244",
+  "originHash" : "a4d277b3fc0c033559ac71d5e43b3bbb9f82b0f94b723999bf6eda0c2166c032",
   "pins" : [
     {
       "identity" : "aexml",
@@ -24,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Brightify/Cuckoo.git",
       "state" : {
-        "revision" : "3ecee6db6771fabc674eaf15e225cdbd8c4e6e8d",
-        "version" : "2.0.18"
+        "revision" : "856aa829a5717220326368589a3d1390e7ec1785",
+        "version" : "2.1.0"
       }
     },
     {
@@ -96,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-argument-parser",
       "state" : {
-        "revision" : "41982a3656a71c768319979febd796c6fd111d5c",
-        "version" : "1.5.0"
+        "revision" : "011f0c765fb46d9cac61bca19be0527e99c98c8b",
+        "version" : "1.5.1"
       }
     },
     {
