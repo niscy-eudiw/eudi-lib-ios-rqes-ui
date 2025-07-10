@@ -1,5 +1,5 @@
 {
-  "originHash" : "137bbd6e01ca947f84b8566e3c9c655f30aa9f3d3c8dccee5ab1761b1465c82c",
+  "originHash" : "3b65845a0202abd8b160af159a304be9cb1278f920720a41a1d2492958478d26",
   "pins" : [
     {
       "identity" : "aexml",
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-csc-swift.git",
       "state" : {
-        "revision" : "b10f5a71c1c4399845cf4da63889f059f484275f",
-        "version" : "0.1.0"
+        "revision" : "9e192796a8df9b11d3b463b56289a1220bbeb010",
+        "version" : "0.2.1"
       }
     },
     {
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-kit.git",
       "state" : {
-        "revision" : "7299c827c603e711c750c2c384dc8311b9b2db6f",
-        "version" : "0.1.1"
+        "revision" : "9072a99034e725524aa895b9cabc5bf36c987c61",
+        "version" : "0.2.0"
       }
     },
     {
@@ -96,8 +96,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-argument-parser",
       "state" : {
-        "revision" : "011f0c765fb46d9cac61bca19be0527e99c98c8b",
-        "version" : "1.5.1"
+        "revision" : "309a47b2b1d9b5e991f36961c983ecec72275be3",
+        "version" : "1.6.1"
       }
     },
     {
@@ -105,8 +105,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-asn1.git",
       "state" : {
-        "revision" : "a54383ada6cecde007d374f58f864e29370ba5c3",
-        "version" : "1.3.2"
+        "revision" : "f70225981241859eb4aa1a18a75531d26637c8cc",
+        "version" : "1.4.0"
       }
     },
     {
@@ -114,8 +114,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-certificates.git",
       "state" : {
-        "revision" : "999fd70c7803da89f3904d635a6815a2a7cd7585",
-        "version" : "1.10.0"
+        "revision" : "870f4d5fe5fcfedc13f25d70e103150511746404",
+        "version" : "1.11.0"
       }
     },
     {
