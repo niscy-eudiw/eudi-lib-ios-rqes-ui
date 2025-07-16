@@ -78,7 +78,7 @@ public enum LocalizableKey: Sendable, Equatable, Hashable {
     case .cancelSigning: "Cancel signing"
     case .continueSigning: "Continue signing"
     case .cancelSigningProcessTitle: "Cancel signing process?"
-    case .cancelSigningProcessSubtitle: "Cancel  will will redirect you back to the document list without signing your document."
+    case .cancelSigningProcessSubtitle: "Cancel will redirect you back to the document list without signing your document."
     case .genericErrorButtonRetry: "TRY AGAIN"
     case .genericErrorMessage: "Oups! Something went wrong"
     case .genericServiceErrorMessage: "It seems the RQES Signing service is unavailable. Please try again later."
