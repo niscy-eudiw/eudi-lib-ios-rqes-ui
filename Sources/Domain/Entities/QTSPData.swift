@@ -19,7 +19,8 @@ public struct QTSPData: Equatable, Sendable {
   
   public let name: String
   public let uri: URL
-  public let scaURL: String
+  public let scaUrl: String
+  public let tsaUrl: String?
   public let clientId: String
   public let clientSecret: String
   public let authFlowRedirectionURI: String
@@ -28,7 +29,8 @@ public struct QTSPData: Equatable, Sendable {
   public init(
     name: String,
     uri: URL,
-    scaURL: String,
+    scaUrl: String,
+    tsaUrl: String?,
     clientId: String,
     clientSecret: String,
     authFlowRedirectionURI: String,
@@ -36,7 +38,8 @@ public struct QTSPData: Equatable, Sendable {
   ) {
     self.name = name
     self.uri = uri
-    self.scaURL = scaURL
+    self.scaUrl = scaUrl
+    self.tsaUrl = tsaUrl
     self.clientId = clientId
     self.clientSecret = clientSecret
     self.authFlowRedirectionURI = authFlowRedirectionURI

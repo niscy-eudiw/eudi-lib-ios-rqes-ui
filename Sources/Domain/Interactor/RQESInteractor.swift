@@ -54,7 +54,8 @@ final class RQESInteractorImpl: RQESInteractor {
             clientSecret: qtsp.clientSecret
           ),
           authFlowRedirectionURI: qtsp.authFlowRedirectionURI,
-          scaBaseURL: qtsp.scaURL
+          scaBaseURL: qtsp.scaUrl,
+          tsaUrl: qtsp.tsaUrl
         ),
         defaultHashAlgorithmOID: qtsp.hashAlgorithm,
         fileExtension: ".\(fileExtension)"

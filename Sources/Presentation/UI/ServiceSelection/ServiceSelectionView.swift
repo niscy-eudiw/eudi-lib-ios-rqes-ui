@@ -95,7 +95,8 @@ private func content(
         QTSPData(
           name: "Entrust",
           uri: URL(string: "https://www.entrust.com")!,
-          scaURL: "https://www.entrust.com",
+          scaUrl: "https://www.entrust.com",
+          tsaUrl: nil,
           clientId: "clientId",
           clientSecret: "clientSecret",
           authFlowRedirectionURI: "authFlowRedirectionURI",
@@ -106,7 +107,8 @@ private func content(
         QTSPData(
           name: "Entrust",
           uri: URL(string: "https://www.entrust.com")!,
-          scaURL: "https://www.entrust.com",
+          scaUrl: "https://www.entrust.com",
+          tsaUrl: nil,
           clientId: "clientId",
           clientSecret: "clientSecret",
           authFlowRedirectionURI: "authFlowRedirectionURI",
@@ -128,7 +130,8 @@ private func content(
         QTSPData(
           name: "Entrust",
           uri: URL(string: "https://www.entrust.com")!,
-          scaURL: "https://www.entrust.com",
+          scaUrl: "https://www.entrust.com",
+          tsaUrl: nil,
           clientId: "clientId",
           clientSecret: "clientSecret",
           authFlowRedirectionURI: "authFlowRedirectionURI",
@@ -139,7 +142,8 @@ private func content(
         QTSPData(
           name: "Entrust",
           uri: URL(string: "https://www.entrust.com")!,
-          scaURL: "https://www.entrust.com",
+          scaUrl: "https://www.entrust.com",
+          tsaUrl: nil,
           clientId: "clientId",
           clientSecret: "clientSecret",
           authFlowRedirectionURI: "authFlowRedirectionURI",
