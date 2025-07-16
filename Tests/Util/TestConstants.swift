@@ -27,7 +27,8 @@ struct TestConstants {
   static let mockQtspData: QTSPData = .init(
     name: "Wallet-Centric",
     uri: URL(string: "https://walletcentric.signer.eudiw.dev/csc/v2")!,
-    scaURL: "https://walletcentric.signer.eudiw.dev",
+    scaUrl: "https://walletcentric.signer.eudiw.dev",
+    tsaUrl: nil,
     clientId: "wallet-client",
     clientSecret: "somesecret2",
     authFlowRedirectionURI: "rqes://oauth/callback",

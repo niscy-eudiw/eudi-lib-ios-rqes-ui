@@ -49,7 +49,8 @@ final class TestDocumentSelectionViewModel: XCTestCase {
       qtsp: QTSPData(
         name: expectedQTSPName,
         uri: URL(string: "uri")!,
-        scaURL: "scaURL",
+        scaUrl: "scaURL",
+        tsaUrl: nil,
         clientId: "clientId",
         clientSecret: "clientSecret",
         authFlowRedirectionURI: "authFlowRedirectionURI",
@@ -175,7 +176,8 @@ final class TestDocumentSelectionViewModel: XCTestCase {
       qtsp: QTSPData(
         name: "name",
         uri: URL(string: "uri")!,
-        scaURL: "scaURL",
+        scaUrl: "scaURL",
+        tsaUrl: nil,
         clientId: "clientId",
         clientSecret: "clientSecret",
         authFlowRedirectionURI: "authFlowRedirectionURI",
@@ -216,7 +218,8 @@ final class TestDocumentSelectionViewModel: XCTestCase {
       qtsp: QTSPData(
         name: expectedQTSPName,
         uri: URL(string: "uri")!,
-        scaURL: "scaURL",
+        scaUrl: "scaURL",
+        tsaUrl: nil,
         clientId: "clientId",
         clientSecret: "clientSecret",
         authFlowRedirectionURI: "authFlowRedirectionURI",

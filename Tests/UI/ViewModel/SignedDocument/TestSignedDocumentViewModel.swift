@@ -151,7 +151,8 @@ final class TestSignedDocumentViewModel: XCTestCase {
     let qtsp = QTSPData(
       name: "name",
       uri: URL(string: "uri")!,
-      scaURL: "scaURL",
+      scaUrl: "scaURL",
+      tsaUrl: nil,
       clientId: "clientId",
       clientSecret: "clientSecret",
       authFlowRedirectionURI: "authFlowRedirectionURI",
@@ -206,7 +207,8 @@ final class TestSignedDocumentViewModel: XCTestCase {
     let qtsp = QTSPData(
       name: "name",
       uri: URL(string: "uri")!,
-      scaURL: "scaURL",
+      scaUrl: "scaURL",
+      tsaUrl: nil,
       clientId: "clientId",
       clientSecret: "clientSecret",
       authFlowRedirectionURI: "authFlowRedirectionURI",
@@ -278,7 +280,8 @@ final class TestSignedDocumentViewModel: XCTestCase {
       qtsp: QTSPData(
         name: "qtsp",
         uri: URL(string: "uri")!,
-        scaURL: "scaURL",
+        scaUrl: "scaURL",
+        tsaUrl: nil,
         clientId: "clientId",
         clientSecret: "clientSecret",
         authFlowRedirectionURI: "authFlowRedirectionURI",
