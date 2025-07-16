@@ -43,19 +43,10 @@ final class TestDocumentSelectionViewModel: XCTestCase {
   func testInitiate_WhenGetSessionReturnSessionData_ThenReturnSuccess() async {
     // Given
     let stateRecorder = viewModel.$viewState.record()
-    let expectedQTSPName = "name"
+    let expectedQTSPName = "Wallet-Centric"
     let expectedSession: SessionData = .init(
       document: TestConstants.mockDocumentData,
-      qtsp: QTSPData(
-        name: expectedQTSPName,
-        uri: URL(string: "uri")!,
-        scaUrl: "scaURL",
-        tsaUrl: nil,
-        clientId: "clientId",
-        clientSecret: "clientSecret",
-        authFlowRedirectionURI: "authFlowRedirectionURI",
-        hashAlgorithm: "hashAlgorithm"
-      )
+      qtsp: TestConstants.mockQtspData
     )
 
     stub(interactor) { stub in
@@ -173,16 +164,7 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     // Given
     let expectedSession: SessionData = .init(
       document: TestConstants.mockDocumentData,
-      qtsp: QTSPData(
-        name: "name",
-        uri: URL(string: "uri")!,
-        scaUrl: "scaURL",
-        tsaUrl: nil,
-        clientId: "clientId",
-        clientSecret: "clientSecret",
-        authFlowRedirectionURI: "authFlowRedirectionURI",
-        hashAlgorithm: "hashAlgorithm"
-      )
+      qtsp: TestConstants.mockQtspData
     )
 
     stub(router) { mock in
@@ -211,20 +193,11 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     // Given
     let stateRecorder = viewModel.$viewState.record()
 
-    let expectedQTSPName = "name"
+    let expectedQTSPName = "Wallet-Centric"
     let sessionWithNilDoc: SessionData = .init()
     let sessionWithDoc = SessionData(
       document: TestConstants.mockDocumentData,
-      qtsp: QTSPData(
-        name: expectedQTSPName,
-        uri: URL(string: "uri")!,
-        scaUrl: "scaURL",
-        tsaUrl: nil,
-        clientId: "clientId",
-        clientSecret: "clientSecret",
-        authFlowRedirectionURI: "authFlowRedirectionURI",
-        hashAlgorithm: "hashAlgorithm"
-      )
+      qtsp: TestConstants.mockQtspData
     )
 
     stub(interactor) { stub in

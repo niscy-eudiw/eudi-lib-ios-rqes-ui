@@ -148,16 +148,7 @@ final class TestSignedDocumentViewModel: XCTestCase {
       uri: URL(string: "uri")!
     )
 
-    let qtsp = QTSPData(
-      name: "name",
-      uri: URL(string: "uri")!,
-      scaUrl: "scaURL",
-      tsaUrl: nil,
-      clientId: "clientId",
-      clientSecret: "clientSecret",
-      authFlowRedirectionURI: "authFlowRedirectionURI",
-      hashAlgorithm: "hashAlgorithm"
-    )
+    let qtsp = TestConstants.mockQtspData
     let mockSession: SessionData = .init(
       document: expectedDocumentData,
       qtsp: qtsp
@@ -204,16 +195,7 @@ final class TestSignedDocumentViewModel: XCTestCase {
       documentName: "documentName",
       uri: URL(string: "uri")!
     )
-    let qtsp = QTSPData(
-      name: "name",
-      uri: URL(string: "uri")!,
-      scaUrl: "scaURL",
-      tsaUrl: nil,
-      clientId: "clientId",
-      clientSecret: "clientSecret",
-      authFlowRedirectionURI: "authFlowRedirectionURI",
-      hashAlgorithm: "hashAlgorithm"
-    )
+    let qtsp = TestConstants.mockQtspData
     let mockSession: SessionData = .init(
       document: expectedDocumentData,
       qtsp: qtsp
@@ -277,16 +259,7 @@ final class TestSignedDocumentViewModel: XCTestCase {
         documentName: "test.pdf",
         uri: URL(string: "file://uri")!
       ),
-      qtsp: QTSPData(
-        name: "qtsp",
-        uri: URL(string: "uri")!,
-        scaUrl: "scaURL",
-        tsaUrl: nil,
-        clientId: "clientId",
-        clientSecret: "clientSecret",
-        authFlowRedirectionURI: "authFlowRedirectionURI",
-        hashAlgorithm: "hashAlgorithm"
-      ),
+      qtsp: TestConstants.mockQtspData,
       documentName: "test.pdf",
       qtspName: "qtsp",
       headerConfig: .init(
