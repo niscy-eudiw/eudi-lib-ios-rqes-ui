@@ -77,7 +77,8 @@ final class RQESConfigImpl: EudiRQESUiConfig {
     return .init(
             name: "your_dev_name",
             uri: URL(string: "your_dev_uri")!,
-            scaURL: "your_dev_sca",
+            scaUrl: "your_dev_sca",
+            tsaUrl: "your_dev_tsa",
             clientId: "your_dev_clientid",
             clientSecret: "your_dev_secret",
             authFlowRedirectionURI: "your_registered_deeplink",

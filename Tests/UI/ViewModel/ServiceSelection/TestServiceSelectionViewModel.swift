@@ -45,15 +45,7 @@ final class TestServiceSelectionViewModel: XCTestCase {
   func testInitiate_WhenGetQtspServices_ThenSetState() async {
     // Given
     let stateRecorder = viewModel.$viewState.record()
-    let qtsp = QTSPData(
-      name: "name",
-      uri: URL(string: "uri")!,
-      scaURL: "scaURL",
-      clientId: "clientId",
-      clientSecret: "clientSecret",
-      authFlowRedirectionURI: "authFlowRedirectionURI",
-      hashAlgorithm: "hashAlgorithm"
-    )
+    let qtsp = TestConstants.mockQtspData
     let qtspData = [qtsp]
 
     stub(interactor) { stub in
@@ -101,15 +93,7 @@ final class TestServiceSelectionViewModel: XCTestCase {
     // Given
     let stateRecorder = viewModel.$viewState.record()
     let expectedError = EudiRQESUiError.noDocumentProvided
-    let qtsp = QTSPData(
-      name: "name",
-      uri: URL(string: "uri")!,
-      scaURL: "scaURL",
-      clientId: "clientId",
-      clientSecret: "clientSecret",
-      authFlowRedirectionURI: "authFlowRedirectionURI",
-      hashAlgorithm: "hashAlgorithm"
-    )
+    let qtsp = TestConstants.mockQtspData
     viewModel.selectedItem = qtsp
 
     stub(interactor) { stub in
@@ -152,15 +136,7 @@ final class TestServiceSelectionViewModel: XCTestCase {
       router: router
     )
 
-    let qtsp = QTSPData(
-      name: "name",
-      uri: URL(string: "uri")!,
-      scaURL: "scaURL",
-      clientId: "clientId",
-      clientSecret: "clientSecret",
-      authFlowRedirectionURI: "authFlowRedirectionURI",
-      hashAlgorithm: "hashAlgorithm"
-    )
+    let qtsp = TestConstants.mockQtspData
 
     viewModel.selectedItem = qtsp
 
@@ -230,15 +206,7 @@ final class TestServiceSelectionViewModel: XCTestCase {
   func testErrorAction_WhenInvoked_RetriesAndRecoversState() async {
     // Given
     let stateRecorder = viewModel.$viewState.record()
-    let qtsp = QTSPData(
-      name: "name",
-      uri: URL(string: "uri")!,
-      scaURL: "scaURL",
-      clientId: "clientId",
-      clientSecret: "clientSecret",
-      authFlowRedirectionURI: "authFlowRedirectionURI",
-      hashAlgorithm: "hashAlgorithm"
-    )
+    let qtsp = TestConstants.mockQtspData
     let qtspData = [qtsp]
 
     stub(interactor) { stub in
