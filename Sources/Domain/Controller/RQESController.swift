@@ -17,7 +17,6 @@ import RqesKit
 import Foundation
 
 protocol RQESController: Sendable {
-  func getRSSPMetadata() async throws -> RSSPMetadata
   func getServiceAuthorizationUrl() async throws -> URL
   func authorizeService(_ authorizationCode: String) async throws -> RQESServiceAuthorized
   func authorizeCredential(_ authorizationCode: String) async throws -> RQESServiceCredentialAuthorized
@@ -32,13 +31,6 @@ final class RQESControllerImpl: RQESController {
   
   init(rqesUi: EudiRQESUi) {
     self.rqesUi = rqesUi
-  }
-  
-  func getRSSPMetadata() async throws -> RSSPMetadata {
-    guard let rqesService = await self.rqesUi.getRQESService() else {
-      throw EudiRQESUiError.noRQESServiceProvided
-    }
-    return try await rqesService.getRSSPMetadata()
   }
   
   func getServiceAuthorizationUrl() async throws -> URL {

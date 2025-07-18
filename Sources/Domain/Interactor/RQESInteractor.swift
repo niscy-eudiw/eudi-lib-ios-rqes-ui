@@ -54,7 +54,7 @@ final class RQESInteractorImpl: RQESInteractor {
             clientSecret: qtsp.clientSecret
           ),
           authFlowRedirectionURI: qtsp.authFlowRedirectionURI,
-          scaBaseURL: qtsp.scaUrl,
+          rsspId: qtsp.rsspId,
           tsaUrl: qtsp.tsaUrl
         ),
         defaultHashAlgorithmOID: qtsp.hashAlgorithm,
@@ -94,7 +94,6 @@ final class RQESInteractorImpl: RQESInteractor {
   }
   
   func openAuthrorizationURL() async throws -> URL {
-    let _ = try await rqesController.getRSSPMetadata()
     let authorizationUrl = try await rqesController.getServiceAuthorizationUrl()
     return authorizationUrl
   }

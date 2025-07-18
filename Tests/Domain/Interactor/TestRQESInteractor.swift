@@ -230,16 +230,9 @@ final class TestRQESInteractor: XCTestCase {
     XCTAssertNotNil(stored)
   }
   
-  func testOpenAuthrorizationURL_WhenMetaDataAndAuthUrlReturnFromService_ThenVerifyUrl() async throws {
+  func testOpenAuthrorizationURL_WhenAuthUrlReturnFromService_ThenVerifyUrl() async throws {
     // Given
-    let mockMetadata = try await TestConstants.getMetaData()
     let expectedUrl = try XCTUnwrap(URL(string: "rqes://url"))
-    
-    stub(rqesController) { mock in
-      when(mock.getRSSPMetadata()).thenReturn(
-        mockMetadata
-      )
-    }
     
     stub(rqesController) { mock in
       when(mock.getServiceAuthorizationUrl()).thenReturn(
@@ -252,22 +245,6 @@ final class TestRQESInteractor: XCTestCase {
     
     // Then
     XCTAssertEqual(result, expectedUrl)
-  }
-  
-  func testOpenAuthrorizationURL_WhenMetaDataApiThrowsError_ThenThrowError() async {
-    // Given
-    stub(rqesController) { mock in
-      when(mock.getRSSPMetadata()).thenThrow(EudiRQESUiError.unableToOpenURL)
-    }
-    
-    // When
-    do {
-      let _ = try await interactor.openAuthrorizationURL()
-      XCTFail("Error should be thrown here")
-    } catch {
-      // Then
-      XCTAssertEqual(error.localizedDescription, EudiRQESUiError.unableToOpenURL.localizedDescription)
-    }
   }
   
   func testOpenCredentialAuthrorizationURL_WhenSessionIsCachedAndValid_ThenReturnValidUrl() async throws {

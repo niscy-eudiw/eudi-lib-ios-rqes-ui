@@ -16,7 +16,7 @@
 import XCTest
 import Cuckoo
 import RqesKit
-import RQES_LIBRARY
+import RQESLib
 @testable import EudiRQESUi
 
 @MainActor
