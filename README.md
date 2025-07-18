@@ -76,8 +76,7 @@ final class RQESConfigImpl: EudiRQESUiConfig {
   var rssps: [QTSPData] {
     return .init(
             name: "your_dev_name",
-            uri: URL(string: "your_dev_uri")!,
-            scaUrl: "your_dev_sca",
+            rsspId: "your_dev_rssp",
             tsaUrl: "your_dev_tsa",
             clientId: "your_dev_clientid",
             clientSecret: "your_dev_secret",

@@ -18,8 +18,7 @@ import RqesKit
 public struct QTSPData: Equatable, Sendable {
   
   public let name: String
-  public let uri: URL
-  public let scaUrl: String
+  public let rsspId: String
   public let tsaUrl: String?
   public let clientId: String
   public let clientSecret: String
@@ -28,8 +27,7 @@ public struct QTSPData: Equatable, Sendable {
 
   public init(
     name: String,
-    uri: URL,
-    scaUrl: String,
+    rsspId: String,
     tsaUrl: String?,
     clientId: String,
     clientSecret: String,
@@ -37,8 +35,7 @@ public struct QTSPData: Equatable, Sendable {
     hashAlgorithm: HashAlgorithmOID
   ) {
     self.name = name
-    self.uri = uri
-    self.scaUrl = scaUrl
+    self.rsspId = rsspId
     self.tsaUrl = tsaUrl
     self.clientId = clientId
     self.clientSecret = clientSecret

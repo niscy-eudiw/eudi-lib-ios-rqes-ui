@@ -14,7 +14,7 @@
  * governing permissions and limitations under the Licence.
  */
 @testable import EudiRQESUi
-import RQES_LIBRARY
+import RQESLib
 import RqesKit
 
 struct TestConstants {
@@ -26,8 +26,7 @@ struct TestConstants {
   
   static let mockQtspData: QTSPData = .init(
     name: "Wallet-Centric",
-    uri: URL(string: "https://walletcentric.signer.eudiw.dev/csc/v2")!,
-    scaUrl: "https://walletcentric.signer.eudiw.dev",
+    rsspId: "https://walletcentric.signer.eudiw.dev/csc/v2",
     tsaUrl: nil,
     clientId: "wallet-client",
     clientSecret: "somesecret2",
@@ -55,10 +54,6 @@ struct TestConstants {
   static func getCredentialInfo() async throws -> CredentialsListResponse.CredentialInfo {
     return try JSONDecoder().decode(CredentialsListResponse.CredentialInfo.self, from: Data(mockCredentialJson.utf8))
   }
-  
-  static func getMetaData() async throws -> RSSPMetadata {
-    return try JSONDecoder().decode(RSSPMetadata.self, from: Data(mockMetaData.utf8))
-  }
 }
 
 private extension TestConstants {
@@ -68,7 +63,7 @@ private extension TestConstants {
       clientSecret: "client_secret"
     ),
     authFlowRedirectionURI: "redirect",
-    scaBaseURL: "sca"
+    rsspId: "rsspId"
   )
   
   static let mockCredentialJson =

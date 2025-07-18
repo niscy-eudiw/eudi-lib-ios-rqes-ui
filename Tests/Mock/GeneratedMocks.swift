@@ -618,16 +618,6 @@ class MockRQESController: RQESController, Cuckoo.ProtocolMock, @unchecked Sendab
     }
 
     
-    func getRSSPMetadata() async throws -> RSSPMetadata {
-        return try await cuckoo_manager.callThrows(
-            "getRSSPMetadata() async throws -> RSSPMetadata",
-            parameters: (),
-            escapingParameters: (),
-errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-            defaultCall: await __defaultImplStub!.getRSSPMetadata()
-        )
-    }
-    
     func getServiceAuthorizationUrl() async throws -> URL {
         return try await cuckoo_manager.callThrows(
             "getServiceAuthorizationUrl() async throws -> URL",
@@ -695,14 +685,6 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
             self.cuckoo_manager = manager
         }
         
-        func getRSSPMetadata() -> Cuckoo.ProtocolStubThrowingFunction<(), RSSPMetadata,Error> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return .init(stub: cuckoo_manager.createStub(for: MockRQESController.self,
-                method: "getRSSPMetadata() async throws -> RSSPMetadata",
-                parameterMatchers: matchers
-            ))
-        }
-        
         func getServiceAuthorizationUrl() -> Cuckoo.ProtocolStubThrowingFunction<(), URL,Error> {
             let matchers: [Cuckoo.ParameterMatcher<Void>] = []
             return .init(stub: cuckoo_manager.createStub(for: MockRQESController.self,
@@ -761,18 +743,6 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
             self.cuckoo_manager = manager
             self.callMatcher = callMatcher
             self.sourceLocation = sourceLocation
-        }
-        
-        
-        @discardableResult
-        func getRSSPMetadata() -> Cuckoo.__DoNotUse<(), RSSPMetadata> {
-            let matchers: [Cuckoo.ParameterMatcher<Void>] = []
-            return cuckoo_manager.verify(
-                "getRSSPMetadata() async throws -> RSSPMetadata",
-                callMatcher: callMatcher,
-                parameterMatchers: matchers,
-                sourceLocation: sourceLocation
-            )
         }
         
         
@@ -852,10 +822,6 @@ errorType: Error.self,            superclassCall: Cuckoo.MockManager.crashOnProt
 class RQESControllerStub:RQESController, @unchecked Sendable {
 
 
-    
-    func getRSSPMetadata() async throws -> RSSPMetadata {
-        return DefaultValueRegistry.defaultValue(for: (RSSPMetadata).self)
-    }
     
     func getServiceAuthorizationUrl() async throws -> URL {
         return DefaultValueRegistry.defaultValue(for: (URL).self)

@@ -18,7 +18,7 @@ let package = Package(
     ),
     .package(
       url: "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-kit.git",
-      exact: "0.3.0"
+      exact: "0.3.1"
     ),
     .package(
       url: "https://github.com/Brightify/Cuckoo.git",

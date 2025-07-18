@@ -67,7 +67,7 @@ private func content(
         .font(Theme.shared.font.bodyMedium.font)
         .foregroundStyle(Theme.shared.color.onSurface)
       Spacer()
-      if selectedItem.wrappedValue?.uri == item.uri {
+      if selectedItem.wrappedValue?.rsspId == item.rsspId {
         Image(systemName: "checkmark")
           .foregroundColor(.accentColor)
       }
@@ -75,7 +75,7 @@ private func content(
     .listRowInsets(EdgeInsets())
     .contentShape(Rectangle())
     .onTapGesture {
-      if selectedItem.wrappedValue?.uri == item.uri {
+      if selectedItem.wrappedValue?.rsspId == item.rsspId {
         selectedItem.wrappedValue = nil
       } else {
         selectedItem.wrappedValue = item
@@ -94,8 +94,7 @@ private func content(
       services: [
         QTSPData(
           name: "Entrust",
-          uri: URL(string: "https://www.entrust.com")!,
-          scaUrl: "https://www.entrust.com",
+          rsspId: "https://www.entrust.com",
           tsaUrl: nil,
           clientId: "clientId",
           clientSecret: "clientSecret",
@@ -106,8 +105,7 @@ private func content(
       selectedItem: .constant(
         QTSPData(
           name: "Entrust",
-          uri: URL(string: "https://www.entrust.com")!,
-          scaUrl: "https://www.entrust.com",
+          rsspId: "https://www.entrust.com",
           tsaUrl: nil,
           clientId: "clientId",
           clientSecret: "clientSecret",
@@ -129,8 +127,7 @@ private func content(
       services: [
         QTSPData(
           name: "Entrust",
-          uri: URL(string: "https://www.entrust.com")!,
-          scaUrl: "https://www.entrust.com",
+          rsspId: "https://www.entrust.com",
           tsaUrl: nil,
           clientId: "clientId",
           clientSecret: "clientSecret",
@@ -141,8 +138,7 @@ private func content(
       selectedItem: .constant(
         QTSPData(
           name: "Entrust",
-          uri: URL(string: "https://www.entrust.com")!,
-          scaUrl: "https://www.entrust.com",
+          rsspId: "https://www.entrust.com",
           tsaUrl: nil,
           clientId: "clientId",
           clientSecret: "clientSecret",
