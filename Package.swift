@@ -22,7 +22,7 @@ let package = Package(
     ),
     .package(
       url: "https://github.com/Brightify/Cuckoo.git",
-      from: "2.0.9"
+      from: "2.1.0"
     ),
     .package(
       url: "https://github.com/eu-digital-identity-wallet/SwiftCopyableMacro.git",
