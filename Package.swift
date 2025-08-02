@@ -26,7 +26,7 @@ let package = Package(
     ),
     .package(
       url: "https://github.com/eu-digital-identity-wallet/SwiftCopyableMacro.git",
-      from: "0.0.3"
+      from: "0.0.4"
     ),
     .package(
       url: "https://github.com/groue/CombineExpectations.git",
