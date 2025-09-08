@@ -59,7 +59,7 @@ private struct LocalizationControllerKey: EnvironmentKey {
     if ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1" {
       return PreviewLocalizationController()
     } else {
-      return DIGraph.resolver.force(LocalizationController.self)
+      return DIGraph.shared.resolver.force(LocalizationController.self)
     }
   }
 }

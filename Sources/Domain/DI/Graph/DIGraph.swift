@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@preconcurrency import Swinject
+import Swinject
 
 protocol DIGraphType: Sendable {
+  var resolver: Resolver { get }
   var assembler: Assembler { get }
   func load()
 }
@@ -23,9 +24,12 @@ protocol DIGraphType: Sendable {
 final class DIGraph: DIGraphType {
   
   static let shared: DIGraphType = DIGraph()
-  static let resolver: Resolver = shared.assembler.resolver
   
   let assembler: Assembler
+  
+  var resolver: Resolver {
+    assembler.resolver
+  }
   
   private init() {
     self.assembler = Assembler()

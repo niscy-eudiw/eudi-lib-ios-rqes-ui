@@ -40,7 +40,7 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
       DocumentSelectionView(
         with: DocumentSelectionViewModel(
           router: self,
-          interactor: DIGraph.resolver.force(
+          interactor: DIGraph.shared.resolver.force(
             RQESInteractor.self
           )
         )
@@ -50,7 +50,7 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
       ServiceSelectionView(
         with: ServiceSelectionViewModel(
           router: self,
-          interactor: DIGraph.resolver.force(
+          interactor: DIGraph.shared.resolver.force(
             RQESInteractor.self
           )
         )
@@ -60,7 +60,7 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
       CredentialSelectionView(
         with: CredentialSelectionViewModel(
           router: self,
-          interactor: DIGraph.resolver.force(
+          interactor: DIGraph.shared.resolver.force(
             RQESInteractor.self
           )
         )
@@ -70,7 +70,7 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
       SignedDocumentView(
         with: SignedDocumentViewModel(
           router: self,
-          interactor: DIGraph.resolver.force(
+          interactor: DIGraph.shared.resolver.force(
             RQESInteractor.self
           )
         )
@@ -80,7 +80,7 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
       DocumentViewer(
         with: DocumentViewModel(
           router: self,
-          interactor: DIGraph.resolver.force(
+          interactor: DIGraph.shared.resolver.force(
             RQESInteractor.self
           )
         ),
@@ -107,7 +107,7 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
           DocumentSelectionView(
             with: DocumentSelectionViewModel(
               router: self,
-              interactor: DIGraph.resolver.force(
+              interactor: DIGraph.shared.resolver.force(
                 RQESInteractor.self
               )
             )
@@ -116,7 +116,7 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
           ServiceSelectionView(
             with: ServiceSelectionViewModel(
               router: self,
-              interactor: DIGraph.resolver.force(
+              interactor: DIGraph.shared.resolver.force(
                 RQESInteractor.self
               )
             )
@@ -125,7 +125,7 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
           DocumentSelectionView(
             with: DocumentSelectionViewModel(
               router: self,
-              interactor: DIGraph.resolver.force(
+              interactor: DIGraph.shared.resolver.force(
                 RQESInteractor.self
               )
             )
@@ -134,7 +134,7 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
           SignedDocumentView(
             with: SignedDocumentViewModel(
               router: self,
-              interactor: DIGraph.resolver.force(
+              interactor: DIGraph.shared.resolver.force(
                 RQESInteractor.self
               )
             )
@@ -143,7 +143,7 @@ final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
           DocumentViewer(
             with: DocumentViewModel(
               router: self,
-              interactor: DIGraph.resolver.force(
+              interactor: DIGraph.shared.resolver.force(
                 RQESInteractor.self
               )
             )
