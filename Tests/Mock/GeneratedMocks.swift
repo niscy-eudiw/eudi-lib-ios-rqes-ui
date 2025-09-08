@@ -873,6 +873,16 @@ class MockDIGraphType: DIGraphType, Cuckoo.ProtocolMock, @unchecked Sendable {
         cuckoo_manager.enableDefaultStubImplementation()
     }
     
+    var resolver: Resolver {
+        get {
+            return cuckoo_manager.getter(
+                "resolver",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.resolver
+            )
+        }
+    }
+    
     var assembler: Assembler {
         get {
             return cuckoo_manager.getter(
@@ -901,6 +911,10 @@ class MockDIGraphType: DIGraphType, Cuckoo.ProtocolMock, @unchecked Sendable {
             self.cuckoo_manager = manager
         }
         
+        var resolver: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockDIGraphType,Resolver> {
+            return .init(manager: cuckoo_manager, name: "resolver")
+        }
+        
         var assembler: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockDIGraphType,Assembler> {
             return .init(manager: cuckoo_manager, name: "assembler")
         }
@@ -925,6 +939,10 @@ class MockDIGraphType: DIGraphType, Cuckoo.ProtocolMock, @unchecked Sendable {
             self.sourceLocation = sourceLocation
         }
         
+        var resolver: Cuckoo.VerifyReadOnlyProperty<Resolver> {
+            return .init(manager: cuckoo_manager, name: "resolver", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
         var assembler: Cuckoo.VerifyReadOnlyProperty<Assembler> {
             return .init(manager: cuckoo_manager, name: "assembler", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
@@ -944,6 +962,12 @@ class MockDIGraphType: DIGraphType, Cuckoo.ProtocolMock, @unchecked Sendable {
 }
 
 class DIGraphTypeStub:DIGraphType, @unchecked Sendable {
+    
+    var resolver: Resolver {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (Resolver).self)
+        }
+    }
     
     var assembler: Assembler {
         get {
@@ -999,18 +1023,18 @@ import RqesKit
 
 
 
-// MARK: - Mocks generated from file: '../Sources/Domain/Extension/Document+Extensions.swift'
+// MARK: - Mocks generated from file: '../Sources/Domain/Extension/Assembler+Extensions.swift'
 
 import Cuckoo
-import Foundation
-import RqesKit
+import Swinject
 @testable import EudiRQESUi
 
 
 
-// MARK: - Mocks generated from file: '../Sources/Domain/Extension/HashAlgorithmOID+Extensions.swift'
+// MARK: - Mocks generated from file: '../Sources/Domain/Extension/Document+Extensions.swift'
 
 import Cuckoo
+import Foundation
 import RqesKit
 @testable import EudiRQESUi
 
