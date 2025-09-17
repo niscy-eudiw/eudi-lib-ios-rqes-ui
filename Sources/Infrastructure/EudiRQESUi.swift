@@ -17,24 +17,23 @@ import UIKit
 import RqesKit
 
 public final actor EudiRQESUi {
-
-  private static var _shared: EudiRQESUi?
-  private static var _config: (any EudiRQESUiConfig)?
-  private static var _state: State = .none
-  private static var _viewController: UIViewController?
-
+  
+  private static let _shared: InstanceSnapshot = .init()
+  private static let _config: ConfigSnapshot = .init()
+  
   private let router: any RouterGraph
+  
+  private var state: State = .none
+  private var viewController: UIViewController?
+  
   private var session = SessionData()
-
-  private static var _rqesService: RQESService?
-  private static var _rqesServiceAuthorized: RQESServiceAuthorized?
-
+  private var rqesService: RQESService?
+  private var rqesServiceAuthorized: RQESServiceAuthorized?
+  
   @discardableResult
   public init(config: any EudiRQESUiConfig) {
     DIGraph.shared.load()
     self.router = RouterGraphImpl()
-    Self._config = config
-    Self._shared = self
   }
   
   init(
@@ -45,16 +44,15 @@ public final actor EudiRQESUi {
     rqesService: RQESService? = nil,
     rqesServiceAuthorized: RQESServiceAuthorized? = nil
   ) {
-    DIGraph.shared.load()
     self.router = router
     self.session = session
-    Self._config = config
-    Self._state = state
-    Self._shared = self
-    Self._rqesService = rqesService
-    Self._rqesServiceAuthorized = rqesServiceAuthorized
+    self.state = state
+    self.rqesService = rqesService
+    self.rqesServiceAuthorized = rqesServiceAuthorized
+    Self._shared.value = self
+    Self._config.value = config
   }
-
+  
   @MainActor
   public func initiate(
     on container: UIViewController,
@@ -71,11 +69,11 @@ public final actor EudiRQESUi {
         uri: fileUrl
       )
     )
-    await setState(.initial(Self.forceConfig()))
+    await setState(.initial(try Self.getConfig()))
     
     try await launcSDK(on: container, animated: animated)
   }
-
+  
   @MainActor
   public func resume(
     on container: UIViewController,
@@ -85,7 +83,7 @@ public final actor EudiRQESUi {
     
     self.router.clear()
     
-    await setState(calculateNextState())
+    await setState(try calculateNextState())
     await updateAuthorizationCode(with: authorizationCode)
     
     try await launcSDK(on: container, animated: animated)
@@ -94,82 +92,31 @@ public final actor EudiRQESUi {
 
 public extension EudiRQESUi {
   
-  static func instance() throws -> EudiRQESUi {
-    guard let _shared else {
+  nonisolated static func instance() throws -> EudiRQESUi {
+    guard let instance = Self._shared.value else {
       throw EudiRQESUiError.notInitialized
     }
-    return _shared
-  }
-}
-
-private extension EudiRQESUi {
-
-  func getViewController() -> UIViewController? {
-    return Self._viewController
-  }
-
-  func setViewController(_ viewController: UIViewController) {
-    Self._viewController = viewController
-  }
-
-  func launcSDK(
-    on container: UIViewController,
-    animated: Bool
-  ) async throws {
-    await setViewController(try self.router.nextView(for: getState()))
-    if let viewController = getViewController() {
-      await container.present(viewController, animated: animated)
-    }
-  }
-  
-  func calculateNextState() -> State {
-    switch getState() {
-    case .none:
-      return .initial(Self.forceConfig())
-    case .initial, .rssps:
-      return .credentials
-    case .credentials:
-      return .sign
-    case .sign:
-      return .view
-    case .view:
-      return .view
-    }
-  }
-  
-  func setState(_ state: State) {
-    Self._state = state
-  }
-  
-  func resetCache() async {
-    session = SessionData()
-    setRQESService(nil)
-    setRQESServiceAuthorized(nil)
-  }
-
-  func updateAuthorizationCode(with code: String) async {
-    session = session.copy(code: code)
+    return instance
   }
 }
 
 extension EudiRQESUi {
   
-  static func forceConfig() -> any EudiRQESUiConfig {
-    return Self._config!
-  }
-  
-  static func forceInstance() -> EudiRQESUi {
-    return Self._shared!
+  nonisolated static func getConfig() throws -> (any EudiRQESUiConfig) {
+    guard let config = Self._config.value else {
+      throw EudiRQESUiError.notInitialized
+    }
+    return config
   }
   
   func updateSelectionDocument(with document: DocumentData? = nil) async {
     session = session.copy(document: document)
   }
-
+  
   func updateQTSP(with qtsp: QTSPData? = nil) async {
     session = session.copy(qtsp: qtsp)
   }
-
+  
   func updateCertificate(with certificate: CredentialInfo) async {
     session = session.copy(certificate: certificate)
   }
@@ -187,52 +134,111 @@ extension EudiRQESUi {
   }
   
   func getState() -> State {
-    return Self._state
+    return self.state
   }
   
   func getRQESService() -> RQESService? {
-    Self._rqesService
-  }
-
-  func setRQESService(_ service: RQESService?) {
-    Self._rqesService = service
-  }
-
-  func getRQESServiceAuthorized() -> RQESServiceAuthorized? {
-    Self._rqesServiceAuthorized
-  }
-
-  func setRQESServiceAuthorized(_ service: RQESServiceAuthorized?) {
-    Self._rqesServiceAuthorized = service
+    self.rqesService
   }
   
-  func getRssps() -> [QTSPData] {
-    return Self.forceConfig().rssps
+  func setRQESService(_ service: RQESService?) {
+    self.rqesService = service
   }
-
+  
+  func getRQESServiceAuthorized() -> RQESServiceAuthorized? {
+    self.rqesServiceAuthorized
+  }
+  
+  func setRQESServiceAuthorized(_ service: RQESServiceAuthorized?) {
+    self.rqesServiceAuthorized = service
+  }
+  
+  func getRssps() throws -> [QTSPData] {
+    return try Self.getConfig().rssps
+  }
+  
   @MainActor
   func cancel(animated: Bool = true) async {
     await setState(.none)
     await resetCache()
     await pause(animated: animated)
   }
-
+  
   @MainActor
   func pause(animated: Bool = true) async {
     await getViewController()?.dismiss(animated: animated)
   }
 }
 
+private extension EudiRQESUi {
+  
+  func getViewController() -> UIViewController? {
+    return self.viewController
+  }
+  
+  func setViewController(_ viewController: UIViewController) {
+    self.viewController = viewController
+  }
+  
+  func launcSDK(
+    on container: UIViewController,
+    animated: Bool
+  ) async throws {
+    await setViewController(try self.router.nextView(for: getState()))
+    if let viewController = getViewController() {
+      await container.present(viewController, animated: animated)
+    }
+  }
+  
+  func calculateNextState() throws -> State {
+    switch getState() {
+    case .none:
+      return .initial(try Self.getConfig())
+    case .initial, .rssps:
+      return .credentials
+    case .credentials:
+      return .sign
+    case .sign:
+      return .view
+    case .view:
+      return .view
+    }
+  }
+  
+  func setState(_ state: State) {
+    self.state = state
+  }
+  
+  func resetCache() async {
+    session = SessionData()
+    setRQESService(nil)
+    setRQESServiceAuthorized(nil)
+  }
+  
+  func updateAuthorizationCode(with code: String) async {
+    session = session.copy(code: code)
+  }
+}
+
+private extension EudiRQESUi {
+  final class ConfigSnapshot: @unchecked Sendable {
+    var value: (any EudiRQESUiConfig)? = nil
+  }
+  final class InstanceSnapshot: @unchecked Sendable {
+    var value: EudiRQESUi? = nil
+  }
+}
+
 extension EudiRQESUi {
   enum State: Equatable, Sendable {
-
+    
     case none
     case initial(any EudiRQESUiConfig)
     case rssps
     case credentials
     case sign
     case view
-
+    
     var id: String {
       return switch self {
       case .none:
@@ -249,7 +255,7 @@ extension EudiRQESUi {
         "view"
       }
     }
-
+    
     public static func == (lhs: State, rhs: State) -> Bool {
       return lhs.id == rhs.id
     }

@@ -90,7 +90,10 @@ final class RQESInteractorImpl: RQESInteractor {
   }
   
   func getQTSps() async -> [QTSPData] {
-    await rqesUi.getRssps()
+    guard let rssp = try? await rqesUi.getRssps() else {
+      return []
+    }
+    return rssp
   }
   
   func openAuthrorizationURL() async throws -> URL {

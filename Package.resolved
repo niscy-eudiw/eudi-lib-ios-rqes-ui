@@ -1,5 +1,5 @@
 {
-  "originHash" : "6667d3e0efd301c50589fddf3910b1aa9a5b5c590561071b0384a6143856911f",
+  "originHash" : "3d4eb5043834ea44f88523b43b763f170606442cfd2ec9c93de649f9bc346153",
   "pins" : [
     {
       "identity" : "aexml",
@@ -33,8 +33,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-csc-swift.git",
       "state" : {
-        "revision" : "975e11e9cc5bc51236b572e5a982b37fb612acc4",
-        "version" : "0.6.1"
+        "revision" : "1bcf7f8470f03a3c2aa8e9b05b9f272eae49be18",
+        "version" : "0.6.2"
       }
     },
     {
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-kit.git",
       "state" : {
-        "revision" : "551747c56a1ebddb46f0534cab4ff0c321ae4529",
-        "version" : "0.6.1"
+        "revision" : "03d4d5238215aeb43698b117127e42ca70a356fd",
+        "version" : "0.6.2"
       }
     },
     {
@@ -51,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-podofo",
       "state" : {
-        "revision" : "12c5adb7435d42f2ba7eb5c12b1f0d8a55da280b",
-        "version" : "0.3.4"
+        "revision" : "fe0269ba1ed58789cad865d87f759f4ba3658c67",
+        "version" : "0.3.7"
       }
     },
     {
@@ -123,8 +123,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-certificates.git",
       "state" : {
-        "revision" : "20c451f1ad8e344e61ddbb34ef196653d4b73ea6",
-        "version" : "1.13.0"
+        "revision" : "4b092f15164144c24554e0a75e080a960c5190a6",
+        "version" : "1.14.0"
       }
     },
     {
