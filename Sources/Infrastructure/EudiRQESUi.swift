@@ -34,6 +34,8 @@ public final actor EudiRQESUi {
   public init(config: any EudiRQESUiConfig) {
     DIGraph.shared.load()
     self.router = RouterGraphImpl()
+    Self._shared.value = self
+    Self._config.value = config
   }
   
   init(
