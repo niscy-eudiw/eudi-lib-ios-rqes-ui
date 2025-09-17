@@ -22,7 +22,7 @@ final class InteractorAssembly: Assembly {
   func assemble(container: Container) {
     container.register(RQESInteractor.self) { r in
       RQESInteractorImpl(
-        rqesUi: EudiRQESUi.forceInstance(),
+        rqesUi: try! EudiRQESUi.instance(),
         rqesController: r.force(RQESController.self)
       )
     }

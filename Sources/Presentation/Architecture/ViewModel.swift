@@ -39,13 +39,13 @@ class ViewModel<Router: RouterGraph, UiState: ViewState>: ObservableObject {
   
   func onPause() {
     Task {
-      await EudiRQESUi.forceInstance().pause()
+      try! await EudiRQESUi.instance().pause()
     }
   }
   
   func onCancel() {
     Task {
-      await EudiRQESUi.forceInstance().cancel()
+      try! await EudiRQESUi.instance().cancel()
     }
   }
 }
