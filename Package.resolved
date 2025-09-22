@@ -1,5 +1,5 @@
 {
-  "originHash" : "3d4eb5043834ea44f88523b43b763f170606442cfd2ec9c93de649f9bc346153",
+  "originHash" : "43301a3fdb19f75860e13f8b13b32bdd90abc31f5aa8c9907e14fc560c3d52cf",
   "pins" : [
     {
       "identity" : "aexml",
@@ -43,7 +43,7 @@
       "location" : "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-rqes-kit.git",
       "state" : {
         "revision" : "03d4d5238215aeb43698b117127e42ca70a356fd",
-        "version" : "0.6.2"
+        "version" : "0.6.3"
       }
     },
     {
