@@ -21,6 +21,7 @@ struct SignedDocumentView<Router: RouterGraph>: View {
   @Environment(\.localizationController) var localization
   
   @State private var showSheet = false
+  @State private var showShareSheet = false
 
   init(with viewModel: SignedDocumentViewModel<Router>) {
     self.viewModel = viewModel
@@ -60,9 +61,9 @@ struct SignedDocumentView<Router: RouterGraph>: View {
         Button(localization.get(with: .doneButton), role: .destructive) {
           viewModel.onCancel()
         }
-        if let url = viewModel.pdfURL {
-          ShareLink(item: url) {
-            Text(localization.get(with: .share))
+        Button(localization.get(with: .share), role: .cancel) {
+          if viewModel.pdfURL != nil {
+            showShareSheet = true
           }
         }
       },
@@ -70,6 +71,11 @@ struct SignedDocumentView<Router: RouterGraph>: View {
         Text(localization.get(with: .closeSharingDocument))
       }
     )
+    .sheet(isPresented: $showShareSheet) {
+      if let url = viewModel.pdfURL {
+        ShareSheet(items: [url])
+      }
+    }
     .task {
       await viewModel.initiate()
     }
