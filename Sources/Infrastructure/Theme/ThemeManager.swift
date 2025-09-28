@@ -14,14 +14,12 @@
  * limitations under the License.
  */
 
-typealias Theme = ThemeManager
-
 final class ThemeManager: Sendable {
 
-  nonisolated(unsafe) static var shared: ThemeProtocol = AppTheme()
-
-  static func config(with theme: ThemeProtocol) {
-    self.shared = theme
+  let theme: ThemeProtocol
+  
+  init(theme: ThemeProtocol) {
+    self.theme = theme
   }
 }
 

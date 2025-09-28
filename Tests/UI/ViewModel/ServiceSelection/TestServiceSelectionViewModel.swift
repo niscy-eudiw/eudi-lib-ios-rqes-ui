@@ -23,8 +23,6 @@ import RQESLib
 final class TestServiceSelectionViewModel: XCTestCase {
   var interactor: MockRQESInteractor!
   var router: MockRouterGraph!
-  var config: MockEudiRQESUiConfig!
-  var eudiRQESUi: EudiRQESUi!
   var viewModel: ServiceSelectionViewModel<MockRouterGraph>!
 
   override func setUp() async throws {
@@ -130,11 +128,6 @@ final class TestServiceSelectionViewModel: XCTestCase {
   func testOpenAuthorization_WhenAllSucceeds_ThenNoErrorAndPauseCalled() async {
     // Given
     let stateRecorder = viewModel.$viewState.record()
-    self.config = MockEudiRQESUiConfig()
-    self.eudiRQESUi = .init(
-      config: config,
-      router: router
-    )
 
     let qtsp = TestConstants.mockQtspData
 

@@ -50,8 +50,8 @@ struct RelyingPartyView: View {
         WrapTextView(
           text: name,
           textConfig: relyingPartyData.nameTextConfig ?? TextConfig(
-            font: Theme.shared.font.bodyLarge.font,
-            color: Theme.shared.color.onSurface,
+            font: try! EudiRQESUi.getTheme().font.bodyLarge.font,
+            color: try! EudiRQESUi.getTheme().color.onSurface,
             textAlign: .center,
             maxLines: 1,
             fontWeight: .semibold
@@ -70,8 +70,8 @@ struct RelyingPartyView: View {
         WrapTextView(
           text: description,
           textConfig: relyingPartyData.descriptionTextConfig ?? TextConfig(
-            font: Theme.shared.font.bodyMedium.font,
-            color: Theme.shared.color.onSurface,
+            font: try! EudiRQESUi.getTheme().font.bodyMedium.font,
+            color: try! EudiRQESUi.getTheme().color.onSurface,
             textAlign: .center,
             maxLines: 2,
             fontWeight: nil

@@ -20,8 +20,8 @@ enum CardViewType {
 
   func backgroundColor() -> Color {
     switch self {
-    case .info: return Theme.shared.color.surfaceContriner
-    case .success: return Theme.shared.color.tertiary
+    case .info: return try! EudiRQESUi.getTheme().color.surfaceContriner
+    case .success: return try! EudiRQESUi.getTheme().color.tertiary
     }
   }
 }
@@ -68,16 +68,16 @@ struct CardView: View {
       VStack(alignment: .leading, spacing: SPACING_NONE) {
         
         Text(title)
-          .font(Theme.shared.font.bodyLarge.font)
-          .foregroundStyle(Theme.shared.color.onSurface)
+          .font(try! EudiRQESUi.getTheme().font.bodyLarge.font)
+          .foregroundStyle(try! EudiRQESUi.getTheme().color.onSurface)
           .lineLimit(2)
           .truncationMode(.tail)
           .fontWeight(.semibold)
 
         if let subtitle {
           Text(subtitle)
-            .font(Theme.shared.font.bodySmall.font)
-            .foregroundStyle(Theme.shared.color.onSurfaceVariant)
+            .font(try! EudiRQESUi.getTheme().font.bodySmall.font)
+            .foregroundStyle(try! EudiRQESUi.getTheme().color.onSurfaceVariant)
             .lineLimit(2)
             .truncationMode(.tail)
         }

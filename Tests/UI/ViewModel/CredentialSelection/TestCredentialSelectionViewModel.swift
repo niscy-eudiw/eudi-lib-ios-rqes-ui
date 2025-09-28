@@ -23,7 +23,6 @@ import RQESLib
 final class TestCredentialSelectionViewModel: XCTestCase {
   var interactor: MockRQESInteractor!
   var router: MockRouterGraph!
-  var config: MockEudiRQESUiConfig!
   var eudiRQESUi: EudiRQESUi!
   var viewModel: CredentialSelectionViewModel<MockRouterGraph>!
 
@@ -143,7 +142,12 @@ final class TestCredentialSelectionViewModel: XCTestCase {
   func testNextStep_WhenOpenCredentialAuthrorizationURLFailure_ThenSetErrorState() async {
     // Given
     let stateRecorder = viewModel.$viewState.record()
-    self.config = MockEudiRQESUiConfig()
+    
+    let config = MockEudiRQESUiConfig()
+    stub(config) { mock in
+      when(mock.theme.get).thenReturn(AppTheme())
+    }
+    
     self.eudiRQESUi = .init(
       config: config,
       router: router

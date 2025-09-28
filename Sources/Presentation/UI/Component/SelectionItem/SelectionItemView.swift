@@ -48,21 +48,21 @@ struct SelectionItemView: View {
       VStack(alignment: .leading, spacing: SPACING_EXTRA_SMALL) {
         if let overline = selectionItemData.overlineText {
           Text(localization.get(with: overline))
-            .font(Theme.shared.font.labelLarge.font)
-            .foregroundColor(Theme.shared.color.onSurfaceVariant)
+            .font(try! EudiRQESUi.getTheme().font.labelLarge.font)
+            .foregroundColor(try! EudiRQESUi.getTheme().color.onSurfaceVariant)
         }
 
         if let mainText = selectionItemData.mainText {
           Text(localization.get(with: mainText))
-            .font(Theme.shared.font.titleMedium.font)
-            .foregroundColor(Theme.shared.color.onSurface)
+            .font(try! EudiRQESUi.getTheme().font.titleMedium.font)
+            .foregroundColor(try! EudiRQESUi.getTheme().color.onSurface)
             .fontWeight(.bold)
         }
 
         if let subtitle = selectionItemData.subtitle {
           Text(localization.get(with: subtitle))
-            .font(Theme.shared.font.bodyMedium.font)
-            .foregroundColor(Theme.shared.color.onSurface)
+            .font(try! EudiRQESUi.getTheme().font.bodyMedium.font)
+            .foregroundColor(try! EudiRQESUi.getTheme().color.onSurface)
         }
       }
       .frame(maxWidth: .infinity, alignment: .leading)

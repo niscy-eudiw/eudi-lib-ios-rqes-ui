@@ -18,7 +18,7 @@ import SwiftUI
 
 protocol RouterGraph: ObservableObject, Sendable {
   
-  var path: NavigationPath { get set }
+  @MainActor var path: NavigationPath { get set }
   
   @MainActor func navigateTo(_ appRoute: Route)
   @MainActor func pop()
@@ -28,7 +28,8 @@ protocol RouterGraph: ObservableObject, Sendable {
   @MainActor func clear()
 }
 
-final class RouterGraphImpl: RouterGraph, @unchecked Sendable {
+@MainActor
+final class RouterGraphImpl: RouterGraph {
   
   @Published var path: NavigationPath = NavigationPath()
   
