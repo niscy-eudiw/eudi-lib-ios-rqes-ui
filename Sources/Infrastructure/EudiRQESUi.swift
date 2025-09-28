@@ -20,24 +20,27 @@ public final actor EudiRQESUi {
   
   private static let _shared: InstanceSnapshot = .init()
   private static let _config: ConfigSnapshot = .init()
+  private static let _theme: ThemeSnapshot = .init()
   
-  private let router: any RouterGraph
+  @MainActor private let router: any RouterGraph
+  @MainActor private var viewController: UIViewController?
   
   private var state: State = .none
-  private var viewController: UIViewController?
-  
   private var session = SessionData()
   private var rqesService: RQESService?
   private var rqesServiceAuthorized: RQESServiceAuthorized?
   
+  @MainActor
   @discardableResult
   public init(config: any EudiRQESUiConfig) {
     DIGraph.shared.load()
     self.router = RouterGraphImpl()
-    Self._shared.value = self
     Self._config.value = config
+    Self._theme.value = ThemeManager(theme: config.theme)
+    Self._shared.value = self
   }
   
+  @MainActor
   init(
     config: any EudiRQESUiConfig,
     router: any RouterGraph,
@@ -51,8 +54,9 @@ public final actor EudiRQESUi {
     self.state = state
     self.rqesService = rqesService
     self.rqesServiceAuthorized = rqesServiceAuthorized
-    Self._shared.value = self
     Self._config.value = config
+    Self._theme.value = ThemeManager(theme: config.theme)
+    Self._shared.value = self
   }
   
   @MainActor
@@ -111,6 +115,25 @@ extension EudiRQESUi {
     return config
   }
   
+  nonisolated static func getTheme() throws -> (any ThemeProtocol) {
+    guard let theme = Self._theme.value?.theme else {
+      throw EudiRQESUiError.notInitialized
+    }
+    return theme
+  }
+  
+  @MainActor
+  func cancel(animated: Bool = true) async {
+    await setState(.none)
+    await resetCache()
+    await pause(animated: animated)
+  }
+  
+  @MainActor
+  func pause(animated: Bool = true) async {
+    getViewController()?.dismiss(animated: animated)
+  }
+  
   func updateSelectionDocument(with document: DocumentData? = nil) async {
     session = session.copy(document: document)
   }
@@ -158,37 +181,28 @@ extension EudiRQESUi {
   func getRssps() throws -> [QTSPData] {
     return try Self.getConfig().rssps
   }
-  
-  @MainActor
-  func cancel(animated: Bool = true) async {
-    await setState(.none)
-    await resetCache()
-    await pause(animated: animated)
-  }
-  
-  @MainActor
-  func pause(animated: Bool = true) async {
-    await getViewController()?.dismiss(animated: animated)
-  }
 }
 
 private extension EudiRQESUi {
   
+  @MainActor
   func getViewController() -> UIViewController? {
     return self.viewController
   }
   
+  @MainActor
   func setViewController(_ viewController: UIViewController) {
     self.viewController = viewController
   }
   
+  @MainActor
   func launcSDK(
     on container: UIViewController,
     animated: Bool
   ) async throws {
     await setViewController(try self.router.nextView(for: getState()))
     if let viewController = getViewController() {
-      await container.present(viewController, animated: animated)
+      container.present(viewController, animated: animated)
     }
   }
   
@@ -228,6 +242,9 @@ private extension EudiRQESUi {
   }
   final class InstanceSnapshot: @unchecked Sendable {
     var value: EudiRQESUi? = nil
+  }
+  final class ThemeSnapshot: @unchecked Sendable {
+    var value: ThemeManager? = nil
   }
 }
 

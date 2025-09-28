@@ -47,23 +47,24 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
         certificateSelection: viewModel.viewState.certificateSelection
       )
     }
+    .dialogCompat(
+      localization.get(with: .cancelSigningProcessTitle),
+      isPresented: $showSheet,
+      actions: {
+        Button(localization.get(with: .continueSigning), role: .cancel) {
+          showSheet.toggle()
+        }
+        Button(localization.get(with: .cancelSigning), role: .destructive) {
+          viewModel.onCancel()
+        }
+      },
+      message: {
+        Text(localization.get(with: .cancelSigningProcessSubtitle))
+      }
+    )
     .task {
       await viewModel.initiate()
     }
-    .confirmationDialog(
-      title: .cancelSigningProcessTitle,
-      message: .cancelSigningProcessSubtitle,
-      destructiveText: .cancelSigning,
-      baseText: .continueSigning,
-      isPresented: $showSheet,
-      destructiveAction: {
-        viewModel.onCancel()
-      },
-      baseAction: {
-        showSheet.toggle()
-      }
-    )
-    .eraseToAnyView()
   }
 }
 
@@ -115,14 +116,14 @@ private func content(
         subtitle: .selectDocumentFromDevice,
         actionText: .view,
         leadingIcon: Image(.stepOne),
-        leadingIconTint: Theme.shared.color.success,
+        leadingIconTint: try! EudiRQESUi.getTheme().color.success,
         action: {}
       ),
       qtspServiceSelection: SelectionItemData(
         mainText: .selectCertificate,
         subtitle: .signingCertificateDescription,
         leadingIcon: Image(.stepTwo),
-        leadingIconTint: Theme.shared.color.onSurface,
+        leadingIconTint: try! EudiRQESUi.getTheme().color.onSurface,
         action: {}
       ),
       certificateSelection: nil
@@ -143,14 +144,14 @@ private func content(
         subtitle: .selectDocumentFromDevice,
         actionText: .view,
         leadingIcon: Image(.stepOne),
-        leadingIconTint: Theme.shared.color.success,
+        leadingIconTint: try! EudiRQESUi.getTheme().color.success,
         action: {}
       ),
       qtspServiceSelection: SelectionItemData(
         mainText: .selectCertificate,
         subtitle: .signingCertificateDescription,
         leadingIcon: Image(.stepTwo),
-        leadingIconTint: Theme.shared.color.onSurface,
+        leadingIconTint: try! EudiRQESUi.getTheme().color.onSurface,
         action: {}
       ),
       certificateSelection: nil

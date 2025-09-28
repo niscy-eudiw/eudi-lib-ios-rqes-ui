@@ -2536,14 +2536,6 @@ import SwiftUI
 
 
 
-// MARK: - Mocks generated from file: '../Sources/Presentation/Modifiers/ConfirmationDialogModifier.swift'
-
-import Cuckoo
-import SwiftUI
-@testable import EudiRQESUi
-
-
-
 // MARK: - Mocks generated from file: '../Sources/Presentation/Modifiers/FastenedDynamicModifier.swift'
 
 import Cuckoo
@@ -2905,6 +2897,14 @@ import SwiftUI
 
 
 
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/Component/Dialog/DialogCompat.swift'
+
+import Cuckoo
+import SwiftUI
+@testable import EudiRQESUi
+
+
+
 // MARK: - Mocks generated from file: '../Sources/Presentation/UI/Component/LoadingView.swift'
 
 import Cuckoo
@@ -2922,6 +2922,14 @@ import SwiftUI
 
 
 // MARK: - Mocks generated from file: '../Sources/Presentation/UI/Component/SelectionItem/selectionItemData.swift'
+
+import Cuckoo
+import SwiftUI
+@testable import EudiRQESUi
+
+
+
+// MARK: - Mocks generated from file: '../Sources/Presentation/UI/Component/Share/ShareSheet.swift'
 
 import Cuckoo
 import SwiftUI

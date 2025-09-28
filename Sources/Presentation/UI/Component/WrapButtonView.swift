@@ -53,7 +53,7 @@ struct WrapButtonView: View {
       label: {
         HStack {
           Text(title)
-            .font(Theme.shared.font.bodyMedium.font)
+            .font(try! EudiRQESUi.getTheme().font.bodyMedium.font)
             .foregroundColor(textColor)
         }
         .padding()
@@ -113,17 +113,17 @@ enum ButtonViewStyle {
   var textColor: Color {
     switch self {
     case .primary:
-      Theme.shared.color.onPrimary
+      try! EudiRQESUi.getTheme().color.onPrimary
     case .secondary:
-      Theme.shared.color.primaryMain
+      try! EudiRQESUi.getTheme().color.primaryMain
     }
   }
   var backgroundColor: Color {
     switch self {
     case .primary:
-      Theme.shared.color.primaryMain
+      try! EudiRQESUi.getTheme().color.primaryMain
     case .secondary:
-      Theme.shared.color.onPrimary
+      try! EudiRQESUi.getTheme().color.onPrimary
     }
   }
   var borderWidth: CGFloat {
@@ -139,7 +139,7 @@ enum ButtonViewStyle {
     case .primary:
         .clear
     case .secondary:
-      Theme.shared.color.primaryMain
+      try! EudiRQESUi.getTheme().color.primaryMain
     }
   }
 }

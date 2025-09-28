@@ -24,10 +24,16 @@ final class TestEudiRQESUi: XCTestCase {
   var config: MockEudiRQESUiConfig!
   var eudiRQESUi: EudiRQESUi!
   
-  override func setUp() {
+  override func setUp() async throws {
+    
     self.router = MockRouterGraph()
     self.config = MockEudiRQESUiConfig()
-    self.eudiRQESUi = .init(
+    
+    stub(config) { mock in
+      when(mock.theme.get).thenReturn(AppTheme())
+    }
+    
+    self.eudiRQESUi = await .init(
       config: config,
       router: router
     )
@@ -80,7 +86,7 @@ final class TestEudiRQESUi: XCTestCase {
     let expectedAuthCode = "123145"
     let expectedState = EudiRQESUi.State.credentials
     
-    self.eudiRQESUi = .init(
+    self.eudiRQESUi = await .init(
       config: self.config,
       router: self.router,
       state: .rssps

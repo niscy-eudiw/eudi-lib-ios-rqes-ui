@@ -25,14 +25,21 @@ final class TestRQESInteractor: XCTestCase {
   var rqesController: MockRQESController!
   var interactor: RQESInteractorImpl!
   
-  override func setUp() {
-    self.config = MockEudiRQESUiConfig()
+  override func setUp() async throws {
+    
     self.rqesController = MockRQESController()
-    self.eudiRQESUi = .init(
+    self.config = MockEudiRQESUiConfig()
+    
+    stub(config) { mock in
+      when(mock.theme.get).thenReturn(AppTheme())
+    }
+    
+    self.eudiRQESUi = await .init(
       config: config,
       router: MockRouterGraph(),
       session: TestConstants.mockSession
     )
+    
     self.interactor = RQESInteractorImpl(
       rqesUi: eudiRQESUi,
       rqesController: rqesController
@@ -59,7 +66,7 @@ final class TestRQESInteractor: XCTestCase {
     // Given
     let fileUri = try XCTUnwrap(URL(string: "rqes://no_extension"))
     
-    eudiRQESUi = .init(
+    eudiRQESUi = await .init(
       config: config,
       router: MockRouterGraph(),
       session: .init(document: .init(documentName: "test", uri: fileUri))
@@ -120,7 +127,7 @@ final class TestRQESInteractor: XCTestCase {
       )
     }
     
-    eudiRQESUi = .init(
+    eudiRQESUi = await .init(
       config: config,
       router: MockRouterGraph(),
       session: .init(code: expectedAuthCode)
@@ -156,7 +163,7 @@ final class TestRQESInteractor: XCTestCase {
       when(mock.getCredentialsList()).thenThrow(EudiRQESUiError.unableToFetchCredentials)
     }
     
-    eudiRQESUi = .init(
+    eudiRQESUi = await .init(
       config: config,
       router: MockRouterGraph(),
       session: .init(code: expectedAuthCode)
@@ -256,7 +263,7 @@ final class TestRQESInteractor: XCTestCase {
       when(mock.getCredentialAuthorizationUrl(credentialInfo: any(), documents: any())).thenReturn(expectedUrl)
     }
     
-    eudiRQESUi = .init(
+    eudiRQESUi = await .init(
       config: config,
       router: MockRouterGraph(),
       session: .init(
@@ -298,7 +305,7 @@ final class TestRQESInteractor: XCTestCase {
       when(mock.getCredentialAuthorizationUrl(credentialInfo: any(), documents: any())).thenThrow(EudiRQESUiError.unableToFetchCredentials)
     }
     
-    eudiRQESUi = .init(
+    eudiRQESUi = await .init(
       config: config,
       router: MockRouterGraph(),
       session: .init(
@@ -346,7 +353,7 @@ final class TestRQESInteractor: XCTestCase {
       )
     }
     
-    eudiRQESUi = .init(
+    eudiRQESUi = await .init(
       config: config,
       router: MockRouterGraph(),
       session: .init(code: expectedAuthCode)
@@ -391,7 +398,7 @@ final class TestRQESInteractor: XCTestCase {
       when(mock.signDocuments(any())).thenThrow(EudiRQESUiError.unableToSignHashDocument)
     }
     
-    eudiRQESUi = .init(
+    eudiRQESUi = await .init(
       config: config,
       router: MockRouterGraph(),
       session: .init(code: expectedAuthCode)

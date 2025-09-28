@@ -13,31 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import SwiftUI
 
-final class ThemeManager: Sendable {
-
-  let theme: ThemeProtocol
+struct ShareSheet: UIViewControllerRepresentable {
   
-  init(theme: ThemeProtocol) {
-    self.theme = theme
+  let items: [Any]
+  
+  func makeUIViewController(context: Context) -> UIActivityViewController {
+    UIActivityViewController(activityItems: items, applicationActivities: nil)
   }
-}
-
-public protocol ThemeProtocol: Sendable {
-  var color: ColorManagerProtocol { get }
-  var font: TypographyManagerProtocol { get }
-}
-
-extension ThemeProtocol {
-  var color: ColorManagerProtocol {
-    ColorManager()
-  }
-
-  var font: TypographyManagerProtocol {
-    TypographyManager()
-  }
-}
-
-final class AppTheme: ThemeProtocol {
-  init() {}
+  
+  func updateUIViewController(_ vc: UIActivityViewController, context: Context) {}
 }

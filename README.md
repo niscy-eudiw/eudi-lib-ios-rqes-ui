@@ -113,30 +113,14 @@ It is the application's responsibility to retrieve the `code` query parameter fr
 
 Alternatively, you can use universal app links with associated domains [Apple Documentation](https://developer.apple.com/documentation/xcode/supporting-associated-domains)
 
-Initialize the SDK in your AppDelegate by providing your configuration.
-
-```swift
-func application(
-    _ application: UIApplication,
-    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
-  ) -> Bool {
-
-    // RQES SDK Setup
-    EudiRQESUi.init(config: rqes_config)
-
-    return true
-  }
-```
-
-Alternatively, you can initialize the SDK wherever needed, avoiding initialization in the AppDelegate. 
-However, you must first ensure instance availability before performing any actions.
+Initialize the SDK by providing your configuration. You must first ensure instance availability before performing any actions
 
 ```swift
 let eudiRQESUi: EudiRQESUi
 do {
   eudiRQESUi = try EudiRQESUi.instance()
 } catch {
-  eudiRQESUi = EudiRQESUi.init(config: rqes_config)
+  eudiRQESUi = await EudiRQESUi.init(config: rqes_config)
 }
 ```
 

@@ -29,7 +29,7 @@ protocol RQESInteractor: Sendable {
   func openCredentialAuthrorizationURL() async throws -> URL
 }
 
-final class RQESInteractorImpl: RQESInteractor {
+final actor RQESInteractorImpl: RQESInteractor {
   
   private let rqesUi: EudiRQESUi
   private let rqesController: RQESController
