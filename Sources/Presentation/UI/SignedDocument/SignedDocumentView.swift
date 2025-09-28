@@ -53,23 +53,23 @@ struct SignedDocumentView<Router: RouterGraph>: View {
         view: viewModel.viewDocument
       )
     }
-    .confirmationDialog(
+    .dialogCompat(
       localization.get(with: .sharingDocument),
       isPresented: $showSheet,
-      titleVisibility: .visible
-    ) {
-      Button(localization.get(with: .doneButton), role: .destructive) {
-        viewModel.onCancel()
-      }
-
-      if let url = viewModel.pdfURL {
-        ShareLink(item: url) {
-          Text(localization.get(with: .share))
+      actions: {
+        Button(localization.get(with: .doneButton), role: .destructive) {
+          viewModel.onCancel()
         }
+        if let url = viewModel.pdfURL {
+          ShareLink(item: url) {
+            Text(localization.get(with: .share))
+          }
+        }
+      },
+      message: {
+        Text(localization.get(with: .closeSharingDocument))
       }
-    } message: {
-      Text(localization.get(with: .closeSharingDocument))
-    }
+    )
     .task {
       await viewModel.initiate()
     }
