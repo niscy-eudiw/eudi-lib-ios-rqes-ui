@@ -75,7 +75,7 @@ public final actor EudiRQESUi {
         uri: fileUrl
       )
     )
-    await setState(.initial(Self.getConfig()))
+    await setState(.initial(try Self.getConfig()))
     
     try await launcSDK(on: container, animated: animated)
   }
@@ -108,14 +108,21 @@ public extension EudiRQESUi {
 
 extension EudiRQESUi {
   
-  nonisolated static func getConfig() -> (any EudiRQESUiConfig) {
+  nonisolated static func requireInstance() -> EudiRQESUi {
+    guard let instance = Self._shared.value else {
+      fatalError(EudiRQESUiError.notInitialized.localizedDescription)
+    }
+    return instance
+  }
+  
+  nonisolated static func requireConfig() -> (any EudiRQESUiConfig) {
     guard let config = Self._config.value else {
       fatalError(EudiRQESUiError.notInitialized.localizedDescription)
     }
     return config
   }
   
-  nonisolated static func getTheme() -> (any ThemeProtocol) {
+  nonisolated static func requireTheme() -> (any ThemeProtocol) {
     guard let theme = Self._theme.value?.theme else {
       fatalError(EudiRQESUiError.notInitialized.localizedDescription)
     }
@@ -179,11 +186,18 @@ extension EudiRQESUi {
   }
   
   func getRssps() throws -> [QTSPData] {
-    return Self.getConfig().rssps
+    return try Self.getConfig().rssps
   }
 }
 
 private extension EudiRQESUi {
+  
+  nonisolated static func getConfig() throws -> (any EudiRQESUiConfig) {
+    guard let config = Self._config.value else {
+      throw EudiRQESUiError.notInitialized
+    }
+    return config
+  }
   
   @MainActor
   func getViewController() -> UIViewController? {
@@ -209,7 +223,7 @@ private extension EudiRQESUi {
   func calculateNextState() throws -> State {
     switch getState() {
     case .none:
-      return .initial(Self.getConfig())
+      return .initial(try Self.getConfig())
     case .initial, .rssps:
       return .credentials
     case .credentials:

@@ -103,7 +103,7 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
       subtitle: .selectDocumentFromDevice,
       actionText: .view,
       leadingIcon: Image(.stepOne),
-      leadingIconTint: EudiRQESUi.getTheme().color.success,
+      leadingIconTint: EudiRQESUi.requireTheme().color.success,
       action: {
         self.viewDocument()
       }
@@ -119,7 +119,7 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
         mainText: .custom(qtspName),
         subtitle: .selectServiceSubtitle,
         leadingIcon: Image(.stepTwo),
-        leadingIconTint: EudiRQESUi.getTheme().color.success,
+        leadingIconTint: EudiRQESUi.requireTheme().color.success,
         enabled: false
       )
     } else {
@@ -127,7 +127,7 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
         mainText: .selectService,
         subtitle: .selectServiceSubtitle,
         leadingIcon: Image(.stepTwo),
-        leadingIconTint: EudiRQESUi.getTheme().color.onSurface,
+        leadingIconTint: EudiRQESUi.requireTheme().color.onSurface,
         enabled: true,
         action: {
           self.selectService()
@@ -141,7 +141,7 @@ class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, Documen
       mainText: .selectCertificate,
       subtitle: .signingCertificateDescription,
       leadingIcon: Image(.stepThree),
-      leadingIconTint: EudiRQESUi.getTheme().color.onSurface,
+      leadingIconTint: EudiRQESUi.requireTheme().color.onSurface,
       action: {
         self.selectCertificate()
       }

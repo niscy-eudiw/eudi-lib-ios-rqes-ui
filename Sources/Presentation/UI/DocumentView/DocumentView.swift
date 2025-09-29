@@ -24,7 +24,7 @@ private struct PDFViewRepresented: UIViewRepresentable {
     
     let pdfView = PDFView()
     pdfView.autoScales = true
-    pdfView.backgroundColor = UIColor(EudiRQESUi.getTheme().color.background)
+    pdfView.backgroundColor = UIColor(EudiRQESUi.requireTheme().color.background)
 
     if let document = pdfDocument {
       pdfView.document = document
