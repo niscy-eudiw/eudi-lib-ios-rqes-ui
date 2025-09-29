@@ -64,8 +64,8 @@ private func content(
   List(services, id: \.name) { item in
     HStack {
       Text(item.name)
-        .font(EudiRQESUi.getTheme().font.bodyMedium.font)
-        .foregroundStyle(EudiRQESUi.getTheme().color.onSurface)
+        .font(EudiRQESUi.requireTheme().font.bodyMedium.font)
+        .foregroundStyle(EudiRQESUi.requireTheme().color.onSurface)
       Spacer()
       if selectedItem.wrappedValue?.rsspId == item.rsspId {
         Image(systemName: "checkmark")

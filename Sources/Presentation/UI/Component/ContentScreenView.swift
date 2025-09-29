@@ -34,7 +34,7 @@ struct ContentScreenView<Content: View>: View {
     padding: CGFloat = SPACING_MEDIUM,
     canScroll: Bool = false,
     spacing: CGFloat = 0,
-    background: Color = EudiRQESUi.getTheme().color.background,
+    background: Color = EudiRQESUi.requireTheme().color.background,
     title: LocalizableKey,
     errorConfig: ContentErrorView.Config? = nil,
     isLoading: Bool = false,

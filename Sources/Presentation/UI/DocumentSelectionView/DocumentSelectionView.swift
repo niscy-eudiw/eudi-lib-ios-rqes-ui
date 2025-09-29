@@ -116,14 +116,14 @@ private func content(
         subtitle: .selectDocumentFromDevice,
         actionText: .view,
         leadingIcon: Image(.stepOne),
-        leadingIconTint: EudiRQESUi.getTheme().color.success,
+        leadingIconTint: EudiRQESUi.requireTheme().color.success,
         action: {}
       ),
       qtspServiceSelection: SelectionItemData(
         mainText: .selectCertificate,
         subtitle: .signingCertificateDescription,
         leadingIcon: Image(.stepTwo),
-        leadingIconTint: EudiRQESUi.getTheme().color.onSurface,
+        leadingIconTint: EudiRQESUi.requireTheme().color.onSurface,
         action: {}
       ),
       certificateSelection: nil
@@ -144,14 +144,14 @@ private func content(
         subtitle: .selectDocumentFromDevice,
         actionText: .view,
         leadingIcon: Image(.stepOne),
-        leadingIconTint: EudiRQESUi.getTheme().color.success,
+        leadingIconTint: EudiRQESUi.requireTheme().color.success,
         action: {}
       ),
       qtspServiceSelection: SelectionItemData(
         mainText: .selectCertificate,
         subtitle: .signingCertificateDescription,
         leadingIcon: Image(.stepTwo),
-        leadingIconTint: EudiRQESUi.getTheme().color.onSurface,
+        leadingIconTint: EudiRQESUi.requireTheme().color.onSurface,
         action: {}
       ),
       certificateSelection: nil
