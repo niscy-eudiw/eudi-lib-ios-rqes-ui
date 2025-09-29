@@ -43,7 +43,7 @@ struct TextConfig {
 
   init(
     font: Font,
-    color: Color = try! EudiRQESUi.getTheme().color.onSurface,
+    color: Color = EudiRQESUi.getTheme().color.onSurface,
     textAlign: TextAlignment = .center,
     maxLines: Int = 2,
     fontWeight: Font.Weight? = nil
@@ -73,8 +73,8 @@ struct ContentHeader: View {
         WrapTextView(
           text: description,
           textConfig: config.descriptionTextConfig ?? TextConfig(
-            font: try! EudiRQESUi.getTheme().font.bodyLarge.font,
-            color: try! EudiRQESUi.getTheme().color.onSurface,
+            font: EudiRQESUi.getTheme().font.bodyLarge.font,
+            color: EudiRQESUi.getTheme().color.onSurface,
             textAlign: .center,
             maxLines: 2,
             fontWeight: nil

@@ -75,8 +75,8 @@ private func content(
   List(credentials) { item in
     HStack {
       Text(item.name)
-        .font(try! EudiRQESUi.getTheme().font.bodyMedium.font)
-        .foregroundStyle(try! EudiRQESUi.getTheme().color.onSurface)
+        .font(EudiRQESUi.getTheme().font.bodyMedium.font)
+        .foregroundStyle(EudiRQESUi.getTheme().color.onSurface)
       Spacer()
       if item.id == selectedItem.wrappedValue?.id {
         Image(systemName: "checkmark")
