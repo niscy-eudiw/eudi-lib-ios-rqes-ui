@@ -23,14 +23,14 @@ final class ControllerAssembly: Assembly {
     
     container.register(LocalizationController.self) { r in
       LocalizationControllerImpl(
-        config: try! EudiRQESUi.getConfig(),
+        config: EudiRQESUi.getConfig(),
         locale: Locale.current
       )
     }
     .inObjectScope(ObjectScope.container)
     
     container.register(LogController.self) { r in
-      LogControllerImpl(config: try! EudiRQESUi.getConfig())
+      LogControllerImpl(config: EudiRQESUi.getConfig())
     }
     .inObjectScope(ObjectScope.transient)
     

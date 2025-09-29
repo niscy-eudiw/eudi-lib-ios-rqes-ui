@@ -75,7 +75,7 @@ public final actor EudiRQESUi {
         uri: fileUrl
       )
     )
-    await setState(.initial(try Self.getConfig()))
+    await setState(.initial(Self.getConfig()))
     
     try await launcSDK(on: container, animated: animated)
   }
@@ -108,16 +108,16 @@ public extension EudiRQESUi {
 
 extension EudiRQESUi {
   
-  nonisolated static func getConfig() throws -> (any EudiRQESUiConfig) {
+  nonisolated static func getConfig() -> (any EudiRQESUiConfig) {
     guard let config = Self._config.value else {
-      throw EudiRQESUiError.notInitialized
+      fatalError(EudiRQESUiError.notInitialized.localizedDescription)
     }
     return config
   }
   
-  nonisolated static func getTheme() throws -> (any ThemeProtocol) {
+  nonisolated static func getTheme() -> (any ThemeProtocol) {
     guard let theme = Self._theme.value?.theme else {
-      throw EudiRQESUiError.notInitialized
+      fatalError(EudiRQESUiError.notInitialized.localizedDescription)
     }
     return theme
   }
@@ -179,7 +179,7 @@ extension EudiRQESUi {
   }
   
   func getRssps() throws -> [QTSPData] {
-    return try Self.getConfig().rssps
+    return Self.getConfig().rssps
   }
 }
 
@@ -209,7 +209,7 @@ private extension EudiRQESUi {
   func calculateNextState() throws -> State {
     switch getState() {
     case .none:
-      return .initial(try Self.getConfig())
+      return .initial(Self.getConfig())
     case .initial, .rssps:
       return .credentials
     case .credentials:

@@ -35,7 +35,7 @@ struct SelectionItemData: Identifiable {
     subtitle: LocalizableKey? = nil,
     actionText: LocalizableKey? = nil,
     leadingIcon: Image? = nil,
-    leadingIconTint: Color = try! EudiRQESUi.getTheme().color.black,
+    leadingIconTint: Color = EudiRQESUi.getTheme().color.black,
     trailingIcon: Image? = Image(systemName: "chevron.right"),
     trailingIconTint: Color = Color.accentColor,
     enabled: Bool = true,

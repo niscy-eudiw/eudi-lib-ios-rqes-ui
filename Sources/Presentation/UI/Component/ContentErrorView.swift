@@ -28,15 +28,15 @@ struct ContentErrorView: View {
       VStack(alignment: .leading, spacing: SPACING_MEDIUM) {
         HStack {
           Text(localization.get(with: config.title))
-            .font(try! EudiRQESUi.getTheme().font.headlineSmall.font)
-            .foregroundStyle(try! EudiRQESUi.getTheme().color.onSurface)
+            .font(EudiRQESUi.getTheme().font.headlineSmall.font)
+            .foregroundStyle(EudiRQESUi.getTheme().color.onSurface)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
 
         HStack {
           Text(localization.get(with: config.description))
-            .font(try! EudiRQESUi.getTheme().font.bodyMedium.font)
-            .foregroundStyle(try! EudiRQESUi.getTheme().color.onSurface)
+            .font(EudiRQESUi.getTheme().font.bodyMedium.font)
+            .foregroundStyle(EudiRQESUi.getTheme().color.onSurface)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
       }
