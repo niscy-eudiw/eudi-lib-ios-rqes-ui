@@ -15,6 +15,7 @@
  */
 import Foundation
 import SwiftUI
+import Observation
 
 protocol RouterGraph: ObservableObject, Sendable {
   
@@ -29,9 +30,10 @@ protocol RouterGraph: ObservableObject, Sendable {
 }
 
 @MainActor
+@Observable
 final class RouterGraphImpl: RouterGraph {
   
-  @Published var path: NavigationPath = NavigationPath()
+  var path: NavigationPath = NavigationPath()
   
   init() {}
   

@@ -17,7 +17,7 @@ import SwiftUI
 
 struct SignedDocumentView<Router: RouterGraph>: View {
   
-  @ObservedObject var viewModel: SignedDocumentViewModel<Router>
+  @State var viewModel: SignedDocumentViewModel<Router>
   @Environment(\.localizationController) var localization
   
   @State private var showSheet = false

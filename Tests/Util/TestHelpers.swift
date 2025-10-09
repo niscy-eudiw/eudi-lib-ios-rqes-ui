@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 import Foundation
+import Observation
+import XCTest
 
 @MainActor
 func waitUntil(
@@ -23,5 +25,35 @@ func waitUntil(
   let end = Date().addingTimeInterval(timeout)
   while !condition(), Date() < end {
     try? await Task.sleep(nanoseconds: 20_000_000)
+  }
+}
+
+public extension XCTestCase {
+  @MainActor
+  func beginObservation(
+    _ observed: @escaping @MainActor @Sendable () -> Void,
+    description: String = #function
+  ) -> XCTestExpectation {
+    let exp = expectation(description: description)
+    withObservationTracking({
+      observed()
+    }, onChange: {
+      exp.fulfill()
+    })
+    return exp
+  }
+
+  @MainActor
+  func awaitChanges(
+    _ observed: @escaping @MainActor @Sendable () -> Void,
+    timeout: Double = 1.0
+  ) async {
+    let exp = expectation(description: #function)
+    withObservationTracking({
+      observed()
+    }, onChange: {
+      exp.fulfill()
+    })
+    await fulfillment(of: [exp], timeout: timeout)
   }
 }

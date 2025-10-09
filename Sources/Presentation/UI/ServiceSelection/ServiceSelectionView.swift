@@ -19,7 +19,7 @@ import RqesKit
 struct ServiceSelectionView<Router: RouterGraph>: View {
   
   @Environment(\.localizationController) var localization
-  @ObservedObject var viewModel: ServiceSelectionViewModel<Router>
+  @State var viewModel: ServiceSelectionViewModel<Router>
 
   init(with viewModel:ServiceSelectionViewModel<Router>) {
     self.viewModel = viewModel

@@ -42,7 +42,6 @@ final class TestDocumentViewModel: XCTestCase {
 
   func testInitiate_WhenGetSessionDocumentPdfUrl_ThenLoadDocumentFails() async {
     // Given
-    let stateRecorder = viewModel.$viewState.record()
     let expectedDocumentSource = DocumentSource.pdfUrl(URL(string: "file://internal/test.pdf")!)
     let expectedSession: SessionData = .init(
       document: TestConstants.mockDocumentData
@@ -56,20 +55,24 @@ final class TestDocumentViewModel: XCTestCase {
       when(stub.getSession()).thenReturn(expectedSession)
     }
 
+    let exp = beginObservation {
+      _ = self.viewModel.viewState
+    }
+
     // When
     await viewModel.initiate()
 
     // Then
+    XCTAssertFalse(viewModel.viewState.isLoading)
+    XCTAssertEqual(viewModel.viewState.documentSource, expectedDocumentSource)
+    XCTAssertEqual(viewModel.viewState.error?.title, .genericErrorMessage)
+
+    await fulfillment(of: [exp], timeout: 1.0)
+
     guard let cancelAction = viewModel.viewState.error?.cancelAction else {
       XCTFail("cancelAction should not be nil")
       return
     }
-
-    let state = stateRecorder.fetchState()
-    XCTAssertFalse(state.isLoading)
-    XCTAssertNil(state.error)
-    XCTAssertEqual(state.documentSource, expectedDocumentSource)
-    XCTAssertEqual(state.documentSource, expectedDocumentSource)
 
     cancelAction()
     verify(router).pop()
@@ -77,7 +80,6 @@ final class TestDocumentViewModel: XCTestCase {
 
   func testInitiate_WhenGetSessionDocumentisNil_ThenSetErrorState() async {
     // Given
-    let stateRecorder = viewModel.$viewState.record()
     let expectedSession: SessionData = .init()
 
     stub(interactor) { stub in
@@ -88,18 +90,22 @@ final class TestDocumentViewModel: XCTestCase {
       when(mock.pop()).thenDoNothing()
     }
 
+    let exp = beginObservation {
+      _ = self.viewModel.viewState
+    }
+
     // When
     await viewModel.initiate()
 
     // Then
+    XCTAssertEqual(viewModel.viewState.error?.title, .genericErrorMessage)
+
+    await fulfillment(of: [exp], timeout: 1.0)
+
     guard let cancelAction = viewModel.viewState.error?.cancelAction else {
       XCTFail("cancelAction should not be nil")
       return
     }
-
-    let state = stateRecorder.fetchState()
-    XCTAssertEqual(state.error?.title, .genericErrorMessage)
-
     cancelAction()
     verify(router).pop()
   }

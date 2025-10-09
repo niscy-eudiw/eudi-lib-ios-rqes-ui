@@ -15,6 +15,7 @@
  */
 import SwiftUI
 import RqesKit
+import Observation
 
 @Copyable
 struct CredentialSelectionState: ViewState {
@@ -25,12 +26,14 @@ struct CredentialSelectionState: ViewState {
   let selectedCredential: CredentialInfo?
 }
 
+@Observable
 final class CredentialSelectionViewModel<Router: RouterGraph>: ViewModel<Router, CredentialSelectionState> {
-  
+
+  @ObservationIgnored
   private let interactor: RQESInteractor
   
-  @Published var document: DocumentData?
-  @Published var qtspName: String?
+  var document: DocumentData?
+  var qtspName: String?
   
   init(
     router: Router,

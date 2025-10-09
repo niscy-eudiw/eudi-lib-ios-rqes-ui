@@ -18,8 +18,8 @@ import SwiftUI
 struct CredentialSelectionView<Router: RouterGraph>: View {
   
   @Environment(\.localizationController) var localization
-  @ObservedObject private var viewModel: CredentialSelectionViewModel<Router>
-  
+  @State private var viewModel: CredentialSelectionViewModel<Router>
+
   @State private var selectedItem: CredentialDataUIModel?
 
   init(with viewModel:CredentialSelectionViewModel<Router>) {
@@ -39,7 +39,7 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
         credentials: viewModel.viewState.credentials,
         selectedItem: $selectedItem
       )
-      .onChange(of: selectedItem) { newValue in
+      .onChange(of: selectedItem) { _, newValue in
         if let newValue {
           viewModel.setCertificate(newValue)
         } else {
