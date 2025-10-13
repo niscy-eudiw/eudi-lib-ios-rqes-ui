@@ -25,7 +25,7 @@ lane :code_coverage do
   test
 
   xcov(
-    scheme: ENV['SCHEME'],
+    scheme: ENV['EudiRQESUI'],
     output_directory: "xcov_output",
     is_swift_package: true
   )
@@ -41,7 +41,7 @@ lane :test do
 
   params = {
     package_path: '.',
-    scheme: ENV['SCHEME'],
+    scheme: ENV['EudiRQESUI'],
     devices: ['iPhone 16 Pro Max'], 
     result_bundle: true
   }
