@@ -24,7 +24,7 @@ struct DocumentSelectionState: ViewState {
   let error: ContentErrorView.Config?
 }
 
-class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, DocumentSelectionState> {
+final class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, DocumentSelectionState> {
   
   private let interactor: RQESInteractor
   

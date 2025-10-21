@@ -42,7 +42,6 @@ final class TestDocumentSelectionViewModel: XCTestCase {
 
   func testInitiate_WhenGetSessionReturnSessionData_ThenReturnSuccess() async {
     // Given
-    let stateRecorder = viewModel.$viewState.record()
     let expectedQTSPName = "Wallet-Centric"
     let expectedSession: SessionData = .init(
       document: TestConstants.mockDocumentData,
@@ -57,7 +56,7 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     await viewModel.initiate()
 
     // Then
-    let state = stateRecorder.fetchState()
+    let state = viewModel.viewState
     XCTAssertFalse(state.isLoading)
     XCTAssertNil(state.error)
     XCTAssertEqual(
@@ -76,8 +75,6 @@ final class TestDocumentSelectionViewModel: XCTestCase {
 
   func testInitiate_WhenGetSessionReturnSessionDataWithNilQtsp_ThenReturnSuccess() async {
     // Given
-    let stateRecorder = viewModel.$viewState.record()
-
     let expectedSession: SessionData = .init(
       document: TestConstants.mockDocumentData
     )
@@ -90,7 +87,7 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     await viewModel.initiate()
 
     // Then
-    let state = stateRecorder.fetchState()
+    let state = viewModel.viewState
     XCTAssertFalse(state.isLoading)
     XCTAssertNil(state.error)
     XCTAssertEqual(
@@ -191,8 +188,6 @@ final class TestDocumentSelectionViewModel: XCTestCase {
 
   func testErrorAction_WhenInvoked_RetriesAndRecoversState() async {
     // Given
-    let stateRecorder = viewModel.$viewState.record()
-
     let expectedQTSPName = "Wallet-Centric"
     let sessionWithNilDoc: SessionData = .init()
     let sessionWithDoc = SessionData(
@@ -208,6 +203,11 @@ final class TestDocumentSelectionViewModel: XCTestCase {
       when(stub.getSession()).thenReturn(sessionWithNilDoc, sessionWithDoc)
     }
 
+    let (exp, capturedStates) = beginObservation(
+      { self.viewModel.viewState },
+      targetCount: 2
+    )
+
     // When
     await viewModel.initiate()
 
@@ -217,11 +217,11 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     }
     retryAction()
 
-    await waitUntil{ self.viewModel.viewState.error == nil }
+    await fulfillment(of: [exp], timeout: 1.0)
 
     // Then
-    let state = stateRecorder.fetchStates(expectedCount: 2)
-    guard let firstState = state.first, let lastState = state.last else {
+    let states = capturedStates()
+    guard let firstState = states.first, let lastState = states.last else {
       XCTFail("Expected error in state, but was nil")
       return
     }
@@ -245,8 +245,6 @@ final class TestDocumentSelectionViewModel: XCTestCase {
 
   func testInitiate_WhenGetSessionReturnSessionDataWithNilDocumentName_ThenReturnSuccess() async {
     // Given
-    let stateRecorder = viewModel.$viewState.record()
-    
     let expectedSession: SessionData = .init()
     let expectedError = ContentErrorView.Config(
       title: .genericErrorMessage,
@@ -261,7 +259,7 @@ final class TestDocumentSelectionViewModel: XCTestCase {
     await viewModel.initiate()
 
     // Then
-    let state = stateRecorder.fetchState()
+    let state = viewModel.viewState
     XCTAssertFalse(state.isLoading)
     XCTAssertEqual(state.error, expectedError)
   }

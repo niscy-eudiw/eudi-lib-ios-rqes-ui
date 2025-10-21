@@ -42,7 +42,6 @@ final class TestServiceSelectionViewModel: XCTestCase {
 
   func testInitiate_WhenGetQtspServices_ThenSetState() async {
     // Given
-    let stateRecorder = viewModel.$viewState.record()
     let qtsp = TestConstants.mockQtspData
     let qtspData = [qtsp]
 
@@ -54,7 +53,7 @@ final class TestServiceSelectionViewModel: XCTestCase {
     await viewModel.initiate()
 
     // Then
-    let state = stateRecorder.fetchState()
+    let state = viewModel.viewState
     XCTAssertNil(state.error)
     XCTAssertFalse(state.isLoading)
     XCTAssertEqual(state.services, qtspData)
@@ -62,7 +61,6 @@ final class TestServiceSelectionViewModel: XCTestCase {
 
   func testInitiate_WhenGetQtspServicesIsEmpty_ThenSetErrorState() async {
     // Given
-    let stateRecorder = viewModel.$viewState.record()
     stub(interactor) { stub in
       when(stub.getQTSps()).thenReturn([])
     }
@@ -81,7 +79,7 @@ final class TestServiceSelectionViewModel: XCTestCase {
     }
     cancelAction()
 
-    let state = stateRecorder.fetchState()
+    let state = viewModel.viewState
     XCTAssertNotNil(state.error)
     XCTAssertEqual(state.error?.title, .genericErrorMessage)
     verify(router).pop()
@@ -89,7 +87,6 @@ final class TestServiceSelectionViewModel: XCTestCase {
 
   func testOpenAuthorization_WhenCreateRQESServiceFails_ThenSetErrorState() async {
     // Given
-    let stateRecorder = viewModel.$viewState.record()
     let expectedError = EudiRQESUiError.noDocumentProvided
     let qtsp = TestConstants.mockQtspData
     viewModel.selectedItem = qtsp
@@ -102,14 +99,21 @@ final class TestServiceSelectionViewModel: XCTestCase {
       when(mock.pop()).thenDoNothing()
     }
 
+    let (exp, capturedStates) = beginObservation(
+      { self.viewModel.viewState },
+      targetCount: 2
+    )
+
     // When
     viewModel.nextStep()
 
     await waitUntil{ self.viewModel.viewState.error != nil }
 
     // Then
-    let state = stateRecorder.fetchStates(expectedCount: 2)
-    guard let firstState = state.first, let lastState = state.last else {
+    await fulfillment(of: [exp], timeout: 1.0)
+
+    let states = capturedStates()
+    guard let firstState = states.first, let lastState = states.last else {
       XCTFail("Expected error in state, but was nil")
       return
     }
@@ -117,7 +121,7 @@ final class TestServiceSelectionViewModel: XCTestCase {
     XCTAssertNotNil(lastState.error)
     XCTAssertEqual(lastState.error?.title, .genericErrorMessage)
 
-    guard let cancelAction = state.last!.error?.cancelAction else {
+    guard let cancelAction = states.last!.error?.cancelAction else {
       XCTFail("cancelAction should not be nil")
       return
     }
@@ -127,8 +131,6 @@ final class TestServiceSelectionViewModel: XCTestCase {
 
   func testOpenAuthorization_WhenAllSucceeds_ThenNoErrorAndPauseCalled() async {
     // Given
-    let stateRecorder = viewModel.$viewState.record()
-
     let qtsp = TestConstants.mockQtspData
 
     viewModel.selectedItem = qtsp
@@ -141,14 +143,21 @@ final class TestServiceSelectionViewModel: XCTestCase {
       when(stub.updateQTSP(equal(to: qtsp))).thenDoNothing()
     }
 
+    let (exp, capturedStates) = beginObservation(
+      { self.viewModel.viewState },
+      targetCount: 2
+    )
+
     // When
     viewModel.nextStep()
 
     await waitUntil{ self.viewModel.viewState.error != nil }
 
+    await fulfillment(of: [exp], timeout: 1.0)
+
     // Then
-    let state = stateRecorder.fetchStates(expectedCount: 2)
-    guard let lastState = state.last else {
+    let states = capturedStates()
+    guard let lastState = states.last else {
       XCTFail("Expected error in state, but was nil")
       return
     }
@@ -162,12 +171,16 @@ final class TestServiceSelectionViewModel: XCTestCase {
 
   func testOpenAuthorization_WhenSelectedItemIsNil_ThenThrowError() async {
     // Given
-    let stateRecorder = viewModel.$viewState.record()
     viewModel.selectedItem = nil
 
     stub(router) { mock in
       when(mock.pop()).thenDoNothing()
     }
+
+    let (exp, capturedStates) = beginObservation(
+      { self.viewModel.viewState },
+      targetCount: 1
+    )
 
     // When
     viewModel.nextStep()
@@ -181,8 +194,10 @@ final class TestServiceSelectionViewModel: XCTestCase {
     }
     cancelAction()
 
-    let state = stateRecorder.fetchStates(expectedCount: 2)
-    guard let lastState = state.last else {
+    await fulfillment(of: [exp], timeout: 2.0)
+
+    let states = capturedStates()
+    guard let lastState = states.last else {
       XCTFail("Expected error in state, but was nil")
       return
     }
@@ -198,7 +213,6 @@ final class TestServiceSelectionViewModel: XCTestCase {
 
   func testErrorAction_WhenInvoked_RetriesAndRecoversState() async {
     // Given
-    let stateRecorder = viewModel.$viewState.record()
     let qtsp = TestConstants.mockQtspData
     let qtspData = [qtsp]
 
@@ -208,6 +222,11 @@ final class TestServiceSelectionViewModel: XCTestCase {
     stub(router) { mock in
       when(mock.pop()).thenDoNothing()
     }
+
+    let (exp, capturedStates) = beginObservation(
+      { self.viewModel.viewState },
+      targetCount: 2
+    )
 
     // When
     await viewModel.initiate()
@@ -221,8 +240,10 @@ final class TestServiceSelectionViewModel: XCTestCase {
 
     await waitUntil{ self.viewModel.viewState.error == nil }
 
-    let state = stateRecorder.fetchStates(expectedCount: 2)
-    guard let firstState = state.first, let lastState = state.last else {
+    await fulfillment(of: [exp], timeout: 1.0)
+
+    let states = capturedStates()
+    guard let firstState = states.first, let lastState = states.last else {
       XCTFail("Expected error in state, but was nil")
       return
     }

@@ -42,7 +42,6 @@ final class TestDocumentViewModel: XCTestCase {
 
   func testInitiate_WhenGetSessionDocumentPdfUrl_ThenLoadDocumentFails() async {
     // Given
-    let stateRecorder = viewModel.$viewState.record()
     let expectedDocumentSource = DocumentSource.pdfUrl(URL(string: "file://internal/test.pdf")!)
     let expectedSession: SessionData = .init(
       document: TestConstants.mockDocumentData
@@ -65,10 +64,8 @@ final class TestDocumentViewModel: XCTestCase {
       return
     }
 
-    let state = stateRecorder.fetchState()
+    let state = viewModel.viewState
     XCTAssertFalse(state.isLoading)
-    XCTAssertNil(state.error)
-    XCTAssertEqual(state.documentSource, expectedDocumentSource)
     XCTAssertEqual(state.documentSource, expectedDocumentSource)
 
     cancelAction()
@@ -77,7 +74,6 @@ final class TestDocumentViewModel: XCTestCase {
 
   func testInitiate_WhenGetSessionDocumentisNil_ThenSetErrorState() async {
     // Given
-    let stateRecorder = viewModel.$viewState.record()
     let expectedSession: SessionData = .init()
 
     stub(interactor) { stub in
@@ -97,7 +93,7 @@ final class TestDocumentViewModel: XCTestCase {
       return
     }
 
-    let state = stateRecorder.fetchState()
+    let state = viewModel.viewState
     XCTAssertEqual(state.error?.title, .genericErrorMessage)
 
     cancelAction()

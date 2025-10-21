@@ -42,7 +42,7 @@ private struct PDFViewRepresented: UIViewRepresentable {
 
 struct DocumentViewer<Router: RouterGraph>: View {
   
-  @ObservedObject var viewModel: DocumentViewModel<Router>
+  @State var viewModel: DocumentViewModel<Router>
   @Environment(\.localizationController) var localization
 
   private let isSigned: Bool

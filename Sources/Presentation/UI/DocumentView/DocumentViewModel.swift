@@ -28,7 +28,7 @@ struct DocumentState: ViewState {
   let error: ContentErrorView.Config?
 }
 
-class DocumentViewModel<Router: RouterGraph>: ViewModel<Router, DocumentState> {
+final class DocumentViewModel<Router: RouterGraph>: ViewModel<Router, DocumentState> {
   
   private let interactor: RQESInteractor
   

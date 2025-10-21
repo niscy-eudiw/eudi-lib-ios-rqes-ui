@@ -55,7 +55,6 @@ final class TestSignedDocumentViewModel: XCTestCase {
 
   func testInitiate_WhenSignDocumentThrowError_ThenSetErrorState() async {
     // Given
-    let stateRecorder = viewModel.$viewState.record()
     let expectedError = EudiRQESUiError.noDocumentProvided
 
     stub(interactor) { mock in
@@ -66,7 +65,7 @@ final class TestSignedDocumentViewModel: XCTestCase {
     await viewModel.initiate()
 
     // Then
-    let state = stateRecorder.fetchState()
+    let state = viewModel.viewState
     XCTAssertNotNil(state.error)
     XCTAssertEqual(state.error?.title, .genericErrorMessage)
     XCTAssertEqual(state.error?.description, .genericServiceErrorMessage)
@@ -76,7 +75,6 @@ final class TestSignedDocumentViewModel: XCTestCase {
 
   func testInitiate_WhenGetSessionReturnNil_ThenSetErrorState() async {
     // Given
-    let stateRecorder = viewModel.$viewState.record()
     let expectedDocument = Document(
       id: "id",
       fileURL: URL(string: "uri")!
@@ -98,7 +96,7 @@ final class TestSignedDocumentViewModel: XCTestCase {
     await viewModel.initiate()
 
     // Then
-    let state = stateRecorder.fetchState()
+    let state = viewModel.viewState
     XCTAssertNotNil(state.error)
     XCTAssertEqual(state.error?.title, .genericErrorMessage)
     XCTAssertEqual(state.error?.description, .genericErrorDocumentNotFound)
@@ -106,7 +104,6 @@ final class TestSignedDocumentViewModel: XCTestCase {
 
   func testInitiate_WhenGenSessionReturnsEmptyDocument_ThenSetErrorState() async {
     // Given
-    let stateRecorder = viewModel.$viewState.record()
     let mockSession : SessionData = .init()
     let expectedDocument = Document(
       id: "id",
@@ -129,7 +126,7 @@ final class TestSignedDocumentViewModel: XCTestCase {
     await viewModel.initiate()
 
     // Then
-    let state = stateRecorder.fetchState()
+    let state = viewModel.viewState
     XCTAssertNotNil(state.error)
     XCTAssertEqual(state.error?.title, .genericErrorMessage)
     XCTAssertEqual(state.error?.description, .genericErrorDocumentNotFound)
@@ -137,7 +134,6 @@ final class TestSignedDocumentViewModel: XCTestCase {
 
   func testInitiate_WhenGenSessionReturnsSessionData_ThenSetState() async {
     // Given
-    let stateRecorder = viewModel.$viewState.record()
     let expectedDocument = Document(
       id: "id",
       fileURL: URL(string: "uri")!
@@ -170,7 +166,7 @@ final class TestSignedDocumentViewModel: XCTestCase {
     await viewModel.initiate()
 
     // Then
-    let state = stateRecorder.fetchState()
+    let state = viewModel.viewState
     XCTAssertEqual(state.documentName, mockSession.document?.documentName)
     XCTAssertEqual(state.qtspName, mockSession.qtsp?.name)
     XCTAssertEqual(
@@ -186,7 +182,6 @@ final class TestSignedDocumentViewModel: XCTestCase {
 
   func testErrorAction_WhenInvoked_RetriesAndRecoversState() async {
     // Given
-    let stateRecorder = viewModel.$viewState.record()
     let expectedDocument = Document(
       id: "id",
       fileURL: URL(string: "uri")!
@@ -214,20 +209,28 @@ final class TestSignedDocumentViewModel: XCTestCase {
       when(mock.updateDocument(any())).thenDoNothing()
     }
 
+    let (exp, capturedStates) = beginObservation(
+      { self.viewModel.viewState },
+      targetCount: 2,
+      includeInitial: false
+    )
+
     // When
     await viewModel.initiate()
 
-    // Then
+    await waitUntil{ self.viewModel.viewState.error == nil }
+
     guard let retryAction = viewModel.viewState.error?.action else {
       XCTFail("Retry action should not be nil")
       return
     }
     retryAction()
 
-    await waitUntil{ self.viewModel.viewState.error == nil }
-
-    let state = stateRecorder.fetchStates(expectedCount: 2)
-    guard let firstState = state.first, let lastState = state.last else {
+    await fulfillment(of: [exp], timeout: 1.0)
+    
+    // Then
+    let states = capturedStates()
+    guard let firstState = states.first, let lastState = states.last else {
       XCTFail("Expected error in state, but was nil")
       return
     }
@@ -252,7 +255,6 @@ final class TestSignedDocumentViewModel: XCTestCase {
 
   func testInitiate_WhenIsInitializedIsTrue_ThenDoesNothing() async {
     // Given
-    let stateRecorder = viewModel.$viewState.record()
     let initialState = SignedDocumenState(
       isLoading: false,
       document: DocumentData(
@@ -286,7 +288,7 @@ final class TestSignedDocumentViewModel: XCTestCase {
     await viewModel.initiate()
 
     // Then
-    let state = stateRecorder.fetchState()
+    let state = viewModel.viewState
     XCTAssertTrue(state.isInitialized)
   }
 }

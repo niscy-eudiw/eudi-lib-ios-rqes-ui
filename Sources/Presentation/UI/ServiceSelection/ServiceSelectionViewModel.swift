@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import SwiftUI
+import Observation
 
 @Copyable
 struct ServiceSelectionState: ViewState {
@@ -22,10 +23,13 @@ struct ServiceSelectionState: ViewState {
   let error: ContentErrorView.Config?
 }
 
-class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceSelectionState> {
-  
+@Observable
+final class ServiceSelectionViewModel<Router: RouterGraph>: ViewModel<Router, ServiceSelectionState> {
+
+  @ObservationIgnored
   private let interactor: RQESInteractor
-  @Published var selectedItem: QTSPData?
+
+  var selectedItem: QTSPData?
   
   init(
     router: Router,

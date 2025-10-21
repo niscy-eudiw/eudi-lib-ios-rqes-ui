@@ -16,16 +16,17 @@
 @_exported import SwiftUI
 @_exported import Combine
 @_exported import Copyable
+import Observation
 
 protocol ViewState {}
 
 @MainActor
-class ViewModel<Router: RouterGraph, UiState: ViewState>: ObservableObject {
+@Observable
+class ViewModel<Router: RouterGraph, UiState: ViewState> {
   
-  lazy var cancellables = Set<AnyCancellable>()
-  
-  @Published private(set) var viewState: UiState
+  private(set) var viewState: UiState
 
+  @ObservationIgnored
   let router: Router
   
   init(router: Router, initialState: UiState) {
