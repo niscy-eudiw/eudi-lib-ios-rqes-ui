@@ -28,10 +28,6 @@ let package = Package(
       url: "https://github.com/eu-digital-identity-wallet/SwiftCopyableMacro.git",
       from: "0.0.4"
     ),
-    .package(
-      url: "https://github.com/groue/CombineExpectations.git",
-      from: "0.10.0"
-    ),
   ],
   targets: [
     .target(
@@ -60,7 +56,6 @@ let package = Package(
           name: "Cuckoo",
           package: "Cuckoo"
         ),
-        "CombineExpectations",
       ],
       path: "./Tests"
     ),
