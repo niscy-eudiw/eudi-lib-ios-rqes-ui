@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import SwiftUI
+import Observation
 
 @Copyable
 struct SignedDocumenState: ViewState {
@@ -27,10 +28,13 @@ struct SignedDocumenState: ViewState {
   let isInitialized: Bool
 }
 
-class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocumenState> {
-  
+@Observable
+final class SignedDocumentViewModel<Router: RouterGraph>: ViewModel<Router, SignedDocumenState> {
+
+  @ObservationIgnored
   private let interactor: RQESInteractor
-  @Published var pdfURL: URL?
+
+  var pdfURL: URL?
   
   init(
     router: Router,

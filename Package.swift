@@ -5,7 +5,7 @@ import PackageDescription
 
 let package = Package(
   name: "EudiRQESUi",
-  platforms: [.iOS(.v16)],
+  platforms: [.iOS(.v17)],
   products: [
     .library(
       name: "EudiRQESUi",
@@ -27,10 +27,6 @@ let package = Package(
     .package(
       url: "https://github.com/eu-digital-identity-wallet/SwiftCopyableMacro.git",
       from: "0.0.4"
-    ),
-    .package(
-      url: "https://github.com/groue/CombineExpectations.git",
-      from: "0.10.0"
     ),
   ],
   targets: [
@@ -60,7 +56,6 @@ let package = Package(
           name: "Cuckoo",
           package: "Cuckoo"
         ),
-        "CombineExpectations",
       ],
       path: "./Tests"
     ),

@@ -13,17 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import CombineExpectations
+@testable import EudiRQESUi
 
-extension Recorder {
-  func fetchStates(expectedCount: Int) -> ArraySlice<Input> {
-    return try! self.next(expectedCount + 1).get().dropFirst()
-  }
-  func fetchState() -> Input {
-    return try! self.next(2).get().dropFirst().first!
-  }
-  func isStateEmpty() -> Bool {
-    let state = try? self.next(2).get()
-    return state == nil
-  }
-}
+extension CredentialSelectionState: @unchecked Sendable {}
+extension DocumentSelectionState: @unchecked Sendable {}
+extension ServiceSelectionState: @unchecked Sendable {}
+extension SignedDocumenState: @unchecked Sendable {}

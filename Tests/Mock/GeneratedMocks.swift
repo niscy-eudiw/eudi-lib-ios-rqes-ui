@@ -2465,6 +2465,7 @@ import Cuckoo
 import SwiftUI
 import Combine
 import Copyable
+import Observation
 @testable import EudiRQESUi
 
 class MockViewState: ViewState, Cuckoo.ProtocolMock, @unchecked Sendable {
@@ -2565,6 +2566,7 @@ import SwiftUI
 import Cuckoo
 import Foundation
 import SwiftUI
+import Observation
 @testable import EudiRQESUi
 
 class MockRouterGraph: RouterGraph, Cuckoo.ProtocolMock, @unchecked Sendable {
@@ -2973,6 +2975,7 @@ import SwiftUI
 import Cuckoo
 import SwiftUI
 import RqesKit
+import Observation
 @testable import EudiRQESUi
 
 
@@ -3024,6 +3027,7 @@ import RqesKit
 
 import Cuckoo
 import SwiftUI
+import Observation
 @testable import EudiRQESUi
 
 
@@ -3040,5 +3044,6 @@ import SwiftUI
 
 import Cuckoo
 import SwiftUI
+import Observation
 @testable import EudiRQESUi
 
