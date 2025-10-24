@@ -55,7 +55,8 @@ final actor RQESInteractorImpl: RQESInteractor {
           ),
           authFlowRedirectionURI: qtsp.authFlowRedirectionURI,
           rsspId: qtsp.rsspId,
-          tsaUrl: qtsp.tsaUrl
+          tsaUrl: qtsp.tsaUrl,
+          includeRevocationInfo: qtsp.includeRevocationInfo
         ),
         defaultHashAlgorithmOID: qtsp.hashAlgorithm,
         fileExtension: ".\(fileExtension)"

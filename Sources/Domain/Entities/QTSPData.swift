@@ -24,6 +24,7 @@ public struct QTSPData: Equatable, Sendable {
   public let clientSecret: String
   public let authFlowRedirectionURI: String
   public let hashAlgorithm: HashAlgorithmOID
+  public let includeRevocationInfo: Bool
 
   public init(
     name: String,
@@ -32,7 +33,8 @@ public struct QTSPData: Equatable, Sendable {
     clientId: String,
     clientSecret: String,
     authFlowRedirectionURI: String,
-    hashAlgorithm: HashAlgorithmOID
+    hashAlgorithm: HashAlgorithmOID,
+    includeRevocationInfo: Bool
   ) {
     self.name = name
     self.rsspId = rsspId
@@ -41,5 +43,6 @@ public struct QTSPData: Equatable, Sendable {
     self.clientSecret = clientSecret
     self.authFlowRedirectionURI = authFlowRedirectionURI
     self.hashAlgorithm = hashAlgorithm
+    self.includeRevocationInfo = includeRevocationInfo
   }
 }

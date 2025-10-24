@@ -31,7 +31,8 @@ struct TestConstants {
     clientId: "wallet-client",
     clientSecret: "somesecret2",
     authFlowRedirectionURI: "rqes://oauth/callback",
-    hashAlgorithm: .SHA256
+    hashAlgorithm: .SHA256,
+    includeRevocationInfo: false
   )
   
   static let mockSession: SessionData = .init(document: TestConstants.mockDocumentData)
