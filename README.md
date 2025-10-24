@@ -81,7 +81,8 @@ final class RQESConfigImpl: EudiRQESUiConfig {
             clientId: "your_dev_clientid",
             clientSecret: "your_dev_secret",
             authFlowRedirectionURI: "your_registered_deeplink",
-            hashAlgorithm: .SHA256
+            hashAlgorithm: .SHA256,
+            includeRevocationInfo: false
         )
   }
 

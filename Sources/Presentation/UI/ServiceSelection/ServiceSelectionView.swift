@@ -99,7 +99,8 @@ private func content(
           clientId: "clientId",
           clientSecret: "clientSecret",
           authFlowRedirectionURI: "authFlowRedirectionURI",
-          hashAlgorithm: HashAlgorithmOID.SHA256
+          hashAlgorithm: HashAlgorithmOID.SHA256,
+          includeRevocationInfo: false
         )
       ],
       selectedItem: .constant(
@@ -110,7 +111,8 @@ private func content(
           clientId: "clientId",
           clientSecret: "clientSecret",
           authFlowRedirectionURI: "authFlowRedirectionURI",
-          hashAlgorithm: HashAlgorithmOID.SHA256
+          hashAlgorithm: HashAlgorithmOID.SHA256,
+          includeRevocationInfo: false
         )
       )
     )
@@ -132,7 +134,8 @@ private func content(
           clientId: "clientId",
           clientSecret: "clientSecret",
           authFlowRedirectionURI: "authFlowRedirectionURI",
-          hashAlgorithm: HashAlgorithmOID.SHA256
+          hashAlgorithm: HashAlgorithmOID.SHA256,
+          includeRevocationInfo: false
         )
       ],
       selectedItem: .constant(
@@ -143,7 +146,8 @@ private func content(
           clientId: "clientId",
           clientSecret: "clientSecret",
           authFlowRedirectionURI: "authFlowRedirectionURI",
-          hashAlgorithm: HashAlgorithmOID.SHA256
+          hashAlgorithm: HashAlgorithmOID.SHA256,
+          includeRevocationInfo: false
         )
       )
     )
