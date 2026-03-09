@@ -29,6 +29,9 @@ public protocol EudiRQESUiConfig: Sendable {
 
   // Can print logs
   var printLogs: Bool { get }
+  
+  // Document retrieval configuration
+  var documentRetrievalConfiguration: DocumentRetrievalConfig { get }
 }
 
 extension EudiRQESUiConfig {

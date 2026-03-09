@@ -16,6 +16,8 @@
 import UIKit
 import RqesKit
 
+public typealias DocumentRetrievalConfig = DocumentRetrievalConfiguration
+
 public final actor EudiRQESUi {
   
   private static let _shared: InstanceSnapshot = .init()
@@ -28,7 +30,9 @@ public final actor EudiRQESUi {
   private var state: State = .none
   private var session = SessionData()
   private var rqesService: RQESService?
+  private var documentRetrievalService: DocumentRetrievalServiceType?
   private var rqesServiceAuthorized: RQESServiceAuthorized?
+  private var resolutionOutcome: ResolutionOutcomeType?
   
   @MainActor
   @discardableResult
@@ -47,12 +51,14 @@ public final actor EudiRQESUi {
     state: State = .none,
     session: SessionData = .init(),
     rqesService: RQESService? = nil,
+    documentRetrievalService: DocumentRetrievalServiceType? = nil,
     rqesServiceAuthorized: RQESServiceAuthorized? = nil
   ) {
     self.router = router
     self.session = session
     self.state = state
     self.rqesService = rqesService
+    self.documentRetrievalService = documentRetrievalService
     self.rqesServiceAuthorized = rqesServiceAuthorized
     Self._config.value = config
     Self._theme.value = ThemeManager(theme: config.theme)
@@ -62,13 +68,17 @@ public final actor EudiRQESUi {
   @MainActor
   public func initiate(
     on container: UIViewController,
-    fileUrl: URL,
+    provenance: DocumentProvenance,
     animated: Bool = true
   ) async throws {
     
     self.router.clear()
     
     await resetCache()
+    
+    let (fileUrl, outcome) = try await self.resolve(provenance: provenance)
+    
+    await updateResolutionOutcome(with: outcome)
     await updateSelectionDocument(
       with: .init(
         documentName: fileUrl.lastPathComponent,
@@ -157,6 +167,10 @@ extension EudiRQESUi {
     session = session.copy(credentialCertificate: info)
   }
   
+  func updateResolutionOutcome(with resolutionOutcome: ResolutionOutcomeType?) async {
+    self.resolutionOutcome = resolutionOutcome
+  }
+  
   func getCredentialInfo() -> [CredentialInfo]? {
     return session.credentialCertificate
   }
@@ -173,8 +187,20 @@ extension EudiRQESUi {
     self.rqesService
   }
   
+  func getResolutionOutcome() async -> ResolutionOutcomeType? {
+    self.resolutionOutcome
+  }
+  
   func setRQESService(_ service: RQESService?) {
     self.rqesService = service
+  }
+  
+  func getDocumentRetrievalService() -> DocumentRetrievalServiceType? {
+    self.documentRetrievalService
+  }
+  
+  func setDocumentRetrievalService(_ service: DocumentRetrievalServiceType?) {
+    self.documentRetrievalService = service
   }
   
   func getRQESServiceAuthorized() -> RQESServiceAuthorized? {
@@ -243,6 +269,7 @@ private extension EudiRQESUi {
     session = SessionData()
     setRQESService(nil)
     setRQESServiceAuthorized(nil)
+    await updateResolutionOutcome(with: nil)
   }
   
   func updateAuthorizationCode(with code: String) async {
@@ -291,6 +318,45 @@ extension EudiRQESUi {
     
     public static func == (lhs: State, rhs: State) -> Bool {
       return lhs.id == rhs.id
+    }
+  }
+}
+
+private extension EudiRQESUi {
+  
+  func resolve(provenance: DocumentProvenance) async throws -> (fileUrl: URL, outcome: ResolutionOutcomeType?) {
+    return await switch provenance {
+    case .remoteUri(let url, let config):
+      try await retrieveDocument(
+        url: url,
+        client: DocumentRetrieval(
+          config: config
+        )
+      )
+    case .localUri(let url):
+      (fileUrl: url, outcome: nil)
+    }
+  }
+  
+  func retrieveDocument(
+    url: URL,
+    client: DocumentRetrieving
+  ) async throws -> (fileUrl: URL, outcome: ResolutionOutcomeType) {
+    
+    setDocumentRetrievalService(try DocumentRetrievalService(client: client))
+    
+    let result = try await documentRetrievalService?.resolveDocument(requestUri: url)
+    
+    switch result {
+    case .success(let outcome):
+      guard let fileUrl = outcome.resolvedDocuments.first?.file else {
+        throw EudiRQESUiError.unableToResolveDocument
+      }
+      return (fileUrl: fileUrl, outcome: outcome)
+    case .failure:
+      throw EudiRQESUiError.notInitialized
+    case .none:
+      throw EudiRQESUiError.notInitialized
     }
   }
 }

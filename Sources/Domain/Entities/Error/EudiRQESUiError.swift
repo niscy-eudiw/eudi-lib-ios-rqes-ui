@@ -24,6 +24,7 @@ public enum EudiRQESUiError: LocalizedError {
   case unableToOpenURL
   case noRQESServiceProvided
   case noDocumentProvided
+  case unableToResolveDocument
   
   public var errorDescription: String? {
     return switch self {
@@ -41,6 +42,8 @@ public enum EudiRQESUiError: LocalizedError {
       "noRQESServiceProvided"
     case .noDocumentProvided:
       "noDocumentProvided"
+    case .unableToResolveDocument:
+      "unableToResolveDocument"
     }
   }
 }

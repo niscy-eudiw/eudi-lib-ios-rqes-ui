@@ -27,6 +27,7 @@ protocol RQESInteractor: Sendable {
   func saveCertificate(_ certificate: CredentialInfo) async
   func openAuthrorizationURL() async throws -> URL
   func openCredentialAuthrorizationURL() async throws -> URL
+  func createDocumentRetrievalService(_ client: DocumentRetrieving) async throws
 }
 
 final actor RQESInteractorImpl: RQESInteractor {
@@ -61,6 +62,12 @@ final actor RQESInteractorImpl: RQESInteractor {
         defaultHashAlgorithmOID: qtsp.hashAlgorithm,
         fileExtension: ".\(fileExtension)"
       )
+    )
+  }
+  
+  func createDocumentRetrievalService(_ client: DocumentRetrieving) async throws {
+    await self.rqesUi.setDocumentRetrievalService(
+      try DocumentRetrievalService(client: client)
     )
   }
   
