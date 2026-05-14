@@ -1,5 +1,5 @@
 {
-  "originHash" : "9ccb3703c6d831f5466aff0ee331ae88099e61a3aea92ce850cd9272ec79633a",
+  "originHash" : "bb686ea3d3891e2957682598be9c4fb9512843676b4eb6a238bd11ea2b6b000f",
   "pins" : [
     {
       "identity" : "aexml",
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Brightify/Cuckoo.git",
       "state" : {
-        "revision" : "856aa829a5717220326368589a3d1390e7ec1785",
-        "version" : "2.1.0"
+        "revision" : "fad35de62713feac24eb19b895705ea2fa6eb5c3",
+        "version" : "2.2.1"
       }
     },
     {
@@ -105,8 +105,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-argument-parser",
       "state" : {
-        "revision" : "626b5b7b2f45e1b0b1c6f4a309296d1d21d7311b",
-        "version" : "1.7.1"
+        "revision" : "c5d11a805e765f52ba34ec7284bd4fcd6ba68615",
+        "version" : "1.7.0"
       }
     },
     {
@@ -123,8 +123,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-certificates.git",
       "state" : {
-        "revision" : "5aa1c0d1bc204908df47c2075bdbb39573d05e8d",
-        "version" : "1.19.0"
+        "revision" : "bde8ca32a096825dfce37467137c903418c1893d",
+        "version" : "1.19.1"
       }
     },
     {
@@ -150,8 +150,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swiftlang/swift-syntax.git",
       "state" : {
-        "revision" : "64889f0c732f210a935a0ad7cda38f77f876262d",
-        "version" : "509.1.1"
+        "revision" : "4799286537280063c85a32f09884cfbca301b1a1",
+        "version" : "602.0.0"
       }
     },
     {
@@ -159,8 +159,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/eu-digital-identity-wallet/SwiftCopyableMacro.git",
       "state" : {
-        "revision" : "d535b0836be52c846d87605adad1205445e4dc35",
-        "version" : "0.0.4"
+        "revision" : "ba0d1318b825b69d8c0bd5ae65746300c95aa972",
+        "version" : "0.0.5"
       }
     },
     {
@@ -193,10 +193,10 @@
     {
       "identity" : "xcodeproj",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/tuist/XcodeProj.git",
+      "location" : "https://github.com/tuist/XcodeProj",
       "state" : {
-        "revision" : "b1caa062d4aaab3e3d2bed5fe0ac5f8ce9bf84f4",
-        "version" : "8.27.7"
+        "revision" : "77ee0721798186f71b7ee8f7e29be8495d28360f",
+        "version" : "9.9.0"
       }
     }
   ],
