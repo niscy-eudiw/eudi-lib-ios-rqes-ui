@@ -253,6 +253,52 @@ final class TestSignedDocumentViewModel: XCTestCase {
     )
   }
 
+  func testInitiate_WhenSessionLacksQtspName_ActionTriggersOnCancel() async {
+    // Given - initialize EudiRQESUi so onCancel's requireInstance() doesn't fatalError
+    let bootConfig = MockEudiRQESUiConfig()
+    stub(bootConfig) { mock in
+      when(mock.theme.get).thenReturn(AppTheme())
+    }
+    let eudiRQESUi = EudiRQESUi(
+      config: bootConfig,
+      router: router,
+      state: .sign,
+      session: TestConstants.mockSession
+    )
+
+    let signedDoc = Document(id: "id", fileURL: URL(string: "file://signed.pdf")!)
+    let sessionWithoutQtsp = SessionData(
+      document: DocumentData(documentName: "doc.pdf", uri: URL(string: "file://doc.pdf")!)
+    )
+
+    stub(interactor) { mock in
+      when(mock.signDocument()).thenReturn(signedDoc)
+      when(mock.getSession()).thenReturn(sessionWithoutQtsp)
+      when(mock.updateDocument(any())).thenDoNothing()
+    }
+
+    await viewModel.initiate()
+
+    guard let action = viewModel.viewState.error?.action else {
+      XCTFail("action should not be nil")
+      return
+    }
+
+    // When - invoke the retry action which fires self.onCancel()
+    action()
+
+    // Then - wait for the cancel Task to reset EudiRQESUi state
+    let end = Date().addingTimeInterval(2.0)
+    while Date() < end {
+      let state = await eudiRQESUi.getState()
+      if state == .none { break }
+      try? await Task.sleep(nanoseconds: 20_000_000)
+    }
+
+    let finalState = await eudiRQESUi.getState()
+    XCTAssertEqual(finalState, .none)
+  }
+
   func testInitiate_WhenIsInitializedIsTrue_ThenDoesNothing() async {
     // Given
     let initialState = SignedDocumenState(

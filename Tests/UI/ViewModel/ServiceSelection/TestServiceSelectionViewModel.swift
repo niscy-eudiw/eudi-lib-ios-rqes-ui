@@ -211,6 +211,41 @@ final class TestServiceSelectionViewModel: XCTestCase {
     verify(interactor, never()).updateQTSP(any())
   }
 
+  func testOpenAuthorization_WhenURLNotOpenable_SetsUnableToOpenBrowserAndCancelActionClearsError() async {
+    // Given - initialize EudiRQESUi for onPause's requireInstance
+    let bootConfig = MockEudiRQESUiConfig()
+    stub(bootConfig) { mock in
+      when(mock.theme.get).thenReturn(AppTheme())
+    }
+    _ = EudiRQESUi(config: bootConfig, router: router)
+
+    let qtsp = TestConstants.mockQtspData
+    viewModel.selectedItem = qtsp
+    let unopenableURL = URL(string: "rqes-x-test-unknown://example.com")!
+
+    stub(interactor) { stub in
+      when(stub.createRQESService(equal(to: qtsp))).thenDoNothing()
+      when(stub.openAuthrorizationURL()).thenReturn(unopenableURL)
+      when(stub.updateQTSP(equal(to: qtsp))).thenDoNothing()
+    }
+
+    // When
+    viewModel.nextStep()
+    await waitUntil { self.viewModel.viewState.error != nil }
+
+    // Then - error set with unableToOpenBrowser, cancelAction clears it
+    XCTAssertEqual(viewModel.viewState.error?.description, .unableToOpenBrowser)
+
+    guard let cancelAction = viewModel.viewState.error?.cancelAction else {
+      XCTFail("cancelAction should not be nil")
+      return
+    }
+    cancelAction()
+
+    await waitUntil { self.viewModel.viewState.error == nil }
+    XCTAssertNil(viewModel.viewState.error)
+  }
+
   func testErrorAction_WhenInvoked_RetriesAndRecoversState() async {
     // Given
     let qtsp = TestConstants.mockQtspData

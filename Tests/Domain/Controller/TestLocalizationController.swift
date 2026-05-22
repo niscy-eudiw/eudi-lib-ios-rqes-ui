@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 import XCTest
+import SwiftUI
 import Cuckoo
 @testable import EudiRQESUi
 
 final class TestLocalizationController: XCTestCase {
-  
+
   var config: MockEudiRQESUiConfig!
   var controller: LocalizationController!
-  
+
   override func setUp() {
     self.config = MockEudiRQESUiConfig()
     self.controller = LocalizationControllerImpl(
@@ -29,7 +30,7 @@ final class TestLocalizationController: XCTestCase {
       locale: .init(identifier: "en_US")
     )
   }
-  
+
   override func tearDown() {
     self.config = nil
     self.controller = nil
@@ -79,9 +80,74 @@ final class TestLocalizationController: XCTestCase {
     stub(config) { mock in
       when(mock.translations.get).thenReturn([:])
     }
-    
+
     let result: String = self.controller.get(with: .signedBy, args: ["NISCY"])
-    
+
     XCTAssertEqual(result, LocalizableKey.signedBy.defaultTranslation(args: ["NISCY"]))
+  }
+
+  @MainActor
+  func testEnvironmentValuesLocalizationController_Setter_StoresValue() {
+    // Given
+    var env = EnvironmentValues()
+    let preview = PreviewLocalizationController()
+
+    // When
+    env.localizationController = preview
+
+    // Then
+    XCTAssertTrue(env.localizationController is PreviewLocalizationController)
+  }
+
+  @MainActor
+  func testEnvironmentValuesLocalizationController_DefaultValue_ResolvesFromDIGraph() async {
+    // Given - initialize the SDK so DIGraph is loaded and _config is set
+    let bootConfig = MockEudiRQESUiConfig()
+    stub(bootConfig) { mock in
+      when(mock.theme.get).thenReturn(AppTheme())
+    }
+    _ = EudiRQESUi(config: bootConfig)
+
+    // When
+    let resolved = EnvironmentValues().localizationController
+
+    // Then
+    XCTAssertTrue(resolved is LocalizationControllerImpl)
+  }
+
+  @MainActor
+  func testEnvironmentValuesLocalizationController_DefaultValue_WhenPreviewEnvSet_ReturnsPreview() throws {
+    // Given
+    setenv("XCODE_RUNNING_FOR_PREVIEWS", "1", 1)
+    defer { unsetenv("XCODE_RUNNING_FOR_PREVIEWS") }
+
+    try XCTSkipUnless(
+      ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1",
+      "ProcessInfo.environment does not reflect runtime env changes on this platform"
+    )
+
+    // When
+    let resolved = EnvironmentValues().localizationController
+
+    // Then
+    XCTAssertTrue(resolved is PreviewLocalizationController)
+  }
+
+  func testPreviewLocalizationController_GetWithKey_ReturnsDefaultString() {
+    let preview = PreviewLocalizationController()
+    let result = preview.get(with: .signDocument)
+    XCTAssertEqual(result, LocalizableKey.signDocument.defaultTranslation(args: []))
+  }
+
+  func testPreviewLocalizationController_GetWithKeyAndArgs_ReturnsFormattedDefaultString() {
+    let preview = PreviewLocalizationController()
+    let result: String = preview.get(with: .signedBy, args: ["NISCY"])
+    XCTAssertEqual(result, LocalizableKey.signedBy.defaultTranslation(args: ["NISCY"]))
+  }
+
+  func testPreviewLocalizationController_GetWithKeyAndArgs_ReturnsLocalizedStringKeyPlaceholder() {
+    let preview = PreviewLocalizationController()
+    let result: LocalizedStringKey = preview.get(with: .signDocument, args: [])
+    XCTAssertEqual(result, LocalizedStringKey("Mocked Translation"))
   }
 }

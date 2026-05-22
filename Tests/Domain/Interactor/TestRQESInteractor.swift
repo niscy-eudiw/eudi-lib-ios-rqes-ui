@@ -196,6 +196,31 @@ final class TestRQESInteractor: XCTestCase {
       XCTAssertEqual(error.localizedDescription, EudiRQESUiError.unableToFetchCredentials.localizedDescription)
     }
   }
+
+  func testFetchCredentials_WhenCredentialInfoAlreadyCached_ThenReturnsCachedSuccess() async throws {
+    // Given
+    let expectedCredentialInfo = try await TestConstants.getCredentialInfo()
+    let expectedCredentials = [expectedCredentialInfo]
+
+    eudiRQESUi = await .init(
+      config: config,
+      router: MockRouterGraph(),
+      session: .init(credentialCertificate: expectedCredentials)
+    )
+
+    interactor = RQESInteractorImpl(
+      rqesUi: eudiRQESUi,
+      rqesController: rqesController
+    )
+
+    // When
+    let credentials = try await interactor.fetchCredentials().get()
+
+    // Then
+    XCTAssertEqual(credentials.count, expectedCredentials.count)
+    verify(rqesController, never()).authorizeService(any())
+    verify(rqesController, never()).getCredentialsList()
+  }
   
   func testUpdateQTSP_WhenValuePassed_ThenVerifyCachedSelectedQtsp() async {
     // Given
