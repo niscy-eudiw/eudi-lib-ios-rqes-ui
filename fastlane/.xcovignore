@@ -12,6 +12,8 @@
 - .*Modifier.swift
 - .*Content.swift
 - .*UIModel.swift
+- DialogCompat.swift
+- ShareSheet.swift
 
 # Logic
 - .*Manager.swift

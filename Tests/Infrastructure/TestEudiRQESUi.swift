@@ -80,38 +80,202 @@ final class TestEudiRQESUi: XCTestCase {
   }
   
   func testResume_WhenRouterGraphClearAndNextViewCalled_ThenVerifyStateAndCacheAndRouter() async throws {
-    
+
     // Given
     let controller = await UIViewController()
     let expectedAuthCode = "123145"
     let expectedState = EudiRQESUi.State.credentials
-    
+
     self.eudiRQESUi = await .init(
       config: self.config,
       router: self.router,
       state: .rssps
     )
-    
+
     stub(router) { mock in
       when(mock.clear()).thenDoNothing()
     }
     stub(router) { mock in
       when(mock.nextView(for: expectedState)).thenReturn(controller)
     }
-    
+
     // When
     try await self.eudiRQESUi.resume(on: UIViewController(), authorizationCode: expectedAuthCode)
-    
+
     // Then
     verify(router).clear()
     verify(router).nextView(for: expectedState)
-    
+
     let session = await eudiRQESUi.getSessionData()
     XCTAssertEqual(session.code, expectedAuthCode)
-    
+
     let state = await eudiRQESUi.getState()
     XCTAssertEqual(state, expectedState)
-    
+
   }
-  
+
+  func testCalculateNextState_FromNone_ReturnsInitial() async throws {
+    try await runResumeTransition(
+      startingFrom: .none,
+      expectedNext: .initial(self.config)
+    )
+  }
+
+  func testCalculateNextState_FromInitial_ReturnsCredentials() async throws {
+    try await runResumeTransition(
+      startingFrom: .initial(self.config),
+      expectedNext: .credentials
+    )
+  }
+
+  func testCalculateNextState_FromCredentials_ReturnsSign() async throws {
+    try await runResumeTransition(
+      startingFrom: .credentials,
+      expectedNext: .sign
+    )
+  }
+
+  func testCalculateNextState_FromSign_ReturnsView() async throws {
+    try await runResumeTransition(
+      startingFrom: .sign,
+      expectedNext: .view
+    )
+  }
+
+  func testCalculateNextState_FromView_ReturnsView() async throws {
+    try await runResumeTransition(
+      startingFrom: .view,
+      expectedNext: .view
+    )
+  }
+
+  func testStateEquality_AllCases_UsesIdComparison() {
+    XCTAssertEqual(EudiRQESUi.State.none, .none)
+    XCTAssertEqual(EudiRQESUi.State.initial(config), .initial(config))
+    XCTAssertEqual(EudiRQESUi.State.rssps, .rssps)
+    XCTAssertEqual(EudiRQESUi.State.credentials, .credentials)
+    XCTAssertEqual(EudiRQESUi.State.sign, .sign)
+    XCTAssertEqual(EudiRQESUi.State.view, .view)
+    XCTAssertNotEqual(EudiRQESUi.State.none, .initial(config))
+  }
+
+  func testCancel_WhenInvoked_ResetsStateAndSessionAndServices() async {
+
+    // Given
+    self.eudiRQESUi = await .init(
+      config: config,
+      router: router,
+      state: .initial(config),
+      session: TestConstants.mockSession
+    )
+
+    let initialSession = await eudiRQESUi.getSessionData()
+    XCTAssertNotNil(initialSession.document)
+
+    // When
+    await eudiRQESUi.cancel()
+
+    // Then
+    let state = await eudiRQESUi.getState()
+    XCTAssertEqual(state, .none)
+
+    let session = await eudiRQESUi.getSessionData()
+    XCTAssertNil(session.document)
+    XCTAssertNil(session.qtsp)
+    XCTAssertNil(session.code)
+
+    let service = await eudiRQESUi.getRQESService()
+    XCTAssertNil(service)
+
+    let authService = await eudiRQESUi.getRQESServiceAuthorized()
+    XCTAssertNil(authService)
+  }
+
+  func testRequireConfig_AfterInit_ReturnsConfig() {
+    let returnedConfig = EudiRQESUi.requireConfig()
+    XCTAssertTrue((returnedConfig as AnyObject) === (self.config as AnyObject))
+  }
+
+  func testRequireTheme_AfterInit_ReturnsTheme() {
+    let theme = EudiRQESUi.requireTheme()
+    XCTAssertTrue(theme is AppTheme)
+  }
+
+  func testInstance_AfterInit_ReturnsSameInstance() throws {
+    let returned = try EudiRQESUi.instance()
+    XCTAssertTrue(returned === self.eudiRQESUi)
+  }
+
+  @MainActor
+  func testInit_PublicInit_SetsSharedInstance() async throws {
+
+    // When - use the public init that wires DIGraph + RouterGraphImpl
+    let newInstance = EudiRQESUi(config: config)
+
+    // Then
+    let returned = try EudiRQESUi.instance()
+    XCTAssertTrue(returned === newInstance)
+  }
+
+  func testOnCancel_OnViewModel_TriggersEudiRQESUiCancel() async {
+
+    // Given
+    self.eudiRQESUi = await .init(
+      config: config,
+      router: router,
+      state: .initial(config),
+      session: TestConstants.mockSession
+    )
+
+    let viewModel = await DocumentSelectionViewModel(
+      router: router,
+      interactor: MockRQESInteractor()
+    )
+
+    // When
+    await viewModel.onCancel()
+
+    // Then - wait for the unstructured Task to complete
+    let end = Date().addingTimeInterval(2.0)
+    while Date() < end {
+      let document = await eudiRQESUi.getSessionData().document
+      if document == nil { break }
+      try? await Task.sleep(nanoseconds: 20_000_000)
+    }
+
+    let finalState = await eudiRQESUi.getState()
+    XCTAssertEqual(finalState, .none)
+
+    let finalSession = await eudiRQESUi.getSessionData()
+    XCTAssertNil(finalSession.document)
+  }
+}
+
+private extension TestEudiRQESUi {
+
+  func runResumeTransition(
+    startingFrom initialState: EudiRQESUi.State,
+    expectedNext: EudiRQESUi.State
+  ) async throws {
+
+    let controller = await UIViewController()
+
+    self.eudiRQESUi = await .init(
+      config: config,
+      router: router,
+      state: initialState
+    )
+
+    stub(router) { mock in
+      when(mock.clear()).thenDoNothing()
+    }
+    stub(router) { mock in
+      when(mock.nextView(for: expectedNext)).thenReturn(controller)
+    }
+
+    try await self.eudiRQESUi.resume(on: UIViewController(), authorizationCode: "test")
+
+    let state = await eudiRQESUi.getState()
+    XCTAssertEqual(state, expectedNext)
+  }
 }

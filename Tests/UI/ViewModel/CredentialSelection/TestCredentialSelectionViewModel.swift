@@ -189,6 +189,37 @@ final class TestCredentialSelectionViewModel: XCTestCase {
     XCTAssertNil(lastState.error)
   }
 
+  func testNextStep_WhenURLNotOpenable_SetsUnableToOpenBrowserAndCancelActionClearsError() async {
+    // Given - initialize EudiRQESUi for onPause's requireInstance
+    let bootConfig = MockEudiRQESUiConfig()
+    stub(bootConfig) { mock in
+      when(mock.theme.get).thenReturn(AppTheme())
+    }
+    _ = EudiRQESUi(config: bootConfig, router: router)
+
+    let unopenableURL = URL(string: "rqes-x-test-unknown://example.com")!
+
+    stub(interactor) { stub in
+      when(stub.openCredentialAuthrorizationURL()).thenReturn(unopenableURL)
+    }
+
+    // When
+    viewModel.nextStep()
+    await waitUntil { self.viewModel.viewState.error != nil }
+
+    // Then
+    XCTAssertEqual(viewModel.viewState.error?.description, .unableToOpenBrowser)
+
+    guard let cancelAction = viewModel.viewState.error?.cancelAction else {
+      XCTFail("cancelAction should not be nil")
+      return
+    }
+    cancelAction()
+
+    await waitUntil { self.viewModel.viewState.error == nil }
+    XCTAssertNil(viewModel.viewState.error)
+  }
+
   func testErrorAction_WhenInvoked_RetriesAndRecoversState() async throws {
     // Given
     let expectedCredentialInfo = try await TestConstants.getCredentialInfo()
