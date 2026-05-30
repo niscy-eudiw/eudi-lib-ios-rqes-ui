@@ -129,4 +129,42 @@ final class TestDocumentViewModel: XCTestCase {
     XCTAssertNil(state.error)
     XCTAssertEqual(state.documentSource, .pdfUrl(tempURL))
   }
+
+  func testErrorAction_WhenInvoked_RetriesInitiateAndRecoversState() async throws {
+    // Given - write a minimal valid PDF so the retry can succeed
+    let pdf = PDFDocument()
+    pdf.insert(PDFPage(), at: 0)
+    let pdfData = try XCTUnwrap(pdf.dataRepresentation())
+    let tempURL = FileManager.default.temporaryDirectory
+      .appendingPathComponent("rqes_test_\(UUID().uuidString).pdf")
+    try pdfData.write(to: tempURL)
+    defer { try? FileManager.default.removeItem(at: tempURL) }
+
+    let validSession = SessionData(
+      document: DocumentData(documentName: tempURL.lastPathComponent, uri: tempURL)
+    )
+
+    // First call -> no document (error state); retry -> valid PDF (recovers)
+    stub(interactor) { stub in
+      when(stub.getSession()).thenReturn(SessionData(), validSession)
+    }
+
+    // When - initiate fails into the error state
+    await viewModel.initiate()
+
+    guard let retryAction = viewModel.viewState.error?.action else {
+      XCTFail("Retry action should not be nil")
+      return
+    }
+
+    // When - the retry action re-runs initiate and clears the error
+    retryAction()
+    await waitUntil { self.viewModel.viewState.error == nil }
+
+    // Then
+    let state = viewModel.viewState
+    XCTAssertNil(state.error)
+    XCTAssertFalse(state.isLoading)
+    XCTAssertNotNil(state.pdfDocument)
+  }
 }

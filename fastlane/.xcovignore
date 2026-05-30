@@ -11,7 +11,6 @@
 - .*ViewController.swift
 - .*Modifier.swift
 - .*Content.swift
-- .*UIModel.swift
 - DialogCompat.swift
 - ShareSheet.swift
 
@@ -25,5 +24,9 @@
 - PreferencesController.swift
 - RQESController.swift
 
-# Extensions
-- .*Extensions.swift
+# Extensions (trivial / SwiftUI-only; String+Extensions is intentionally measured)
+- Assembler+Extensions.swift
+- Resolver+Extensions.swift
+- Document+Extensions.swift
+- View+Extensions.swift
+- UIApplication+Extensions.swift
