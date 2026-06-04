@@ -22,7 +22,7 @@ lane :code_coverage do
 
   FileUtils.remove_dir "../xcov_output", true
 
-  tests(scheme: ENV['APP_SCHEME'])
+  tests(scheme: ENV['APP_SCHEME'], output_directory: "xcov_output")
 
   xcov(
     scheme: ENV['APP_SCHEME'],
@@ -50,7 +50,9 @@ lane :tests do |values|
     result_bundle: true
   }
 
-  if ENV['CI'] 
+  params[:output_directory] = values[:output_directory] if values[:output_directory]
+
+  if ENV['CI']
     params[:xcargs] = "-skipPackagePluginValidation -skipMacroValidation"
   end
 
