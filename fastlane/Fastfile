@@ -40,7 +40,7 @@ end
 desc "Run package tests"
 lane :tests do |values|
 
-  scheme = values[:scheme]
+  scheme = values[:scheme] || ENV['SCHEME']
   UI.user_error!("Missing required parameter: scheme") if scheme.to_s.strip.empty?
 
   params = {
