@@ -16,8 +16,17 @@ the [EUDI Wallet Reference Implementation project description](https://github.co
 ## Table of contents
 
 * [Overview](#overview)
+* [Requirements](#requirements)
 * [Installation](#installation)
 * [How to use](#how-to-use)
+  * [Configuration](#configuration)
+  * [Setup](#setup)
+  * [Initialization](#initialization)
+* [Theming and rebranding](#theming-and-rebranding)
+  * [Colors and typography](#colors-and-typography)
+  * [Logos and images](#logos-and-images)
+  * [Text and labels](#text-and-labels)
+* [How to contribute](#how-to-contribute)
 * [License](#license)
 
 ## Overview
@@ -159,6 +168,139 @@ Please note that if the application is transitioning from the background to the 
 
 ```swift
 let controller = await UIApplication.shared.topViewController()
+```
+
+## Theming and rebranding
+
+The SDK renders its own screens with **its own theme** — your app's global styling (tint color, fonts, etc.) is not applied to them. It follows the system light/dark setting automatically (the colors and the wordmark that ship with the SDK provide matching light/dark variants). The theme is resolved once, from the `theme` you set on your `EudiRQESUiConfig`, when you create the `EudiRQESUi` instance — so it is effectively start-up configuration.
+
+You can rebrand the SDK along three independent axes, all wired through your `EudiRQESUiConfig`:
+
+| What you change     | How                                                | Types / resources                                                                       |
+|---------------------|----------------------------------------------------|-----------------------------------------------------------------------------------------|
+| Colors & typography | Override `theme`                                   | `ThemeProtocol`, `ColorManagerProtocol`, `TypographyManagerProtocol`, `TypographyStyle` |
+| Logos & images      | Replace the image assets shipped in the SDK bundle | `Images.xcassets` (`euWalletLogo`, `eudiTextLogo`, …)                                    |
+| Text & labels       | Override `translations`                            | `LocalizableKey` (see [Configuration](#configuration))                                   |
+
+> The public theming types live under `Sources/Infrastructure/Theme` (`ThemeProtocol`, `ColorManagerProtocol`, `TypographyManagerProtocol`, `TypographyStyle`). The SDK's built-in implementations (`AppTheme`, `ColorManager`, `TypographyManager`) are `internal`, so you supply your own conforming types rather than tweaking the defaults. Because the defaults are not visible outside the SDK, a custom `ThemeProtocol` must provide **both** `color` and `font` (there is no partial override) — mirror the defaults for the axis you don't intend to change.
+
+### Colors and typography
+
+Override the `theme` property of your config and return a custom `ThemeProtocol`. A theme is simply a colors provider plus a typography provider.
+
+**Colors.** Implement `ColorManagerProtocol`; every role is a SwiftUI `Color` and all nine are required. By default `success`, `successBackground` and `groupedBackground` ship with light/dark variants, while `primaryLabel`, `secondaryLabel`, `background`, `accent`, `black` and `white` resolve to the matching system colors.
+
+```swift
+import SwiftUI
+import EudiRQESUi
+
+struct BrandColors: ColorManagerProtocol {
+  var black: Color { .black }
+  var white: Color { .white }
+
+  var success: Color { Color(red: 0.17, green: 0.49, blue: 0.04) }
+  var successBackground: Color { Color(red: 0.89, green: 0.93, blue: 0.91) }
+  var groupedBackground: Color { Color(red: 0.92, green: 0.95, blue: 0.99) }
+
+  var primaryLabel: Color { .primary }
+  var secondaryLabel: Color { .secondary }
+  var background: Color { Color(.systemBackground) }
+  var accent: Color { Color("BrandAccent") } // e.g. from your app's asset catalog
+}
+```
+
+**Typography.** Implement `TypographyManagerProtocol`; each of the 15 roles returns a `TypographyStyle(font:spacing:)`. Bundle your font files in your app target and reference them with `Font.custom(_:size:relativeTo:)` — passing `relativeTo:` keeps Dynamic Type scaling. Return `.system(...)` for any role you want to leave as the system font.
+
+```swift
+import SwiftUI
+import EudiRQESUi
+
+struct BrandTypography: TypographyManagerProtocol {
+
+  private func custom(_ name: String, _ size: CGFloat, _ relativeTo: Font.TextStyle) -> TypographyStyle {
+    TypographyStyle(font: .custom(name, size: size, relativeTo: relativeTo), spacing: 0)
+  }
+
+  var displayLarge: TypographyStyle  { custom("Brand-Bold", 34, .largeTitle) }
+  var displayMedium: TypographyStyle { custom("Brand-Bold", 28, .title) }
+  var displaySmall: TypographyStyle  { custom("Brand-Bold", 22, .title2) }
+
+  var headlineLarge: TypographyStyle  { custom("Brand-Medium", 20, .title3) }
+  var headlineMedium: TypographyStyle { custom("Brand-Medium", 17, .headline) }
+  var headlineSmall: TypographyStyle  { custom("Brand-Medium", 15, .subheadline) }
+
+  var titleLarge: TypographyStyle  { custom("Brand-Medium", 28, .title) }
+  var titleMedium: TypographyStyle { custom("Brand-Medium", 22, .title2) }
+  var titleSmall: TypographyStyle  { custom("Brand-Medium", 20, .title3) }
+
+  var bodyLarge: TypographyStyle  { custom("Brand-Regular", 17, .body) }
+  var bodyMedium: TypographyStyle { custom("Brand-Regular", 16, .callout) }
+  var bodySmall: TypographyStyle  { custom("Brand-Regular", 13, .footnote) }
+
+  var labelLarge: TypographyStyle  { custom("Brand-Medium", 17, .headline) }
+  var labelMedium: TypographyStyle { custom("Brand-Regular", 12, .caption) }
+  var labelSmall: TypographyStyle  { custom("Brand-Regular", 11, .caption2) }
+}
+```
+
+Wire both providers into a theme and set it on your config:
+
+```swift
+struct BrandTheme: ThemeProtocol {
+  var color: ColorManagerProtocol { BrandColors() }
+  var font: TypographyManagerProtocol { BrandTypography() }
+}
+
+final class RQESConfigImpl: EudiRQESUiConfig {
+
+  var rssps: [QTSPData] { ... }
+
+  // Custom theme
+  var theme: ThemeProtocol { BrandTheme() }
+}
+```
+
+> **Building the SDK from source?** As an alternative to a custom `TypographyManagerProtocol`, drop your `.ttf`/`.otf` files into `Sources/Resources/` and add an `RQESFontConfig.plist` mapping the weight keys `bold`, `medium` and `regular` to the fonts' PostScript names. The bundled `TypographyManager` auto-registers the fonts at start-up and reads the plist; missing or empty entries fall back to system fonts.
+> ```xml
+> <dict>
+>   <key>bold</key>    <string>YourFont-Bold</string>
+>   <key>medium</key>  <string>YourFont-Medium</string>
+>   <key>regular</key> <string>YourFont-Regular</string>
+> </dict>
+> ```
+
+### Logos and images
+
+The header and success screens show the EU Wallet mark and the EUDI wordmark, and several screens use status/step icons. These ship in the SDK's own asset catalog (`Sources/Resources/Images.xcassets`) and are referenced through generated symbols such as `Image(.euWalletLogo)` and `Image(.eudiTextLogo)`; they are **not** exposed through config. Unlike Android resource merging, iOS asset catalogs are bundled per-module, so you cannot shadow them from your app — rebrand them by **replacing the assets in the SDK bundle when you build the SDK from source / vendor it**, keeping the same asset names so the `Image(.…)` references keep resolving.
+
+| Asset                               | Used for                          | Dark variant             |
+|-------------------------------------|-----------------------------------|--------------------------|
+| `euWalletLogo`                      | EU Wallet mark (header & success) | no                       |
+| `eudiTextLogo`                      | EUDI wordmark (header & success)  | yes (`eudiTextLogoDark`) |
+| `verified`                          | Relying-party "verified" badge    | no                       |
+| `verifiedUser`                      | Document "verified user" icon     | no                       |
+| `gpdGood`                           | Validation indicator              | no                       |
+| `stepOne` / `stepTwo` / `stepThree` | Step indicators                   | no                       |
+
+For an asset that has a dark variant (the wordmark), provide both the light and the `…Dark` image so the SDK keeps adapting to the system appearance.
+
+### Text and labels
+
+All user-facing copy is overridden through `translations` (see [Configuration](#configuration)): map any `LocalizableKey` to your own wording, keyed by locale identifier. Anything you don't override falls back to the built-in English defaults. For keys that take a runtime value, keep the `%@` placeholder where the value should be inserted (for example `LocalizableKey.signedBy`).
+
+```swift
+var translations: [String: [LocalizableKey: String]] {
+  [
+    "en": [
+      .selectDocument: "Choose a document",
+      .signedBy: "Signed by %@"
+    ],
+    "de": [
+      .selectDocument: "Dokument auswählen",
+      .signedBy: "Signiert von %@"
+    ]
+  ]
+}
 ```
 
 ## How to contribute
