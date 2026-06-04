@@ -1460,6 +1460,15 @@ class RQESInteractorStub:RQESInteractor, @unchecked Sendable {
 
 
 
+// MARK: - Mocks generated from file: '../Sources/Infrastructure/Bundle.swift'
+
+import Cuckoo
+import Foundation
+import CoreText
+@testable import EudiRQESUi
+
+
+
 // MARK: - Mocks generated from file: '../Sources/Infrastructure/Config/EudiRQESUiConfig.swift'
 
 import Cuckoo
@@ -1989,7 +1998,6 @@ public class ThemeProtocolStub:ThemeProtocol, @unchecked Sendable {
 // MARK: - Mocks generated from file: '../Sources/Infrastructure/Theme/TypographyManager.swift'
 
 import Cuckoo
-import Foundation
 import SwiftUI
 @testable import EudiRQESUi
 
