@@ -34,7 +34,7 @@ extension ThemeProtocol {
   }
 
   var font: TypographyManagerProtocol {
-    TypographyManager()
+    TypographyManager(bundle: .assetsBundle)
   }
 }
 

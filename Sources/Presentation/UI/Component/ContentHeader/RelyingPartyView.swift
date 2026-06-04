@@ -51,7 +51,7 @@ struct RelyingPartyView: View {
           text: name,
           textConfig: relyingPartyData.nameTextConfig ?? TextConfig(
             font: EudiRQESUi.requireTheme().font.bodyLarge.font,
-            color: EudiRQESUi.requireTheme().color.onSurface,
+            color: EudiRQESUi.requireTheme().color.primaryLabel,
             textAlign: .center,
             maxLines: 1,
             fontWeight: .semibold
@@ -71,7 +71,7 @@ struct RelyingPartyView: View {
           text: description,
           textConfig: relyingPartyData.descriptionTextConfig ?? TextConfig(
             font: EudiRQESUi.requireTheme().font.bodyMedium.font,
-            color: EudiRQESUi.requireTheme().color.onSurface,
+            color: EudiRQESUi.requireTheme().color.primaryLabel,
             textAlign: .center,
             maxLines: 2,
             fontWeight: nil
