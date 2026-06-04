@@ -15,4 +15,4 @@ jobs:
           xcode-version: '26.1'
       - uses: actions/checkout@v6
       - run:
-          fastlane test --env dev
+          fastlane tests scheme: 'EudiRQESUi'
