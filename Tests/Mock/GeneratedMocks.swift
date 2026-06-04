@@ -1460,6 +1460,15 @@ class RQESInteractorStub:RQESInteractor, @unchecked Sendable {
 
 
 
+// MARK: - Mocks generated from file: '../Sources/Infrastructure/Bundle.swift'
+
+import Cuckoo
+import Foundation
+import CoreText
+@testable import EudiRQESUi
+
+
+
 // MARK: - Mocks generated from file: '../Sources/Infrastructure/Config/EudiRQESUiConfig.swift'
 
 import Cuckoo
@@ -1622,6 +1631,7 @@ import RqesKit
 
 import Cuckoo
 import SwiftUI
+import UIKit
 @testable import EudiRQESUi
 
 public class MockColorManagerProtocol: ColorManagerProtocol, Cuckoo.ProtocolMock, @unchecked Sendable {
@@ -1640,62 +1650,22 @@ public class MockColorManagerProtocol: ColorManagerProtocol, Cuckoo.ProtocolMock
         cuckoo_manager.enableDefaultStubImplementation()
     }
 
-    public var background: Color {
+    public var black: Color {
         get {
             return cuckoo_manager.getter(
-                "background",
+                "black",
                 superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.background
+                defaultCall: __defaultImplStub!.black
             )
         }
     }
 
-    public var surfaceContriner: Color {
+    public var white: Color {
         get {
             return cuckoo_manager.getter(
-                "surfaceContriner",
+                "white",
                 superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.surfaceContriner
-            )
-        }
-    }
-
-    public var error: Color {
-        get {
-            return cuckoo_manager.getter(
-                "error",
-                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.error
-            )
-        }
-    }
-
-    public var onSurface: Color {
-        get {
-            return cuckoo_manager.getter(
-                "onSurface",
-                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.onSurface
-            )
-        }
-    }
-
-    public var onSurfaceVariant: Color {
-        get {
-            return cuckoo_manager.getter(
-                "onSurfaceVariant",
-                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.onSurfaceVariant
-            )
-        }
-    }
-
-    public var primaryMain: Color {
-        get {
-            return cuckoo_manager.getter(
-                "primaryMain",
-                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.primaryMain
+                defaultCall: __defaultImplStub!.white
             )
         }
     }
@@ -1710,52 +1680,62 @@ public class MockColorManagerProtocol: ColorManagerProtocol, Cuckoo.ProtocolMock
         }
     }
 
-    public var tertiary: Color {
+    public var successBackground: Color {
         get {
             return cuckoo_manager.getter(
-                "tertiary",
+                "successBackground",
                 superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.tertiary
+                defaultCall: __defaultImplStub!.successBackground
             )
         }
     }
 
-    public var warning: Color {
+    public var groupedBackground: Color {
         get {
             return cuckoo_manager.getter(
-                "warning",
+                "groupedBackground",
                 superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.warning
+                defaultCall: __defaultImplStub!.groupedBackground
             )
         }
     }
 
-    public var secondary: Color {
+    public var primaryLabel: Color {
         get {
             return cuckoo_manager.getter(
-                "secondary",
+                "primaryLabel",
                 superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.secondary
+                defaultCall: __defaultImplStub!.primaryLabel
             )
         }
     }
 
-    public var onPrimary: Color {
+    public var secondaryLabel: Color {
         get {
             return cuckoo_manager.getter(
-                "onPrimary",
+                "secondaryLabel",
                 superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.onPrimary
+                defaultCall: __defaultImplStub!.secondaryLabel
             )
         }
     }
 
-    public var black: Color {
+    public var background: Color {
         get {
             return cuckoo_manager.getter(
-                "black",
+                "background",
                 superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
-                defaultCall: __defaultImplStub!.black
+                defaultCall: __defaultImplStub!.background
+            )
+        }
+    }
+
+    public var accent: Color {
+        get {
+            return cuckoo_manager.getter(
+                "accent",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.accent
             )
         }
     }
@@ -1768,52 +1748,40 @@ public class MockColorManagerProtocol: ColorManagerProtocol, Cuckoo.ProtocolMock
             self.cuckoo_manager = manager
         }
         
-        var background: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockColorManagerProtocol,Color> {
-            return .init(manager: cuckoo_manager, name: "background")
+        var black: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockColorManagerProtocol,Color> {
+            return .init(manager: cuckoo_manager, name: "black")
         }
         
-        var surfaceContriner: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockColorManagerProtocol,Color> {
-            return .init(manager: cuckoo_manager, name: "surfaceContriner")
-        }
-        
-        var error: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockColorManagerProtocol,Color> {
-            return .init(manager: cuckoo_manager, name: "error")
-        }
-        
-        var onSurface: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockColorManagerProtocol,Color> {
-            return .init(manager: cuckoo_manager, name: "onSurface")
-        }
-        
-        var onSurfaceVariant: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockColorManagerProtocol,Color> {
-            return .init(manager: cuckoo_manager, name: "onSurfaceVariant")
-        }
-        
-        var primaryMain: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockColorManagerProtocol,Color> {
-            return .init(manager: cuckoo_manager, name: "primaryMain")
+        var white: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockColorManagerProtocol,Color> {
+            return .init(manager: cuckoo_manager, name: "white")
         }
         
         var success: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockColorManagerProtocol,Color> {
             return .init(manager: cuckoo_manager, name: "success")
         }
         
-        var tertiary: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockColorManagerProtocol,Color> {
-            return .init(manager: cuckoo_manager, name: "tertiary")
+        var successBackground: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockColorManagerProtocol,Color> {
+            return .init(manager: cuckoo_manager, name: "successBackground")
         }
         
-        var warning: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockColorManagerProtocol,Color> {
-            return .init(manager: cuckoo_manager, name: "warning")
+        var groupedBackground: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockColorManagerProtocol,Color> {
+            return .init(manager: cuckoo_manager, name: "groupedBackground")
         }
         
-        var secondary: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockColorManagerProtocol,Color> {
-            return .init(manager: cuckoo_manager, name: "secondary")
+        var primaryLabel: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockColorManagerProtocol,Color> {
+            return .init(manager: cuckoo_manager, name: "primaryLabel")
         }
         
-        var onPrimary: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockColorManagerProtocol,Color> {
-            return .init(manager: cuckoo_manager, name: "onPrimary")
+        var secondaryLabel: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockColorManagerProtocol,Color> {
+            return .init(manager: cuckoo_manager, name: "secondaryLabel")
         }
         
-        var black: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockColorManagerProtocol,Color> {
-            return .init(manager: cuckoo_manager, name: "black")
+        var background: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockColorManagerProtocol,Color> {
+            return .init(manager: cuckoo_manager, name: "background")
+        }
+        
+        var accent: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockColorManagerProtocol,Color> {
+            return .init(manager: cuckoo_manager, name: "accent")
         }
     }
 
@@ -1828,89 +1796,53 @@ public class MockColorManagerProtocol: ColorManagerProtocol, Cuckoo.ProtocolMock
             self.sourceLocation = sourceLocation
         }
         
-        var background: Cuckoo.VerifyReadOnlyProperty<Color> {
-            return .init(manager: cuckoo_manager, name: "background", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        var black: Cuckoo.VerifyReadOnlyProperty<Color> {
+            return .init(manager: cuckoo_manager, name: "black", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
-        var surfaceContriner: Cuckoo.VerifyReadOnlyProperty<Color> {
-            return .init(manager: cuckoo_manager, name: "surfaceContriner", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        var error: Cuckoo.VerifyReadOnlyProperty<Color> {
-            return .init(manager: cuckoo_manager, name: "error", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        var onSurface: Cuckoo.VerifyReadOnlyProperty<Color> {
-            return .init(manager: cuckoo_manager, name: "onSurface", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        var onSurfaceVariant: Cuckoo.VerifyReadOnlyProperty<Color> {
-            return .init(manager: cuckoo_manager, name: "onSurfaceVariant", callMatcher: callMatcher, sourceLocation: sourceLocation)
-        }
-        
-        var primaryMain: Cuckoo.VerifyReadOnlyProperty<Color> {
-            return .init(manager: cuckoo_manager, name: "primaryMain", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        var white: Cuckoo.VerifyReadOnlyProperty<Color> {
+            return .init(manager: cuckoo_manager, name: "white", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
         var success: Cuckoo.VerifyReadOnlyProperty<Color> {
             return .init(manager: cuckoo_manager, name: "success", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
-        var tertiary: Cuckoo.VerifyReadOnlyProperty<Color> {
-            return .init(manager: cuckoo_manager, name: "tertiary", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        var successBackground: Cuckoo.VerifyReadOnlyProperty<Color> {
+            return .init(manager: cuckoo_manager, name: "successBackground", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
-        var warning: Cuckoo.VerifyReadOnlyProperty<Color> {
-            return .init(manager: cuckoo_manager, name: "warning", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        var groupedBackground: Cuckoo.VerifyReadOnlyProperty<Color> {
+            return .init(manager: cuckoo_manager, name: "groupedBackground", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
-        var secondary: Cuckoo.VerifyReadOnlyProperty<Color> {
-            return .init(manager: cuckoo_manager, name: "secondary", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        var primaryLabel: Cuckoo.VerifyReadOnlyProperty<Color> {
+            return .init(manager: cuckoo_manager, name: "primaryLabel", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
-        var onPrimary: Cuckoo.VerifyReadOnlyProperty<Color> {
-            return .init(manager: cuckoo_manager, name: "onPrimary", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        var secondaryLabel: Cuckoo.VerifyReadOnlyProperty<Color> {
+            return .init(manager: cuckoo_manager, name: "secondaryLabel", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
         
-        var black: Cuckoo.VerifyReadOnlyProperty<Color> {
-            return .init(manager: cuckoo_manager, name: "black", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        var background: Cuckoo.VerifyReadOnlyProperty<Color> {
+            return .init(manager: cuckoo_manager, name: "background", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
+        
+        var accent: Cuckoo.VerifyReadOnlyProperty<Color> {
+            return .init(manager: cuckoo_manager, name: "accent", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
     }
 }
 
 public class ColorManagerProtocolStub:ColorManagerProtocol, @unchecked Sendable {
     
-    public var background: Color {
+    public var black: Color {
         get {
             return DefaultValueRegistry.defaultValue(for: (Color).self)
         }
     }
     
-    public var surfaceContriner: Color {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Color).self)
-        }
-    }
-    
-    public var error: Color {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Color).self)
-        }
-    }
-    
-    public var onSurface: Color {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Color).self)
-        }
-    }
-    
-    public var onSurfaceVariant: Color {
-        get {
-            return DefaultValueRegistry.defaultValue(for: (Color).self)
-        }
-    }
-    
-    public var primaryMain: Color {
+    public var white: Color {
         get {
             return DefaultValueRegistry.defaultValue(for: (Color).self)
         }
@@ -1922,31 +1854,37 @@ public class ColorManagerProtocolStub:ColorManagerProtocol, @unchecked Sendable 
         }
     }
     
-    public var tertiary: Color {
+    public var successBackground: Color {
         get {
             return DefaultValueRegistry.defaultValue(for: (Color).self)
         }
     }
     
-    public var warning: Color {
+    public var groupedBackground: Color {
         get {
             return DefaultValueRegistry.defaultValue(for: (Color).self)
         }
     }
     
-    public var secondary: Color {
+    public var primaryLabel: Color {
         get {
             return DefaultValueRegistry.defaultValue(for: (Color).self)
         }
     }
     
-    public var onPrimary: Color {
+    public var secondaryLabel: Color {
         get {
             return DefaultValueRegistry.defaultValue(for: (Color).self)
         }
     }
     
-    public var black: Color {
+    public var background: Color {
+        get {
+            return DefaultValueRegistry.defaultValue(for: (Color).self)
+        }
+    }
+    
+    public var accent: Color {
         get {
             return DefaultValueRegistry.defaultValue(for: (Color).self)
         }
@@ -2060,7 +1998,6 @@ public class ThemeProtocolStub:ThemeProtocol, @unchecked Sendable {
 // MARK: - Mocks generated from file: '../Sources/Infrastructure/Theme/TypographyManager.swift'
 
 import Cuckoo
-import Foundation
 import SwiftUI
 @testable import EudiRQESUi
 

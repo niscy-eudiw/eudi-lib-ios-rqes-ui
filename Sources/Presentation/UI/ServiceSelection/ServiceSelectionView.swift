@@ -31,27 +31,33 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
       spacing: SPACING_LARGE_MEDIUM,
       title: .selectService,
       errorConfig: viewModel.viewState.error,
-      isLoading: viewModel.viewState.isLoading,
-      toolbarContent: ToolBarContent(
-        trailingActions: [
-          Action(
-            title: .proceed,
-            disabled: viewModel.selectedItem == nil,
-            callback: {
-              viewModel.nextStep()
-            }
-          )
-        ]
-      )
+      isLoading: viewModel.viewState.isLoading
     ) {
       content(
         services: viewModel.viewState.services,
         selectedItem: $viewModel.selectedItem
       )
-      .task {
-        await viewModel.initiate()
+      .safeAreaInset(edge: .bottom) {
+        proceedButton(
+          isEnabled: viewModel.selectedItem != nil,
+          isLoading: viewModel.viewState.isLoading
+        )
       }
     }
+    .task {
+      await viewModel.initiate()
+    }
+  }
+
+  private func proceedButton(isEnabled: Bool, isLoading: Bool) -> some View {
+    WrapButtonView(
+      style: .primary,
+      title: localization.get(with: .proceed),
+      isLoading: isLoading,
+      isEnabled: isEnabled,
+      onAction: viewModel.nextStep()
+    )
+    .padding(.bottom, SPACING_LARGE_MEDIUM)
   }
 }
 
@@ -65,7 +71,7 @@ private func content(
     HStack {
       Text(item.name)
         .font(EudiRQESUi.requireTheme().font.bodyMedium.font)
-        .foregroundStyle(EudiRQESUi.requireTheme().color.onSurface)
+        .foregroundStyle(EudiRQESUi.requireTheme().color.primaryLabel)
       Spacer()
       if selectedItem.wrappedValue?.rsspId == item.rsspId {
         Image(systemName: "checkmark")
