@@ -22,10 +22,13 @@ lane :code_coverage do
 
   FileUtils.remove_dir "../xcov_output", true
 
-  tests(scheme: ENV['SCHEME'])
+  tests(
+    scheme: ENV['APP_SCHEME'], 
+    output_directory: "xcov_output"
+    )
 
   xcov(
-    scheme: ENV['SCHEME'],
+    scheme: ENV['APP_SCHEME'],
     output_directory: "xcov_output",
     is_swift_package: true,
     minimum_coverage_percentage: 95.0
@@ -40,7 +43,7 @@ end
 desc "Run package tests"
 lane :tests do |values|
 
-  scheme = values[:scheme] || ENV['SCHEME']
+  scheme = values[:scheme] || ENV['APP_SCHEME']
   UI.user_error!("Missing required parameter: scheme") if scheme.to_s.strip.empty?
 
   params = {
@@ -50,7 +53,9 @@ lane :tests do |values|
     result_bundle: true
   }
 
-  if ENV['CI'] 
+  params[:output_directory] = values[:output_directory] if values[:output_directory]
+
+  if ENV['CI']
     params[:xcargs] = "-skipPackagePluginValidation -skipMacroValidation"
   end
 
