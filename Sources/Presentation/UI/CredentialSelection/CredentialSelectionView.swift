@@ -45,12 +45,12 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
           viewModel.setCertificate(nil)
         }
       }
-    }
-    .safeAreaInset(edge: .bottom) {
-      proceedButton(
-        isEnabled: selectedItem != nil,
-        isLoading: viewModel.viewState.isLoading
-      )
+      .safeAreaInset(edge: .bottom) {
+        proceedButton(
+          isEnabled: selectedItem != nil,
+          isLoading: viewModel.viewState.isLoading
+        )
+      }
     }
     .task {
       await viewModel.initiate()
@@ -65,7 +65,7 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
       isEnabled: isEnabled,
       onAction: viewModel.nextStep()
     )
-    .padding(.horizontal, SPACING_MEDIUM)
+    .padding(.bottom, SPACING_LARGE_MEDIUM)
   }
 }
 

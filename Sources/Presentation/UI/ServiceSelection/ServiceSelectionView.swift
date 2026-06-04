@@ -37,12 +37,12 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
         services: viewModel.viewState.services,
         selectedItem: $viewModel.selectedItem
       )
-    }
-    .safeAreaInset(edge: .bottom) {
-      proceedButton(
-        isEnabled: viewModel.selectedItem != nil,
-        isLoading: viewModel.viewState.isLoading
-      )
+      .safeAreaInset(edge: .bottom) {
+        proceedButton(
+          isEnabled: viewModel.selectedItem != nil,
+          isLoading: viewModel.viewState.isLoading
+        )
+      }
     }
     .task {
       await viewModel.initiate()
@@ -57,7 +57,7 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
       isEnabled: isEnabled,
       onAction: viewModel.nextStep()
     )
-    .padding(.horizontal, SPACING_MEDIUM)
+    .padding(.bottom, SPACING_LARGE_MEDIUM)
   }
 }
 
