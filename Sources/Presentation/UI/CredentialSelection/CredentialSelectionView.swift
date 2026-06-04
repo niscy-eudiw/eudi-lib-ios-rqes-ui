@@ -32,8 +32,7 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
       spacing: SPACING_LARGE_MEDIUM,
       title: .selectCertificate,
       errorConfig: viewModel.viewState.error,
-      isLoading: viewModel.viewState.isLoading,
-      toolbarContent: toolbarAction()
+      isLoading: viewModel.viewState.isLoading
     ) {
       content(
         credentials: viewModel.viewState.credentials,
@@ -47,22 +46,26 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
         }
       }
     }
+    .safeAreaInset(edge: .bottom) {
+      proceedButton(
+        isEnabled: selectedItem != nil,
+        isLoading: viewModel.viewState.isLoading
+      )
+    }
     .task {
       await viewModel.initiate()
     }
   }
 
-  private func toolbarAction() -> ToolBarContent? {
-    return ToolBarContent(
-      trailingActions: [
-        Action(
-          image: Image(systemName: "checkmark"),
-          disabled: selectedItem == nil
-        ) {
-          viewModel.nextStep()
-        }
-      ]
+  private func proceedButton(isEnabled: Bool, isLoading: Bool) -> some View {
+    WrapButtonView(
+      style: .primary,
+      title: localization.get(with: .proceed),
+      isLoading: isLoading,
+      isEnabled: isEnabled,
+      onAction: viewModel.nextStep()
     )
+    .padding(.horizontal, SPACING_MEDIUM)
   }
 }
 
@@ -80,7 +83,7 @@ private func content(
       Spacer()
       if item.id == selectedItem.wrappedValue?.id {
         Image(systemName: "checkmark")
-          .foregroundColor(.accentColor)
+          .foregroundColor(EudiRQESUi.requireTheme().color.accent)
       }
     }
     .listRowInsets(EdgeInsets())

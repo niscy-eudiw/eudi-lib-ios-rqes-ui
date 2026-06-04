@@ -19,12 +19,8 @@ struct WrapButtonView: View {
 
   private let title: String
   private let onAction: () -> Void
-  private let textColor: Color
-  private let backgroundColor: Color
-  private let cornerRadius: CGFloat
+  private let style: ButtonViewStyle
   private let isEnabled: Bool
-  private let borderWidth: CGFloat
-  private let borderColor: Color
   private let isLoading: Bool
 
   init(
@@ -32,43 +28,29 @@ struct WrapButtonView: View {
     title: String,
     isLoading: Bool = false,
     isEnabled: Bool = true,
-    borderWidth: CGFloat = 0,
-    cornerRadius: CGFloat = SPACING_SMALL,
     onAction: @autoclosure @escaping () -> Void
   ) {
+    self.style = style
     self.title = title
-    self.textColor = style.textColor
-    self.backgroundColor = style.backgroundColor
     self.isLoading = isLoading
     self.isEnabled = isEnabled
-    self.cornerRadius = cornerRadius
-    self.borderWidth = style.borderWidth
-    self.borderColor = style.borderColor
     self.onAction = onAction
   }
 
-  public var body: some View {
-    Button(
-      action: { onAction() },
-      label: {
-        HStack {
-          Text(title)
-            .font(EudiRQESUi.requireTheme().font.bodyMedium.font)
-            .foregroundColor(textColor)
-        }
-        .padding()
+  var body: some View {
+    Button(action: { onAction() }) {
+      Text(title)
+        .font(EudiRQESUi.requireTheme().font.bodyLarge.font)
+        .fontWeight(.semibold)
+        .foregroundStyle(style.textColor)
         .frame(maxWidth: .infinity)
-        .background(backgroundColor)
-        .cornerRadius(cornerRadius)
-        .overlay(
-          RoundedRectangle(cornerRadius: cornerRadius)
-            .stroke(borderColor, lineWidth: borderWidth)
-        )
-      }
-    )
-    .if(!isEnabled && !isLoading) {
-      $0.opacity(0.5)
+        .padding(SPACING_SMALL)
     }
+    .if(!isEnabled && !isLoading) {
+      $0.opacity(0.6)
+    }
+    .buttonStyle(.borderedProminent)
+    .tint(style.backgroundColor)
     .disabled(isLoading || !isEnabled)
   }
 }
@@ -118,29 +100,14 @@ enum ButtonViewStyle {
       EudiRQESUi.requireTheme().color.accent
     }
   }
+
   var backgroundColor: Color {
     switch self {
     case .primary:
       EudiRQESUi.requireTheme().color.accent
     case .secondary:
-      EudiRQESUi.requireTheme().color.white
+      EudiRQESUi.requireTheme().color.groupedBackground
     }
   }
-  var borderWidth: CGFloat {
-    switch self {
-    case .primary:
-      0
-    case .secondary:
-      1
-    }
-  }
-  var borderColor: Color {
-    switch self {
-    case .primary:
-        .clear
-    case .secondary:
-      EudiRQESUi.requireTheme().color.accent
-    }
-  }
-}
 
+}

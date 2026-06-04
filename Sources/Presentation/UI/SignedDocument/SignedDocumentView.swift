@@ -36,7 +36,7 @@ struct SignedDocumentView<Router: RouterGraph>: View {
       toolbarContent: ToolBarContent(
         trailingActions: [
           Action(
-            title: .doneButton,
+            image: Image(systemName: "xmark"),
             callback: {
               showSheet = true
             }
