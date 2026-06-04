@@ -38,12 +38,15 @@ lane :code_coverage do
 end
 
 desc "Run package tests"
-lane :test do
+lane :tests do |values|
+
+  scheme = values[:scheme]
+  UI.user_error!("Missing required parameter: scheme") if scheme.to_s.strip.empty?
 
   params = {
     package_path: '.',
-    scheme: ENV['SCHEME'],
-    devices: ['iPhone 16 Pro Max'], 
+    scheme: scheme,
+    devices: ['iPhone 16 Pro Max'],
     result_bundle: true
   }
 
