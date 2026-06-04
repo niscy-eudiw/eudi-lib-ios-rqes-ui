@@ -22,7 +22,10 @@ lane :code_coverage do
 
   FileUtils.remove_dir "../xcov_output", true
 
-  tests(scheme: ENV['APP_SCHEME'], output_directory: "xcov_output")
+  tests(
+    scheme: ENV['APP_SCHEME'], 
+    output_directory: "xcov_output"
+    )
 
   xcov(
     scheme: ENV['APP_SCHEME'],
