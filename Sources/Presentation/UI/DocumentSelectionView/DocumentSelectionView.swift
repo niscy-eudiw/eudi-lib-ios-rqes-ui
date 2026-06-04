@@ -35,7 +35,7 @@ struct DocumentSelectionView<Router: RouterGraph>: View {
       toolbarContent: .init(
         leadingActions: [
           Action(
-            title: .cancel,
+            image: Image(systemName: "xmark"),
             callback: { showSheet.toggle() }
           )
         ]
@@ -123,7 +123,7 @@ private func content(
         mainText: .selectCertificate,
         subtitle: .signingCertificateDescription,
         leadingIcon: Image(.stepTwo),
-        leadingIconTint: EudiRQESUi.requireTheme().color.onSurface,
+        leadingIconTint: EudiRQESUi.requireTheme().color.primaryLabel,
         action: {}
       ),
       certificateSelection: nil
@@ -151,7 +151,7 @@ private func content(
         mainText: .selectCertificate,
         subtitle: .signingCertificateDescription,
         leadingIcon: Image(.stepTwo),
-        leadingIconTint: EudiRQESUi.requireTheme().color.onSurface,
+        leadingIconTint: EudiRQESUi.requireTheme().color.primaryLabel,
         action: {}
       ),
       certificateSelection: nil

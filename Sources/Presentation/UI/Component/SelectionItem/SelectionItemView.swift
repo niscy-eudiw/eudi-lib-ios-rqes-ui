@@ -49,20 +49,20 @@ struct SelectionItemView: View {
         if let overline = selectionItemData.overlineText {
           Text(localization.get(with: overline))
             .font(EudiRQESUi.requireTheme().font.labelLarge.font)
-            .foregroundColor(EudiRQESUi.requireTheme().color.onSurfaceVariant)
+            .foregroundColor(EudiRQESUi.requireTheme().color.secondaryLabel)
         }
 
         if let mainText = selectionItemData.mainText {
           Text(localization.get(with: mainText))
             .font(EudiRQESUi.requireTheme().font.titleMedium.font)
-            .foregroundColor(EudiRQESUi.requireTheme().color.onSurface)
+            .foregroundColor(EudiRQESUi.requireTheme().color.primaryLabel)
             .fontWeight(.bold)
         }
 
         if let subtitle = selectionItemData.subtitle {
           Text(localization.get(with: subtitle))
             .font(EudiRQESUi.requireTheme().font.bodyMedium.font)
-            .foregroundColor(EudiRQESUi.requireTheme().color.onSurface)
+            .foregroundColor(EudiRQESUi.requireTheme().color.primaryLabel)
         }
       }
       .frame(maxWidth: .infinity, alignment: .leading)

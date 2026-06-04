@@ -113,17 +113,17 @@ enum ButtonViewStyle {
   var textColor: Color {
     switch self {
     case .primary:
-      EudiRQESUi.requireTheme().color.onPrimary
+      EudiRQESUi.requireTheme().color.white
     case .secondary:
-      EudiRQESUi.requireTheme().color.primaryMain
+      EudiRQESUi.requireTheme().color.accent
     }
   }
   var backgroundColor: Color {
     switch self {
     case .primary:
-      EudiRQESUi.requireTheme().color.primaryMain
+      EudiRQESUi.requireTheme().color.accent
     case .secondary:
-      EudiRQESUi.requireTheme().color.onPrimary
+      EudiRQESUi.requireTheme().color.white
     }
   }
   var borderWidth: CGFloat {
@@ -139,7 +139,7 @@ enum ButtonViewStyle {
     case .primary:
         .clear
     case .secondary:
-      EudiRQESUi.requireTheme().color.primaryMain
+      EudiRQESUi.requireTheme().color.accent
     }
   }
 }

@@ -127,7 +127,7 @@ final class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, D
         mainText: .selectService,
         subtitle: .selectServiceSubtitle,
         leadingIcon: Image(.stepTwo),
-        leadingIconTint: EudiRQESUi.requireTheme().color.onSurface,
+        leadingIconTint: EudiRQESUi.requireTheme().color.primaryLabel,
         enabled: true,
         action: {
           self.selectService()
@@ -141,7 +141,7 @@ final class DocumentSelectionViewModel<Router: RouterGraph>: ViewModel<Router, D
       mainText: .selectCertificate,
       subtitle: .signingCertificateDescription,
       leadingIcon: Image(.stepThree),
-      leadingIconTint: EudiRQESUi.requireTheme().color.onSurface,
+      leadingIconTint: EudiRQESUi.requireTheme().color.primaryLabel,
       action: {
         self.selectCertificate()
       }

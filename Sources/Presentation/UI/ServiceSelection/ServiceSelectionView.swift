@@ -35,7 +35,7 @@ struct ServiceSelectionView<Router: RouterGraph>: View {
       toolbarContent: ToolBarContent(
         trailingActions: [
           Action(
-            title: .proceed,
+            image: Image(systemName: "checkmark"),
             disabled: viewModel.selectedItem == nil,
             callback: {
               viewModel.nextStep()
@@ -65,7 +65,7 @@ private func content(
     HStack {
       Text(item.name)
         .font(EudiRQESUi.requireTheme().font.bodyMedium.font)
-        .foregroundStyle(EudiRQESUi.requireTheme().color.onSurface)
+        .foregroundStyle(EudiRQESUi.requireTheme().color.primaryLabel)
       Spacer()
       if selectedItem.wrappedValue?.rsspId == item.rsspId {
         Image(systemName: "checkmark")

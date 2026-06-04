@@ -56,7 +56,7 @@ struct CredentialSelectionView<Router: RouterGraph>: View {
     return ToolBarContent(
       trailingActions: [
         Action(
-          title: .proceed,
+          image: Image(systemName: "checkmark"),
           disabled: selectedItem == nil
         ) {
           viewModel.nextStep()
@@ -76,7 +76,7 @@ private func content(
     HStack {
       Text(item.name)
         .font(EudiRQESUi.requireTheme().font.bodyMedium.font)
-        .foregroundStyle(EudiRQESUi.requireTheme().color.onSurface)
+        .foregroundStyle(EudiRQESUi.requireTheme().color.primaryLabel)
       Spacer()
       if item.id == selectedItem.wrappedValue?.id {
         Image(systemName: "checkmark")
