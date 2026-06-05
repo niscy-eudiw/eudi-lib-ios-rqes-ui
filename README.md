@@ -188,7 +188,7 @@ You can rebrand the SDK along three independent axes, all wired through your `Eu
 
 Override the `theme` property of your config and return a custom `ThemeProtocol`. A theme is simply a colors provider plus a typography provider.
 
-**Colors.** Implement `ColorManagerProtocol`; every role is a SwiftUI `Color` and all nine are required. By default `success`, `successBackground` and `groupedBackground` ship with light/dark variants, while `primaryLabel`, `secondaryLabel`, `background`, `accent`, `black` and `white` resolve to the matching system colors.
+**Colors.** Implement `ColorManagerProtocol`; every role is a SwiftUI `Color` and all nine are required. The built-in defaults fall into three groups: the **brand** colors `success`, `successBackground` and `groupedBackground` ship as asset-catalog entries with light/dark variants; the **semantic** colors `primaryLabel`, `secondaryLabel`, `background` and `accent` resolve to the matching UIKit adaptive colors (`.label`, `.secondaryLabel`, `.systemBackground`, `.systemBlue`); and the **system** colors `black` and `white` resolve to plain black/white.
 
 ```swift
 import SwiftUI
@@ -259,6 +259,8 @@ final class RQESConfigImpl: EudiRQESUiConfig {
   var theme: ThemeProtocol { BrandTheme() }
 }
 ```
+
+> **Building the SDK from source?** As an alternative to a custom `ColorManagerProtocol`, add a colorset named after the role (e.g. `accent`, `primaryLabel`, `success`) to `Sources/Resources/Colors.xcassets`; a matching-name entry takes precedence over the built-in default, so you can restyle individual roles without supplying a whole theme. Give it light and dark variants to keep adapting to the system appearance.
 
 > **Building the SDK from source?** As an alternative to a custom `TypographyManagerProtocol`, drop your `.ttf`/`.otf` files into `Sources/Resources/` and add an `RQESFontConfig.plist` mapping the weight keys `bold`, `medium` and `regular` to the fonts' PostScript names. The bundled `TypographyManager` auto-registers the fonts at start-up and reads the plist; missing or empty entries fall back to system fonts.
 > ```xml
