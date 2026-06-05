@@ -77,7 +77,7 @@ struct ContentHeader: View {
             color: EudiRQESUi.requireTheme().color.primaryLabel,
             textAlign: .center,
             maxLines: 2,
-            fontWeight: nil
+            fontWeight: .semibold
           )
         )
         .padding(.vertical, SPACING_SMALL)
