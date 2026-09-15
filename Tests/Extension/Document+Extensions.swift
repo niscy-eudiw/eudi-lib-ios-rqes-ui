@@ -13,11 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import Foundation
 import RqesKit
 
-/// Since the iOS 27 SDK, SwiftUI declares a top-level `Document` protocol.
-/// so a bare `Document` became ambiguous between `RqesKit.Document` and `SwiftUI.Document`.
 typealias Document = RqesKit.Document
-
-extension Document: @unchecked @retroactive Sendable {}
