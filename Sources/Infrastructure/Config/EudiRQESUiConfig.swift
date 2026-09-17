@@ -15,6 +15,7 @@
  */
 import Foundation
 import RqesKit
+import MdocDataModel18013
 
 public protocol EudiRQESUiConfig: Sendable {
 
@@ -29,12 +30,20 @@ public protocol EudiRQESUiConfig: Sendable {
 
   // Can print logs
   var printLogs: Bool { get }
+
+  // Receives one signing transaction entry per signed document.
+  // Entries are stored or updated by `transactionIdentifier`. Logger errors do not affect signing.
+  var transactionLogger: (any TransactionLogger)? { get }
 }
 
 extension EudiRQESUiConfig {
   
   public var translations: [String: [LocalizableKey: String]] {
     [:]
+  }
+
+  public var transactionLogger: (any TransactionLogger)? {
+    nil
   }
 
   public var theme: ThemeProtocol {

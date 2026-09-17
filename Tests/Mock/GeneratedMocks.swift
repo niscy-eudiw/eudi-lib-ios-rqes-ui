@@ -1067,6 +1067,7 @@ import SwiftUI
 import Cuckoo
 import Foundation
 import RqesKit
+import MdocDataModel18013
 @testable import EudiRQESUi
 
 class MockRQESInteractor: RQESInteractor, Cuckoo.ProtocolMock, @unchecked Sendable {
@@ -1474,6 +1475,7 @@ import CoreText
 import Cuckoo
 import Foundation
 import RqesKit
+import MdocDataModel18013
 @testable import EudiRQESUi
 
 public class MockEudiRQESUiConfig: EudiRQESUiConfig, Cuckoo.ProtocolMock, @unchecked Sendable {
@@ -1532,6 +1534,16 @@ public class MockEudiRQESUiConfig: EudiRQESUiConfig, Cuckoo.ProtocolMock, @unche
         }
     }
 
+    public var transactionLogger: (any TransactionLogger)? {
+        get {
+            return cuckoo_manager.getter(
+                "transactionLogger",
+                superclassCall: Cuckoo.MockManager.crashOnProtocolSuperclassCall(),
+                defaultCall: __defaultImplStub!.transactionLogger
+            )
+        }
+    }
+
 
     public struct __StubbingProxy_EudiRQESUiConfig: Cuckoo.StubbingProxy {
         private let cuckoo_manager: Cuckoo.MockManager
@@ -1554,6 +1566,10 @@ public class MockEudiRQESUiConfig: EudiRQESUiConfig, Cuckoo.ProtocolMock, @unche
         
         var printLogs: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockEudiRQESUiConfig,Bool> {
             return .init(manager: cuckoo_manager, name: "printLogs")
+        }
+        
+        var transactionLogger: Cuckoo.ProtocolToBeStubbedReadOnlyProperty<MockEudiRQESUiConfig,(any TransactionLogger)?> {
+            return .init(manager: cuckoo_manager, name: "transactionLogger")
         }
     }
 
@@ -1583,6 +1599,10 @@ public class MockEudiRQESUiConfig: EudiRQESUiConfig, Cuckoo.ProtocolMock, @unche
         var printLogs: Cuckoo.VerifyReadOnlyProperty<Bool> {
             return .init(manager: cuckoo_manager, name: "printLogs", callMatcher: callMatcher, sourceLocation: sourceLocation)
         }
+        
+        var transactionLogger: Cuckoo.VerifyReadOnlyProperty<(any TransactionLogger)?> {
+            return .init(manager: cuckoo_manager, name: "transactionLogger", callMatcher: callMatcher, sourceLocation: sourceLocation)
+        }
     }
 }
 
@@ -1609,6 +1629,12 @@ public class EudiRQESUiConfigStub:EudiRQESUiConfig, @unchecked Sendable {
     public var printLogs: Bool {
         get {
             return DefaultValueRegistry.defaultValue(for: (Bool).self)
+        }
+    }
+    
+    public var transactionLogger: (any TransactionLogger)? {
+        get {
+            return DefaultValueRegistry.defaultValue(for: ((any TransactionLogger)?).self)
         }
     }
 

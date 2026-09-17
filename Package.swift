@@ -21,6 +21,10 @@ let package = Package(
       exact: "0.11.0"
     ),
     .package(
+      url: "https://github.com/eu-digital-identity-wallet/eudi-lib-ios-iso18013-data-model.git",
+      exact: "0.26.0"
+    ),
+    .package(
       url: "https://github.com/Brightify/Cuckoo.git",
       from: "2.1.0"
     ),
@@ -39,6 +43,10 @@ let package = Package(
           package: "eudi-lib-ios-rqes-kit"
         ),
         .product(
+          name: "MdocDataModel18013",
+          package: "eudi-lib-ios-iso18013-data-model"
+        ),
+        .product(
           name: "Copyable",
           package: "SwiftCopyableMacro"
         )
@@ -55,6 +63,10 @@ let package = Package(
         .product(
           name: "Cuckoo",
           package: "Cuckoo"
+        ),
+        .product(
+          name: "MdocDataModel18013",
+          package: "eudi-lib-ios-iso18013-data-model"
         ),
       ],
       path: "./Tests"
