@@ -32,6 +32,7 @@ final class TestRQESInteractor: XCTestCase {
     
     stub(config) { mock in
       when(mock.theme.get).thenReturn(AppTheme())
+      when(mock.transactionLogger.get).thenReturn(nil)
     }
     
     self.eudiRQESUi = await .init(
@@ -60,6 +61,22 @@ final class TestRQESInteractor: XCTestCase {
     // Then
     let service = await eudiRQESUi.getRQESService()
     XCTAssertNotNil(service)
+  }
+  
+  func testCreateRQESService_WhenConfigProvidesTransactionLogger_ThenReadLoggerFromConfigAndCreateService() async throws {
+    // Given
+    let logger = MockTransactionLogger()
+    stub(config) { mock in
+      when(mock.transactionLogger.get).thenReturn(logger)
+    }
+    
+    // When
+    try await interactor.createRQESService(TestConstants.mockQtspData)
+    
+    // Then
+    let service = await eudiRQESUi.getRQESService()
+    XCTAssertNotNil(service)
+    verify(config).transactionLogger.get()
   }
   
   func testCreateRQESService_WhenQtspSelectedButDocumentDataIsNotCached_ThenThrowError() async throws {

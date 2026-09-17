@@ -82,8 +82,17 @@ final class RQESConfigImpl: EudiRQESUiConfig {
 
   // Optional. Default theme will be used if not set.
   var theme: ThemeProtocol
+
+  // Optional. Default is nil (signing transactions are not logged).
+  var transactionLogger: (any TransactionLogger)?
 }
 ```
+
+`TransactionLogger` comes from `MdocDataModel18013`. When set, the SDK records one
+`TransactionEntry.signingSealing` entry per signed document through the underlying
+`RqesKit` service, for both completed and failed signing attempts. The entry's
+`interactingPartyName` is the `name` of the selected `QTSPData`. Store or update entries
+by `transactionIdentifier`; logger errors never affect signing.
 
 Example:
 

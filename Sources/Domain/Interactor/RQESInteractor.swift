@@ -15,6 +15,7 @@
  */
 import Foundation
 import RqesKit
+import MdocDataModel18013
 
 protocol RQESInteractor: Sendable {
   func signDocument() async throws -> Document?
@@ -59,7 +60,9 @@ final actor RQESInteractorImpl: RQESInteractor {
           includeRevocationInfo: qtsp.includeRevocationInfo
         ),
         defaultHashAlgorithmOID: qtsp.hashAlgorithm,
-        fileExtension: ".\(fileExtension)"
+        fileExtension: ".\(fileExtension)",
+        transactionLogger: EudiRQESUi.requireConfig().transactionLogger,
+        signingServiceName: .init(content: qtsp.name)
       )
     )
   }
